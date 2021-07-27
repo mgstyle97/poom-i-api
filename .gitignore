@@ -1,6 +1,6 @@
 
-# Created by https://www.toptal.com/developers/gitignore/api/macos,windows,java,intellij+all,database
-# Edit at https://www.toptal.com/developers/gitignore?templates=macos,windows,java,intellij+all,database
+# Created by https://www.toptal.com/developers/gitignore/api/gradle,intellij+all,java,database,windows,macos
+# Edit at https://www.toptal.com/developers/gitignore?templates=gradle,intellij+all,java,database,windows,macos
 
 ### Database ###
 *.accdb
@@ -182,4 +182,23 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/macos,windows,java,intellij+all,database
+### Gradle ###
+.gradle
+build/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Cache of project
+.gradletasknamecache
+
+# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
+# gradle/wrapper/gradle-wrapper.properties
+
+### Gradle Patch ###
+**/build/
+
+# End of https://www.toptal.com/developers/gitignore/api/gradle,intellij+all,java,database,windows,macos
