@@ -1,0 +1,34 @@
+spring:
+  servlet:
+    multipart:
+      location: C:\Users\user\IdeaProjects\Capstone-Project-Poom-I
+
+  h2:
+    console:
+      enabled: true
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.H2Dialect
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+    initialization-mode: always
+    platform: h2
+server:
+  port: 8080
+
+jwt:
+  secret: MjAyMSBjYXBzdG9uZSBkZXNpZ24gcHJvamVjdCBwb29tLWk=
+
+ncs:
+  accessKey: ${NCS_ACCESS_KEY}
+  secretKey: ${NCS_SECRET_KEY}
+  serviceId: ${NCS_SERVICE_ID}
+  from: ${NCS_FROM}

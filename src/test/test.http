@@ -1,0 +1,35 @@
+#POST localhost:8080/api/join
+#Content-Type: application/json
+#
+#{
+#  "name": "민기",
+#  "age": 20,
+#  "phoneNumber": "010-1111-1111",
+#  "email": "test@gmail.com",
+#  "loginId": "test",
+#  "password": "1234",
+#  "nick": "test"
+#}
+
+#POST localhost:8080/api/login
+#Content-Type: application/json
+#
+#{
+#  "login_id": "test",
+#  "password": "1234"
+#}
+
+#POST localhost:8080/api/sms-certification/send
+#Content-Type: application/json
+#
+#{
+#  "phone_number": "01075976959"
+#}
+
+#POST localhost:8080/api/sms-certification/verify
+#Content-Type: application/json
+#
+#{
+#  "phone_number": "01075976959",
+#  "certification_number": "191942"
+#}

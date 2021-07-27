@@ -1,0 +1,32 @@
+{
+  "groups": [
+    {
+      "name": "ncs",
+      "type": "io.wisoft.poomi.common.property.NCSProperty",
+      "sourceType": "io.wisoft.poomi.common.property.NCSProperty"
+    }
+  ],
+  "properties": [
+    {
+      "name": "ncs.access-key",
+      "type": "java.lang.String",
+      "sourceType": "io.wisoft.poomi.common.property.NCSProperty"
+    },
+    {
+      "name": "ncs.from",
+      "type": "java.lang.String",
+      "sourceType": "io.wisoft.poomi.common.property.NCSProperty"
+    },
+    {
+      "name": "ncs.secret-key",
+      "type": "java.lang.String",
+      "sourceType": "io.wisoft.poomi.common.property.NCSProperty"
+    },
+    {
+      "name": "ncs.service-id",
+      "type": "java.lang.String",
+      "sourceType": "io.wisoft.poomi.common.property.NCSProperty"
+    }
+  ],
+  "hints": []
+}
