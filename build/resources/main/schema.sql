@@ -22,13 +22,14 @@ CREATE TABLE refresh_token (
 
 CREATE TABLE address_tag (
     id integer primary key,
-    name varchar unique
+    extra_address varchar unique
 );
 
 CREATE TABLE address (
     id integer primary key,
-    ad_tag_id integer,
+    post_code varchar not null,
     detail_address varchar not null,
+    ad_tag_id integer,
     foreign key(ad_tag_id) references address_tag(id)
 );
 
@@ -56,7 +57,6 @@ CREATE TABLE childminder_info(
 CREATE TABLE member(
     id integer primary key,
     name varchar not null,
-    age integer not null,
     phone_number varchar not null,
     email varchar unique,
     login_id varchar unique,

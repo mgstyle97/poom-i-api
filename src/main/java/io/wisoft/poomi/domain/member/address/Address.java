@@ -1,5 +1,8 @@
 package io.wisoft.poomi.domain.member.address;
 
+import io.wisoft.poomi.bind.request.AddressRegisterRequest;
+import io.wisoft.poomi.repository.AddressRepository;
+import io.wisoft.poomi.repository.AddressTagRepository;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,6 +32,12 @@ public class Address {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "post_code")
+    private String postCode;
+
+    @Column(name = "detail_address")
+    private String detailAddress;
+
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(
             name = "ad_tag_id",
@@ -36,7 +45,17 @@ public class Address {
     )
     private AddressTag addressTag;
 
-    @Column(name = "detail_address")
-    private String detailAddress;
+    public static Address of(AddressRepository addressRepository,
+                             AddressTagRepository tagRepository,
+                             AddressRegisterRequest request) {
+        Address address = Address.builder()
+                .postCode(request.getPostCode())
+                .detailAddress(request.getDetailAddress())
+                .addressTag(tagRepository.getAddressTagByExtraAddress(request.getExtraAddress()))
+                .build();
+
+        addressRepository.save(address);
+        return address;
+    }
 
 }

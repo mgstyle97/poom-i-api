@@ -1,6 +1,9 @@
 package io.wisoft.poomi.domain.member.child;
 
+import io.wisoft.poomi.bind.request.ChildAddRequest;
+import io.wisoft.poomi.repository.ChildRepository;
 import lombok.Data;
+import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -35,5 +38,15 @@ public class Child {
 
     @Column(name = "special_note")
     private String specialNote;
+
+    public static Child of(ChildAddRequest childAddRequest, ChildRepository childRepository) {
+        Child child = childRepository.findByName(childAddRequest.getName())
+                .orElse(new Child());
+
+        BeanUtils.copyProperties(childAddRequest, child);
+        childRepository.save(child);
+
+        return child;
+    }
 
 }

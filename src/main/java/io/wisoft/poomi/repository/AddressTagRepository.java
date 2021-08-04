@@ -7,6 +7,17 @@ import java.util.Optional;
 
 public interface AddressTagRepository extends JpaRepository<AddressTag, Long> {
 
-    Optional<AddressTag> findByName(String name);
+    Optional<AddressTag> findByExtraAddress(String extraAddress);
 
+    default AddressTag getAddressTagByExtraAddress(String extraAddress) {
+        Optional<AddressTag> addressTag = this.findByExtraAddress(extraAddress);
+        if (addressTag.isEmpty()) {
+            AddressTag newAddressTag = new AddressTag(extraAddress);
+            this.save(newAddressTag);
+
+            return newAddressTag;
+        }
+
+        return addressTag.get();
+    }
 }

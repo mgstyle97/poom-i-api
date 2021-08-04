@@ -1,6 +1,6 @@
 package io.wisoft.poomi.domain.member;
 
-import io.wisoft.poomi.bind.request.JoinRequest;
+import io.wisoft.poomi.bind.request.SignupRequest;
 import io.wisoft.poomi.common.error.exceptions.WrongMemberPasswordException;
 import io.wisoft.poomi.domain.member.address.Address;
 import io.wisoft.poomi.domain.member.child.Child;
@@ -15,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -43,9 +42,6 @@ public class Member {
 
     @Column(name = "name")
     private String name;
-
-    @Column(name = "age")
-    private int age;
 
     @Column(name = "phone_number")
     private String phoneNumber;
@@ -94,7 +90,7 @@ public class Member {
     )
     private ChildminderInfo childminderInfo;
 
-    public static Member of(JoinRequest joinRequest, PasswordEncoder passwordEncoder) {
+    public static Member of(SignupRequest joinRequest, PasswordEncoder passwordEncoder) {
         Member member = new Member();
         BeanUtils.copyProperties(joinRequest, member);
         member.setPassword(passwordEncoder.encode(member.getPassword()));

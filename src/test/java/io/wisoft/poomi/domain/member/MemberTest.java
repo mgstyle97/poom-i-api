@@ -1,7 +1,6 @@
 package io.wisoft.poomi.domain.member;
 
-import io.wisoft.poomi.bind.dto.JoinDto;
-import io.wisoft.poomi.bind.request.JoinRequest;
+import io.wisoft.poomi.bind.request.SignupRequest;
 import io.wisoft.poomi.repository.MemberRepository;
 import io.wisoft.poomi.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,8 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class MemberTest {
@@ -25,13 +22,12 @@ public class MemberTest {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    private JoinRequest joinRequest;
+    private SignupRequest joinRequest;
 
     @BeforeEach
     void setup() {
-        joinRequest = new JoinRequest();
+        joinRequest = new SignupRequest();
         joinRequest.setName("migni");
-        joinRequest.setAge(20);
         joinRequest.setPhoneNumber("010-1111-1111");
         joinRequest.setEmail("migni@gmail.com");
         joinRequest.setLoginId("migni");

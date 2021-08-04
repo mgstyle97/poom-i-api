@@ -1,14 +1,17 @@
 package io.wisoft.poomi.service;
 
-import io.wisoft.poomi.bind.dto.LoginDto;
+import io.wisoft.poomi.bind.dto.SigninDto;
 import io.wisoft.poomi.bind.dto.CMInfoRegisterDto;
-import io.wisoft.poomi.bind.dto.JoinDto;
-import io.wisoft.poomi.bind.request.LoginRequest;
+import io.wisoft.poomi.bind.dto.SignupDto;
+import io.wisoft.poomi.bind.request.SigninRequest;
 import io.wisoft.poomi.bind.request.CMInfoRegisterRequest;
-import io.wisoft.poomi.bind.request.JoinRequest;
+import io.wisoft.poomi.bind.request.SignupRequest;
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
+import io.wisoft.poomi.domain.member.address.Address;
 import io.wisoft.poomi.domain.member.cmInfo.ChildminderInfo;
 import io.wisoft.poomi.domain.member.Member;
+import io.wisoft.poomi.repository.AddressRepository;
+import io.wisoft.poomi.repository.AddressTagRepository;
 import io.wisoft.poomi.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,29 +36,31 @@ public class MemberService {
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
+    private final AddressRepository addressRepository;
+    private final AddressTagRepository addressTagRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final String USER_INFO_DOCUMENT_PATH = "C:/Image/";
 
     @Transactional
-    public JoinDto join(JoinRequest joinRequest, List<MultipartFile> files) {
-        Member member = Member.of(joinRequest, passwordEncoder);
+    public SignupDto signup(SignupRequest signupRequest, List<MultipartFile> files) {
+        Member member = saveMember(signupRequest);
+
         log.info("Generate member: {}", member.getLoginId());
+
         saveDocument(member.getLoginId(), files);
 
-        memberRepository.save(member);
-
-        return JoinDto.of(member);
+        return SignupDto.of(member);
     }
 
     @Transactional(readOnly = true)
-    public LoginDto login(LoginRequest loginRequest) {
+    public SigninDto signin(SigninRequest signinRequest) {
         Authentication authentication = authenticationManagerBuilder
                 .getObject()
-                .authenticate(loginRequest.toAuthentication());
+                .authenticate(signinRequest.toAuthentication());
         String accessToken = jwtTokenProvider.generateToken(authentication);
 
-        return LoginDto.of(authentication.getName(), accessToken);
+        return SigninDto.of(authentication.getName(), accessToken);
     }
 
     @Transactional(readOnly = true)
@@ -94,6 +99,16 @@ public class MemberService {
         } catch (IOException e) {
             throw new IllegalArgumentException();
         }
+    }
+
+    private Member saveMember(SignupRequest request) {
+        Member member = Member.of(request, passwordEncoder);
+        Address address = Address.of(addressRepository, addressTagRepository, request.getAddress());
+
+        member.setAddress(address);
+        memberRepository.save(member);
+
+        return member;
     }
 
 }

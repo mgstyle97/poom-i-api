@@ -1,12 +1,12 @@
 package io.wisoft.poomi.controller;
 
 import io.wisoft.poomi.bind.ApiResponse;
-import io.wisoft.poomi.bind.dto.LoginDto;
+import io.wisoft.poomi.bind.dto.SigninDto;
 import io.wisoft.poomi.bind.dto.CMInfoRegisterDto;
-import io.wisoft.poomi.bind.dto.JoinDto;
-import io.wisoft.poomi.bind.request.LoginRequest;
+import io.wisoft.poomi.bind.dto.SignupDto;
+import io.wisoft.poomi.bind.request.SigninRequest;
 import io.wisoft.poomi.bind.request.CMInfoRegisterRequest;
-import io.wisoft.poomi.bind.request.JoinRequest;
+import io.wisoft.poomi.bind.request.SignupRequest;
 import io.wisoft.poomi.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -24,17 +24,16 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
-    @PostMapping("/login")
-    public ApiResponse<LoginDto> login(@RequestBody @Valid LoginRequest loginRequest) {
-        return ApiResponse.succeed(memberService.login(loginRequest));
+    @PostMapping("/signin")
+    public ApiResponse<SigninDto> login(@RequestBody @Valid SigninRequest signinRequest) {
+        return ApiResponse.succeed(memberService.signin(signinRequest));
     }
 
-    @PostMapping("/join")
-    public ApiResponse<JoinDto> join(
-            @ModelAttribute JoinRequest joinRequest,
-            @RequestPart(value = "images", required = false) List<MultipartFile> files
-            ) {
-        return ApiResponse.succeed(memberService.join(joinRequest, files));
+    @PostMapping("/signup")
+    public ApiResponse<SignupDto> join(
+            @ModelAttribute SignupRequest signupRequest,
+            @RequestPart(value = "images", required = false) List<MultipartFile> files) {
+        return ApiResponse.succeed(memberService.signup(signupRequest, files));
     }
 
     @PostMapping("/member/childminder-info")

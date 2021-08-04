@@ -6,11 +6,9 @@ import io.wisoft.poomi.service.AddressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -20,11 +18,10 @@ public class AddressController {
 
     private final AddressService addressService;
 
-    @PostMapping("/member/address")
-    public ApiResponse<?> address(@RequestBody @Valid AddressRegisterRequest addressRegisterRequest) {
-        Authentication authInfo = SecurityContextHolder.getContext().getAuthentication();
-
-        return ApiResponse.succeed(addressService.registerAddress(authInfo, addressRegisterRequest));
+    @PutMapping("/member/address")
+    public ApiResponse<?> address(@RequestBody @Valid AddressRegisterRequest addressRegisterRequest,
+                                  HttpServletRequest request) {
+        return ApiResponse.succeed(addressService.registerAddress(request, addressRegisterRequest));
     }
 
 }

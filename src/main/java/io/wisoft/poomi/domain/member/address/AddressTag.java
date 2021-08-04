@@ -28,7 +28,11 @@ public class AddressTag {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "extra_address")
+    private String extraAddress;
+
+    public AddressTag(String extraAddress) {
+        this.extraAddress = extraAddress;
+    }
 
 }
