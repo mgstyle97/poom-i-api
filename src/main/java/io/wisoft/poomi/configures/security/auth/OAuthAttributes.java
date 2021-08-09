@@ -29,6 +29,14 @@ public class OAuthAttributes {
     public static OAuthAttributes of(String registrationId,
                                      String userNameAttributeName,
                                      Map<String, Object> attributes) {
+        switch (registrationId) {
+            case "google":
+                return ofGoogle(userNameAttributeName, attributes);
+            case "facebook":
+                return ofFacebook(userNameAttributeName, attributes);
+            case "kakao":
+                return ofKakao(userNameAttributeName, attributes);
+        }
         return ofGoogle(userNameAttributeName, attributes);
     }
 
@@ -37,6 +45,28 @@ public class OAuthAttributes {
         return OAuthAttributes.builder()
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
+                .attributes(attributes)
+                .nameAttributeKey(userNameAttributeName)
+                .build();
+    }
+
+    private static OAuthAttributes ofFacebook(String userNameAttributeName,
+                                              Map<String, Object> attributes) {
+        return OAuthAttributes.builder()
+                .name((String) attributes.get("name"))
+                .email((String) attributes.get("email"))
+                .attributes(attributes)
+                .nameAttributeKey(userNameAttributeName)
+                .build();
+    }
+
+    private static OAuthAttributes ofKakao(String userNameAttributeName,
+                                           Map<String, Object> attributes) {
+        String name = (String) ((Map<String, Object>) attributes.get("properties")).get("nickname");
+        String email = (String) ((Map<String, Object>) attributes.get("kakao_account")).get("email");
+        return OAuthAttributes.builder()
+                .name(name)
+                .email(email)
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
                 .build();
