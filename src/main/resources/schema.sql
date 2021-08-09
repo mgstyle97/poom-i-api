@@ -16,7 +16,7 @@ CREATE TABLE sms_certification(
 
 CREATE TABLE refresh_token (
     id integer primary key,
-    login_id varchar not null,
+    member_email varchar not null,
     refresh_token varchar not null
 );
 
@@ -57,10 +57,9 @@ CREATE TABLE childminder_info(
 CREATE TABLE member(
     id integer primary key,
     name varchar not null,
-    phone_number varchar not null,
+    phone_number varchar ,
     email varchar unique,
-    login_id varchar unique,
-    password varchar not null,
+    password varchar ,
     nick varchar,
     cm_info_id integer,
     address_id integer,

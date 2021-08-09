@@ -5,7 +5,7 @@ import io.wisoft.poomi.common.error.exceptions.WrongMemberPasswordException;
 import io.wisoft.poomi.domain.member.address.Address;
 import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.domain.member.cmInfo.ChildminderInfo;
-import io.wisoft.poomi.domain.member.enumerate.Authority;
+import io.wisoft.poomi.domain.member.authority.Authority;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -48,9 +48,6 @@ public class Member {
 
     @Column(name = "email")
     private String email;
-
-    @Column(name = "login_id")
-    private String loginId;
 
     @Column(name = "password")
     private String password;
@@ -102,6 +99,19 @@ public class Member {
         if (!passwordEncoder.matches(confirmPassword, this.password)) {
             throw new WrongMemberPasswordException("Wrong password");
         }
+
+        return this;
+    }
+
+    public String getAuthority() {
+        return this.authorities.stream()
+                .findFirst()
+                .get()
+                .getAuthority();
+    }
+
+    public Member setOAuthAccountName(String name) {
+        this.name = name;
 
         return this;
     }

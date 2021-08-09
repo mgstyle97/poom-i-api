@@ -1,8 +1,6 @@
 package io.wisoft.poomi.domain.member.address;
 
 import io.wisoft.poomi.bind.request.AddressRegisterRequest;
-import io.wisoft.poomi.repository.AddressRepository;
-import io.wisoft.poomi.repository.AddressTagRepository;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

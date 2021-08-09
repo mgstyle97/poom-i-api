@@ -1,7 +1,6 @@
 package io.wisoft.poomi.domain.member;
 
 import io.wisoft.poomi.bind.request.SignupRequest;
-import io.wisoft.poomi.repository.MemberRepository;
 import io.wisoft.poomi.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

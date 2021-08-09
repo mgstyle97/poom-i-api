@@ -10,13 +10,13 @@ import org.springframework.security.core.Authentication;
 @Setter
 public class SigninRequest {
 
-    @JsonProperty("login_id")
-    private String loginId;
+    @JsonProperty("email")
+    private String email;
 
     private String password;
 
     public Authentication toAuthentication() {
-        return new UsernamePasswordAuthenticationToken(this.loginId, this.getPassword());
+        return new UsernamePasswordAuthenticationToken(this.email, this.getPassword());
     }
 
 }

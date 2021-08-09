@@ -13,9 +13,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -25,12 +28,12 @@ public class MemberController {
     private MemberService memberService;
 
     @PostMapping("/signin")
-    public ApiResponse<SigninDto> login(@RequestBody @Valid SigninRequest signinRequest) {
+    public ApiResponse<SigninDto> signin(@RequestBody @Valid SigninRequest signinRequest) {
         return ApiResponse.succeed(memberService.signin(signinRequest));
     }
 
     @PostMapping("/signup")
-    public ApiResponse<SignupDto> join(
+    public ApiResponse<SignupDto> signup(
             @ModelAttribute SignupRequest signupRequest,
             @RequestPart(value = "images", required = false) List<MultipartFile> files) {
         return ApiResponse.succeed(memberService.signup(signupRequest, files));
@@ -42,6 +45,13 @@ public class MemberController {
         Authentication authInfo = SecurityContextHolder.getContext().getAuthentication();
 
         return ApiResponse.succeed(memberService.cmInfoRegist(authInfo, cmInfoRegisterRequest));
+    }
+
+    @GetMapping("/oauth2/success")
+    public ApiResponse<SigninDto> oauthSignin(HttpServletRequest request) {
+        SigninDto dto = (SigninDto) request.getAttribute("signin-dto");
+
+        return ApiResponse.succeed(dto);
     }
 
 }
