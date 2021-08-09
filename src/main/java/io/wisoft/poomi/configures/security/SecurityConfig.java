@@ -97,7 +97,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private String[] permitAllPatterns() {
         return new String[] {
-                "/", "/api/signup", "/api/signin",
+                "/", "/api/signup", "/api/signin", "/favicon.ico/**",
                 "/api/sms-certification/**", "/api/oauth2/**"
         };
     }
