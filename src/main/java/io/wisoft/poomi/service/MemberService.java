@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
@@ -64,13 +65,15 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public CMInfoRegisterDto cmInfoRegist(Authentication authInfo,
+    public CMInfoRegisterDto cmInfoRegist(HttpServletRequest request,
                                           CMInfoRegisterRequest cmInfoRegisterRequest) {
-        Member member = memberRepository.getMemberByEmail(authInfo.getName());
+        String token = jwtTokenProvider.resolveToken(request);
+        String email = jwtTokenProvider.getUsernameFromToken(token);
+        Member member = memberRepository.getMemberByEmail(email);
         member.setChildminderInfo(ChildminderInfo.from(cmInfoRegisterRequest));
         memberRepository.save(member);
 
-        return new CMInfoRegisterDto(member.getChildminderInfo().getId(), member.getEmail(), new Date());
+        return new CMInfoRegisterDto(member.getChildminderInfo().getId(), member.getEmail());
     }
 
     private void saveDocument(String email, List<MultipartFile> files) {

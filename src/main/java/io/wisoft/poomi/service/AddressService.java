@@ -26,10 +26,10 @@ public class AddressService {
 
     @Transactional
     public AddressDto registerAddress(HttpServletRequest request, AddressRegisterRequest addressRegisterRequest) {
-        String loginId = jwtTokenProvider.getUsernameFromToken(jwtTokenProvider.resolveToken(request));
+        String email = jwtTokenProvider.getUsernameFromToken(jwtTokenProvider.resolveToken(request));
 
         Member member = memberRepository
-                .getMemberByEmail(loginId);
+                .getMemberByEmail(email);
         AddressTag addressTag = addressTagRepository
                 .getAddressTagByExtraAddress(addressRegisterRequest.getExtraAddress());
         Address address = Address
@@ -43,7 +43,7 @@ public class AddressService {
         member.setAddress(address);
         memberRepository.save(member);
 
-        return AddressDto.from(loginId, addressTag.getExtraAddress());
+        return AddressDto.from(email, addressTag.getExtraAddress());
     }
 
 }

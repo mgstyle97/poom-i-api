@@ -1,6 +1,7 @@
 package io.wisoft.poomi.service;
 
 import io.wisoft.poomi.bind.dto.ChildAddDto;
+import io.wisoft.poomi.bind.dto.DeleteChildDto;
 import io.wisoft.poomi.bind.request.ChildAddRequest;
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.domain.member.Member;
@@ -25,9 +26,9 @@ public class ChildService {
 
     @Transactional
     public ChildAddDto addChildren(List<ChildAddRequest> childAddRequest, HttpServletRequest request) {
-        String loginId = jwtTokenProvider.getUsernameFromToken(jwtTokenProvider.resolveToken(request));
+        String email = jwtTokenProvider.getUsernameFromToken(jwtTokenProvider.resolveToken(request));
 
-        Member member = memberRepository.getMemberByEmail(loginId);
+        Member member = memberRepository.getMemberByEmail(email);
 
         List<Child> children = new ArrayList<>();
         for (ChildAddRequest addRequest : childAddRequest) {
@@ -38,6 +39,18 @@ public class ChildService {
         member.setChildren(children);
 
         return ChildAddDto.of(member);
+    }
+
+    @Transactional
+    public DeleteChildDto deleteChild(Long childId, HttpServletRequest request) {
+        String email = jwtTokenProvider.getUsernameFromToken(jwtTokenProvider.resolveToken(request));
+
+        Member member = memberRepository.getMemberByEmail(email);
+
+        Child child = childRepository.getById(childId);
+        member.removeChild(child);
+
+        return new DeleteChildDto(childId, member.getId());
     }
 
 }

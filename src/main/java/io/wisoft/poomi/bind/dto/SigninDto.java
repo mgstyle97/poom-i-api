@@ -1,5 +1,6 @@
 package io.wisoft.poomi.bind.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +18,7 @@ public class SigninDto {
     private String accessToken;
 
     @JsonProperty("login_at")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date loginAt;
 
     public static SigninDto of(String email, String accessToken) {

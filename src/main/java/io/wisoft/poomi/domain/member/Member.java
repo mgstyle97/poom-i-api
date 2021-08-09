@@ -112,8 +112,14 @@ public class Member {
 
     public Member setOAuthAccountName(String name) {
         this.name = name;
-
         return this;
+    }
+
+    public void removeChild(Child child) {
+        if (!this.children.contains(child)) {
+            throw new IllegalArgumentException("No child data in member object");
+        }
+        this.children.remove(child);
     }
 
 }
