@@ -1,6 +1,6 @@
 package io.wisoft.poomi.domain.member;
 
-import io.wisoft.poomi.domain.member.enumerate.Authority;
+import io.wisoft.poomi.domain.member.authority.Authority;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Builder
 public class MemberDetails implements UserDetails {
 
-    private String loginId;
+    private String email;
     private String password;
     private Set<Authority> authorities;
 
@@ -37,7 +37,7 @@ public class MemberDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.loginId;
+        return this.email;
     }
 
     @Override

@@ -10,8 +10,8 @@ import java.util.Date;
 @Setter
 public class SigninDto {
 
-    @JsonProperty("login_id")
-    private String loginId;
+    @JsonProperty("email")
+    private String email;
 
     @JsonProperty("access_token")
     private String accessToken;
@@ -19,9 +19,9 @@ public class SigninDto {
     @JsonProperty("login_at")
     private Date loginAt;
 
-    public static SigninDto of(String loginId, String accessToken) {
+    public static SigninDto of(String email, String accessToken) {
         SigninDto signinDto = new SigninDto();
-        signinDto.setLoginId(loginId);
+        signinDto.setEmail(email);
         signinDto.setAccessToken(accessToken);
         signinDto.setLoginAt(new Date());
 

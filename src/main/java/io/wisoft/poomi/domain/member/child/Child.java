@@ -1,7 +1,6 @@
 package io.wisoft.poomi.domain.member.child;
 
 import io.wisoft.poomi.bind.request.ChildAddRequest;
-import io.wisoft.poomi.repository.ChildRepository;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 

@@ -6,12 +6,10 @@ import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.domain.member.address.Address;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.member.Member;
-import io.wisoft.poomi.repository.AddressRepository;
-import io.wisoft.poomi.repository.AddressTagRepository;
-import io.wisoft.poomi.repository.MemberRepository;
+import io.wisoft.poomi.domain.member.address.AddressRepository;
+import io.wisoft.poomi.domain.member.address.AddressTagRepository;
+import io.wisoft.poomi.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +29,7 @@ public class AddressService {
         String loginId = jwtTokenProvider.getUsernameFromToken(jwtTokenProvider.resolveToken(request));
 
         Member member = memberRepository
-                .getMemberByLoginId(loginId);
+                .getMemberByEmail(loginId);
         AddressTag addressTag = addressTagRepository
                 .getAddressTagByExtraAddress(addressRegisterRequest.getExtraAddress());
         Address address = Address

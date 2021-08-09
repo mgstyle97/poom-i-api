@@ -5,8 +5,8 @@ import io.wisoft.poomi.bind.request.ChildAddRequest;
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.child.Child;
-import io.wisoft.poomi.repository.ChildRepository;
-import io.wisoft.poomi.repository.MemberRepository;
+import io.wisoft.poomi.domain.member.child.ChildRepository;
+import io.wisoft.poomi.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,7 @@ public class ChildService {
     public ChildAddDto addChildren(List<ChildAddRequest> childAddRequest, HttpServletRequest request) {
         String loginId = jwtTokenProvider.getUsernameFromToken(jwtTokenProvider.resolveToken(request));
 
-        Member member = memberRepository.getMemberByLoginId(loginId);
+        Member member = memberRepository.getMemberByEmail(loginId);
 
         List<Child> children = new ArrayList<>();
         for (ChildAddRequest addRequest : childAddRequest) {

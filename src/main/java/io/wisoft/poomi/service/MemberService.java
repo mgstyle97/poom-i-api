@@ -10,9 +10,9 @@ import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.domain.member.address.Address;
 import io.wisoft.poomi.domain.member.cmInfo.ChildminderInfo;
 import io.wisoft.poomi.domain.member.Member;
-import io.wisoft.poomi.repository.AddressRepository;
-import io.wisoft.poomi.repository.AddressTagRepository;
-import io.wisoft.poomi.repository.MemberRepository;
+import io.wisoft.poomi.domain.member.address.AddressRepository;
+import io.wisoft.poomi.domain.member.address.AddressTagRepository;
+import io.wisoft.poomi.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
@@ -46,9 +46,9 @@ public class MemberService {
     public SignupDto signup(SignupRequest signupRequest, List<MultipartFile> files) {
         Member member = saveMember(signupRequest);
 
-        log.info("Generate member: {}", member.getLoginId());
+        log.info("Generate member: {}", member.getEmail());
 
-        saveDocument(member.getLoginId(), files);
+        saveDocument(member.getEmail(), files);
 
         return SignupDto.of(member);
     }
@@ -66,20 +66,14 @@ public class MemberService {
     @Transactional(readOnly = true)
     public CMInfoRegisterDto cmInfoRegist(Authentication authInfo,
                                           CMInfoRegisterRequest cmInfoRegisterRequest) {
-        Member member = verifyById(authInfo.getName());
+        Member member = memberRepository.getMemberByEmail(authInfo.getName());
         member.setChildminderInfo(ChildminderInfo.from(cmInfoRegisterRequest));
         memberRepository.save(member);
 
-        return new CMInfoRegisterDto(member.getChildminderInfo().getId(), member.getLoginId(), new Date());
+        return new CMInfoRegisterDto(member.getChildminderInfo().getId(), member.getEmail(), new Date());
     }
 
-    private Member verifyById(String loginId) {
-        return memberRepository.findMemberByLoginId(loginId).orElseThrow(
-                () -> new UsernameNotFoundException("No member data about login id" + loginId)
-        );
-    }
-
-    private void saveDocument(String loginId, List<MultipartFile> files) {
+    private void saveDocument(String email, List<MultipartFile> files) {
         int idx = 1;
 
         try {
@@ -87,13 +81,13 @@ public class MemberService {
                 String extension = FilenameUtils.getExtension(file.getOriginalFilename());
                 File dest =
                         new File(
-                                USER_INFO_DOCUMENT_PATH + loginId + "/" + loginId + "_" + idx + "." + extension
+                                USER_INFO_DOCUMENT_PATH + email + "/" + email + "_" + idx + "." + extension
                         );
                 if (!dest.exists()) {
                     dest.mkdirs();
                 }
                 file.transferTo(dest);
-                log.info("Save file: {}", loginId + "_" + idx);
+                log.info("Save file: {}", email + "_" + idx);
                 idx++;
             }
         } catch (IOException e) {

@@ -12,14 +12,14 @@ import java.util.List;
 @Setter
 public class ChildAddDto {
 
-    @JsonProperty("login_id")
-    private String loginId;
+    @JsonProperty("email")
+    private String email;
 
     private List<Child> children;
 
     public static ChildAddDto of(Member member) {
         ChildAddDto childAddDto = new ChildAddDto();
-        childAddDto.setLoginId(member.getLoginId());
+        childAddDto.setEmail(member.getEmail());
         childAddDto.setChildren(member.getChildren());
 
         return childAddDto;
