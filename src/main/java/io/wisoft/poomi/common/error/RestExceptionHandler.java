@@ -18,8 +18,8 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ApiResponse<ErrorResponse> illegalArgument() {
-        return ApiResponse.failure(ErrorResponse.builder()
-                .httpStatus(HttpStatus.BAD_REQUEST)
+        return ApiResponse
+                .failure(HttpStatus.BAD_REQUEST, ErrorResponse.builder()
                 .message("Detected Using Illegal Argument")
                 .build());
     }
@@ -27,8 +27,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(DuplicateMemberException.class)
     public ApiResponse<ErrorResponse> duplicateMember() {
         return ApiResponse
-                .failure(ErrorResponse.builder()
-                .httpStatus(HttpStatus.CONFLICT)
+                .failure(HttpStatus.CONFLICT, ErrorResponse.builder()
                 .message("Duplicated member data")
                 .build());
     }
@@ -36,24 +35,23 @@ public class RestExceptionHandler {
     @ExceptionHandler(WrongMemberPasswordException.class)
     public ApiResponse<ErrorResponse> wrongPassword() {
         return ApiResponse
-                .failure(ErrorResponse.builder()
-                .httpStatus(HttpStatus.BAD_REQUEST)
+                .failure(HttpStatus.BAD_REQUEST, ErrorResponse.builder()
                 .message("No match member id with input password")
                 .build());
     }
 
     @ExceptionHandler(TypeMismatchException.class)
     public ApiResponse<ErrorResponse> typeMismatch() {
-        return ApiResponse.failure(ErrorResponse.builder()
-                .httpStatus(HttpStatus.BAD_REQUEST)
+        return ApiResponse
+                .failure(HttpStatus.BAD_REQUEST, ErrorResponse.builder()
                 .message("Type Mismatch")
                 .build());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ApiResponse<ErrorResponse> invalidJSONFormatExp() {
-        return ApiResponse.failure(ErrorResponse.builder()
-                .httpStatus(HttpStatus.BAD_REQUEST)
+        return ApiResponse
+                .failure(HttpStatus.BAD_REQUEST, ErrorResponse.builder()
                 .message("Invalid JSON Format Request")
                 .build());
     }
@@ -64,8 +62,8 @@ public class RestExceptionHandler {
                 .stream()
                 .map(error -> error.getDefaultMessage())
                 .collect(Collectors.joining("\n"));
-        return ApiResponse.failure(ErrorResponse.builder()
-                .httpStatus(HttpStatus.BAD_REQUEST)
+        return ApiResponse
+                .failure(HttpStatus.BAD_REQUEST, ErrorResponse.builder()
                 .message(errorCodes)
                 .build());
     }

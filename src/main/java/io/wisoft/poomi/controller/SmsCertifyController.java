@@ -8,6 +8,7 @@ import io.wisoft.poomi.bind.request.SmsSendRequest;
 import io.wisoft.poomi.bind.request.SmsVerifyRequest;
 import io.wisoft.poomi.service.SmsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,7 +24,7 @@ public class SmsCertifyController {
     @PostMapping("/sms-certification/send")
     public ApiResponse<SmsResultDto> sendCertificationNumber(@RequestBody @Valid SmsSendRequest smsSendRequest) {
         try {
-            return ApiResponse.succeed(smsService.sendSms(smsSendRequest.getPhoneNumber()));
+            return ApiResponse.succeed(HttpStatus.CREATED, smsService.sendSms(smsSendRequest.getPhoneNumber()));
         } catch (JsonProcessingException | URISyntaxException e) {
             throw new IllegalArgumentException();
         }
@@ -31,7 +32,7 @@ public class SmsCertifyController {
 
     @PostMapping("/sms-certification/verify")
     public ApiResponse<SmsVerifyDto> verifyCertificationNumber(@RequestBody @Valid SmsVerifyRequest smsVerifyRequest) {
-        return ApiResponse.succeed(smsService.verify(smsVerifyRequest));
+        return ApiResponse.succeed(HttpStatus.OK, smsService.verify(smsVerifyRequest));
     }
 
 }
