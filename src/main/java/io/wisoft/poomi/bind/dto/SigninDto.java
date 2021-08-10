@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -19,13 +20,13 @@ public class SigninDto {
 
     @JsonProperty("login_at")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date loginAt;
+    private LocalDateTime loginAt;
 
     public static SigninDto of(String email, String accessToken) {
         SigninDto signinDto = new SigninDto();
         signinDto.setEmail(email);
         signinDto.setAccessToken(accessToken);
-        signinDto.setLoginAt(new Date());
+        signinDto.setLoginAt(LocalDateTime.now());
 
         return signinDto;
     }
