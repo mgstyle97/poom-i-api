@@ -29,7 +29,6 @@ public class MemberTest {
         joinRequest.setName("migni");
         joinRequest.setPhoneNumber("010-1111-1111");
         joinRequest.setEmail("migni@gmail.com");
-        joinRequest.setLoginId("migni");
         joinRequest.setPassword("1234");
         joinRequest.setNick("migni");
     }
