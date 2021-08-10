@@ -1,6 +1,6 @@
 package io.wisoft.poomi.configures.security;
 
-import io.wisoft.poomi.configures.security.auth.CustomOAuth2Service;
+import io.wisoft.poomi.configures.security.oauth.CustomOAuth2Service;
 import io.wisoft.poomi.configures.security.jwt.JwtSecurityConfig;
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.configures.security.jwt.JwtAccessDeniedHandler;
@@ -20,6 +20,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @RequiredArgsConstructor
 @EnableWebSecurity(debug = true)
@@ -45,6 +50,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(Arrays.asList("*"));
+        config.setAllowedMethods(Arrays.asList("*"));
+        config.setAllowedHeaders(Arrays.asList("*"));
+        config.setAllowCredentials(true);
+        config.applyPermitDefaultValues();
+
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 
     @Override

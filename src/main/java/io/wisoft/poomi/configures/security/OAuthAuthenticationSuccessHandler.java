@@ -24,7 +24,6 @@ import java.io.IOException;
 public class OAuthAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,

@@ -9,13 +9,13 @@ import java.util.Date;
 @Setter
 public class AddressDto {
 
-    private String loginId;
+    private String email;
     private String tagName;
     private Date registeredAt;
 
-    public static AddressDto from(String loginId, String tagName) {
+    public static AddressDto from(String email, String tagName) {
         AddressDto addressDto = new AddressDto();
-        addressDto.setLoginId(loginId);
+        addressDto.setEmail(email);
         addressDto.setTagName(tagName);
         addressDto.setRegisteredAt(new Date());
 

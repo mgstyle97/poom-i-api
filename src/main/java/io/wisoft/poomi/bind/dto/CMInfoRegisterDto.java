@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -18,12 +19,12 @@ public class CMInfoRegisterDto {
 
     @JsonProperty("registered_at")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date registeredAt;
+    private LocalDateTime registeredAt;
 
     public CMInfoRegisterDto(final Long id, final String email) {
         this.id = id;
         this.email = email;
-        this.registeredAt = new Date();
+        this.registeredAt = LocalDateTime.now();
     }
 
 }
