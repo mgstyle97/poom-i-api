@@ -18,6 +18,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Component
@@ -41,8 +44,17 @@ public class OAuthAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
     }
 
     private Authentication toUsernamePasswordToken(OAuth2User oAuth2User) {
-        String userEmail = (String) oAuth2User.getAttributes().get("email");
+        String userEmail = getOAuth2UserEmail(oAuth2User.getAttributes());
         return new UsernamePasswordAuthenticationToken(userEmail, null);
+    }
+
+    private String getOAuth2UserEmail(Map<String, Object> attributes) {
+        String email = (String) attributes.get("email");
+        if (email == null) {
+            Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+            return (String) kakaoAccount.get("email");
+        }
+        return email;
     }
 
 }

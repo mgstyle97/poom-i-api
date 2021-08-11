@@ -3,6 +3,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,windows,java,intellij+all,database
 
 application-oauth.yml
+Dockerfile
 
 ### Database ###
 *.accdb
