@@ -16,7 +16,7 @@ public class SigninRequest {
     private String password;
 
     public Authentication toAuthentication() {
-        return new UsernamePasswordAuthenticationToken(this.email, this.getPassword());
+        return new UsernamePasswordAuthenticationToken(this.email, this.password);
     }
 
 }

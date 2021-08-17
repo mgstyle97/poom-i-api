@@ -3,7 +3,9 @@ package io.wisoft.poomi.common.error;
 import io.wisoft.poomi.bind.ApiResponse;
 import io.wisoft.poomi.common.error.exceptions.DuplicateMemberException;
 import io.wisoft.poomi.common.error.exceptions.WrongMemberPasswordException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -13,14 +15,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestControllerAdvice
 public class RestExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ApiResponse<ErrorResponse> illegalArgument() {
+    public ApiResponse<ErrorResponse> illegalArgument(IllegalArgumentException e) {
+        log.error("Error message: {}", e.getMessage());
+
         return ApiResponse
                 .failure(HttpStatus.BAD_REQUEST, ErrorResponse.builder()
-                .message("Detected Using Illegal Argument")
+                .message(e.getMessage())
                 .build());
     }
 
@@ -60,7 +65,7 @@ public class RestExceptionHandler {
     public ApiResponse<ErrorResponse> handleBindData(MethodArgumentNotValidException ex) {
         String errorCodes = ex.getBindingResult().getAllErrors()
                 .stream()
-                .map(error -> error.getDefaultMessage())
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining("\n"));
         return ApiResponse
                 .failure(HttpStatus.BAD_REQUEST, ErrorResponse.builder()
