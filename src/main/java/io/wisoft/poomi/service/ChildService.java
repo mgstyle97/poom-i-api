@@ -3,54 +3,50 @@ package io.wisoft.poomi.service;
 import io.wisoft.poomi.bind.dto.ChildAddDto;
 import io.wisoft.poomi.bind.dto.DeleteChildDto;
 import io.wisoft.poomi.bind.request.ChildAddRequest;
-import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.domain.member.child.ChildRepository;
-import io.wisoft.poomi.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Service
+@Slf4j
 @RequiredArgsConstructor
+@Service
 public class ChildService {
 
-    private final MemberRepository memberRepository;
     private final ChildRepository childRepository;
-    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
-    public ChildAddDto addChildren(List<ChildAddRequest> childAddRequest, HttpServletRequest request) {
-        String email = jwtTokenProvider.getUsernameFromToken(jwtTokenProvider.resolveToken(request));
+    public ChildAddDto addChildren(Member member, List<ChildAddRequest> childAddRequests) {
+        List<Child> children = childAddRequests.stream()
+                        .map(this::transferToChild)
+                        .collect(Collectors.toList());
+        log.info("Generate child through request data");
 
-        Member member = memberRepository.getMemberByEmail(email);
-
-        List<Child> children = new ArrayList<>();
-        for (ChildAddRequest addRequest : childAddRequest) {
-            Child child = Child.of(addRequest, childRepository);
-            children.add(child);
-
-        }
         member.setChildren(children);
 
         return ChildAddDto.of(member);
     }
 
     @Transactional
-    public DeleteChildDto deleteChild(Long childId, HttpServletRequest request) {
-        String email = jwtTokenProvider.getUsernameFromToken(jwtTokenProvider.resolveToken(request));
-
-        Member member = memberRepository.getMemberByEmail(email);
-
+    public DeleteChildDto deleteChild(Long childId, Member member) {
         Child child = childRepository.getById(childId);
+        log.info("Generate child data through child-id: {}", child.getId());
+
         member.removeChild(child);
+        childRepository.delete(child);
+        log.info("Delete child data: {}", childId);
 
         return new DeleteChildDto(childId, member.getId());
+    }
+
+    private Child transferToChild(ChildAddRequest childAddRequest) {
+        return Child.of(childAddRequest, childRepository);
     }
 
 }

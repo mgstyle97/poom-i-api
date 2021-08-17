@@ -6,6 +6,7 @@ import io.wisoft.poomi.bind.dto.SignupDto;
 import io.wisoft.poomi.bind.request.SigninRequest;
 import io.wisoft.poomi.bind.request.CMInfoRegisterRequest;
 import io.wisoft.poomi.bind.request.SignupRequest;
+import io.wisoft.poomi.bind.utils.FileUtils;
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.domain.member.address.Address;
 import io.wisoft.poomi.domain.member.cmInfo.ChildminderInfo;
@@ -15,19 +16,14 @@ import io.wisoft.poomi.domain.member.address.AddressTagRepository;
 import io.wisoft.poomi.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -41,71 +37,76 @@ public class MemberService {
     private final AddressTagRepository addressTagRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final String USER_INFO_DOCUMENT_PATH = "C:/Image/";
 
     @Transactional
-    public SignupDto signup(SignupRequest signupRequest, List<MultipartFile> files) {
+    public SignupDto signup(SignupRequest signupRequest, List<MultipartFile> images) {
         Member member = saveMember(signupRequest);
 
         log.info("Generate member: {}", member.getEmail());
 
-        saveDocument(member.getEmail(), files);
+        FileUtils.saveImageWithUserEmail(member.getEmail(), images);
 
         return SignupDto.of(member);
     }
 
     @Transactional(readOnly = true)
     public SigninDto signin(SigninRequest signinRequest) {
-        Authentication authentication = authenticationManagerBuilder
-                .getObject()
-                .authenticate(signinRequest.toAuthentication());
+        Authentication authentication = toAuthentication(signinRequest);
+
         String accessToken = jwtTokenProvider.generateToken(authentication);
+        log.info("Generate JWT token: {}", accessToken);
 
         return SigninDto.of(authentication.getName(), accessToken);
     }
 
     @Transactional(readOnly = true)
-    public CMInfoRegisterDto cmInfoRegist(HttpServletRequest request,
-                                          CMInfoRegisterRequest cmInfoRegisterRequest) {
-        String token = jwtTokenProvider.resolveToken(request);
-        String email = jwtTokenProvider.getUsernameFromToken(token);
-        Member member = memberRepository.getMemberByEmail(email);
+    public CMInfoRegisterDto cmInfoRegist(Member member,
+                                          final CMInfoRegisterRequest cmInfoRegisterRequest) {
         member.setChildminderInfo(ChildminderInfo.from(cmInfoRegisterRequest));
         memberRepository.save(member);
 
         return new CMInfoRegisterDto(member.getChildminderInfo().getId(), member.getEmail());
     }
 
-    private void saveDocument(String email, List<MultipartFile> files) {
-        int idx = 1;
+    @Transactional
+    public Member generateMemberThroughRequest(final HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveToken(request);
+        log.info("Resolve JWT token: {}", token);
 
-        try {
-            for (MultipartFile file : files) {
-                String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-                File dest =
-                        new File(
-                                USER_INFO_DOCUMENT_PATH + email + "/" + email + "_" + idx + "." + extension
-                        );
-                if (!dest.exists()) {
-                    dest.mkdirs();
-                }
-                file.transferTo(dest);
-                log.info("Save file: {}", email + "_" + idx);
-                idx++;
-            }
-        } catch (IOException e) {
-            throw new IllegalArgumentException();
-        }
+        String email = jwtTokenProvider.getUsernameFromToken(token);
+        log.info("Generate member email: {}", email);
+
+        Member member = memberRepository.getMemberByEmail(email);
+        log.info("Generate member of email: {}", email);
+
+        return member;
     }
 
-    private Member saveMember(SignupRequest request) {
-        Member member = Member.of(request, passwordEncoder);
-        Address address = Address.of(addressRepository, addressTagRepository, request.getAddress());
+    private Member saveMember(final SignupRequest signupRequest) {
+        Member member = Member.of(signupRequest, passwordEncoder);
+        log.info("Generate member data through request");
+
+        Address address = new Address();
+        address.of(addressRepository, addressTagRepository, signupRequest.getAddress());
+        log.info("Generate address data through request");
 
         member.setAddress(address);
         memberRepository.save(member);
 
+        log.info("Save member data through member repository");
+
         return member;
+    }
+
+    private Authentication toAuthentication(SigninRequest signinRequest) {
+        Authentication authentication = authenticationManagerBuilder
+                .getObject()
+                .authenticate(signinRequest.toAuthentication());
+
+        log.info("Generate authentication: {}", authentication.getPrincipal());
+        log.info("Authenticate member: {}", signinRequest.getEmail());
+
+        return authentication;
     }
 
 }

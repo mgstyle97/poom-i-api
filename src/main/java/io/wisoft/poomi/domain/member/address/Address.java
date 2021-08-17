@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 
@@ -43,17 +44,15 @@ public class Address {
     )
     private AddressTag addressTag;
 
-    public static Address of(AddressRepository addressRepository,
-                             AddressTagRepository tagRepository,
-                             AddressRegisterRequest request) {
-        Address address = Address.builder()
-                .postCode(request.getPostCode())
-                .detailAddress(request.getDetailAddress())
-                .addressTag(tagRepository.getAddressTagByExtraAddress(request.getExtraAddress()))
-                .build();
+    @Transactional
+    public void of(final AddressRepository addressRepository,
+                      final AddressTagRepository tagRepository,
+                      final AddressRegisterRequest request) {
+        this.postCode = request.getPostCode();
+        this.detailAddress = request.getDetailAddress();
+        this.addressTag = tagRepository.getAddressTagByExtraAddress(request.getExtraAddress());
 
-        addressRepository.save(address);
-        return address;
+        addressRepository.save(this);
     }
 
 }

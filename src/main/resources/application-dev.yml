@@ -22,7 +22,7 @@ spring:
     initialization-mode: always
     platform: h2
 server:
-  port: 8080
+  port: 8081
 
 jwt:
   secret: MjAyMSBjYXBzdG9uZSBkZXNpZ24gcHJvamVjdCBwb29tLWk=

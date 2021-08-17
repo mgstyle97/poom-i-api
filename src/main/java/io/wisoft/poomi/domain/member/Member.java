@@ -95,14 +95,6 @@ public class Member {
         return member;
     }
 
-    public Member checkPassword(String confirmPassword, PasswordEncoder passwordEncoder) {
-        if (!passwordEncoder.matches(confirmPassword, this.password)) {
-            throw new WrongMemberPasswordException("Wrong password");
-        }
-
-        return this;
-    }
-
     public String getAuthority() {
         return this.authorities.stream()
                 .findFirst()

@@ -7,6 +7,7 @@ import io.wisoft.poomi.bind.dto.SignupDto;
 import io.wisoft.poomi.bind.request.SigninRequest;
 import io.wisoft.poomi.bind.request.CMInfoRegisterRequest;
 import io.wisoft.poomi.bind.request.SignupRequest;
+import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,15 +38,17 @@ public class MemberController {
     @PostMapping("/signup")
     public ApiResponse<SignupDto> signup(
             @ModelAttribute SignupRequest signupRequest,
-            @RequestPart(value = "images", required = false) List<MultipartFile> files) {
-        return ApiResponse.succeed(HttpStatus.CREATED, memberService.signup(signupRequest, files));
+            @RequestPart(value = "images", required = false) List<MultipartFile> images) {
+        return ApiResponse.succeed(HttpStatus.CREATED, memberService.signup(signupRequest, images));
     }
 
     @PostMapping("/member/childminder-info")
     public ApiResponse<CMInfoRegisterDto> cmInfoRegist(
             @RequestBody @Valid CMInfoRegisterRequest cmInfoRegisterRequest,
             HttpServletRequest request) {
-        return ApiResponse.succeed(HttpStatus.CREATED, memberService.cmInfoRegist(request, cmInfoRegisterRequest));
+        Member member = memberService.generateMemberThroughRequest(request);
+
+        return ApiResponse.succeed(HttpStatus.CREATED, memberService.cmInfoRegist(member, cmInfoRegisterRequest));
     }
 
     @GetMapping("/oauth2/success")

@@ -2,7 +2,6 @@ package io.wisoft.poomi.service;
 
 import io.wisoft.poomi.bind.dto.AddressDto;
 import io.wisoft.poomi.bind.request.AddressRegisterRequest;
-import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.domain.member.address.Address;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.member.Member;
@@ -10,40 +9,45 @@ import io.wisoft.poomi.domain.member.address.AddressRepository;
 import io.wisoft.poomi.domain.member.address.AddressTagRepository;
 import io.wisoft.poomi.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 
-@Service
+@Slf4j
 @RequiredArgsConstructor
+@Service
 public class AddressService {
 
     private final MemberRepository memberRepository;
-    private final JwtTokenProvider jwtTokenProvider;
     private final AddressRepository addressRepository;
     private final AddressTagRepository addressTagRepository;
 
     @Transactional
-    public AddressDto registerAddress(HttpServletRequest request, AddressRegisterRequest addressRegisterRequest) {
-        String email = jwtTokenProvider.getUsernameFromToken(jwtTokenProvider.resolveToken(request));
-
-        Member member = memberRepository
-                .getMemberByEmail(email);
+    public AddressDto registerAddress(Member member, AddressRegisterRequest addressRegisterRequest) {
         AddressTag addressTag = addressTagRepository
                 .getAddressTagByExtraAddress(addressRegisterRequest.getExtraAddress());
+        log.info("Generate address tag: {}", addressTag.getExtraAddress());
+
+        Address address = generateAddressAndSave(addressRegisterRequest, addressTag);
+        log.info("Save address info: {}", address.getId());
+
+        member.setAddress(address);
+        memberRepository.save(member);
+        log.info("Modify member address info");
+
+        return AddressDto.from(member.getEmail(), addressTag.getExtraAddress());
+    }
+
+    private Address generateAddressAndSave(AddressRegisterRequest addressRegisterRequest, AddressTag addressTag) {
         Address address = Address
                 .builder()
                 .postCode(addressRegisterRequest.getPostCode())
                 .detailAddress(addressRegisterRequest.getDetailAddress())
                 .addressTag(addressTag)
                 .build();
-        addressRepository.save(address);
 
-        member.setAddress(address);
-        memberRepository.save(member);
-
-        return AddressDto.from(email, addressTag.getExtraAddress());
+        return addressRepository.save(address);
     }
 
 }

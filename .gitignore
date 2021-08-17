@@ -4,6 +4,7 @@
 
 application-oauth.yml
 Dockerfile
+img/
 
 ### Database ###
 *.accdb
