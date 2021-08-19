@@ -16,14 +16,14 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/member")
+@RequestMapping("/api/member/child")
 @RequiredArgsConstructor
 public class ChildController {
 
     private final MemberService memberService;
     private final ChildService childService;
 
-    @PostMapping("/child")
+    @PostMapping
     public ApiResponse<ChildAddDto> addChildren(@RequestBody @Valid List<ChildAddRequest> childAddRequest,
                                                 HttpServletRequest request) {
         Member member = memberService.generateMemberThroughRequest(request);
@@ -31,7 +31,7 @@ public class ChildController {
         return ApiResponse.succeed(HttpStatus.CREATED, childService.addChildren(member, childAddRequest));
     }
 
-    @DeleteMapping("/child/{id}")
+    @DeleteMapping("/{id}")
     public ApiResponse<DeleteChildDto> deleteChild(@PathVariable Long id, HttpServletRequest request) {
         Member member = memberService.generateMemberThroughRequest(request);
 

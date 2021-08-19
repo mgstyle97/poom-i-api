@@ -3,9 +3,11 @@ package io.wisoft.poomi.domain.member;
 import io.wisoft.poomi.bind.request.SignupRequest;
 import io.wisoft.poomi.common.error.exceptions.WrongMemberPasswordException;
 import io.wisoft.poomi.domain.member.address.Address;
+import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.domain.member.cmInfo.ChildminderInfo;
 import io.wisoft.poomi.domain.member.authority.Authority;
+import io.wisoft.poomi.domain.program.classes.ClassProgram;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -87,6 +89,9 @@ public class Member {
     )
     private ChildminderInfo childminderInfo;
 
+    @OneToMany(mappedBy = "writer", fetch = FetchType.LAZY)
+    private List<ClassProgram> writtenClasses;
+
     public static Member of(SignupRequest joinRequest, PasswordEncoder passwordEncoder) {
         Member member = new Member();
         BeanUtils.copyProperties(joinRequest, member);
@@ -112,6 +117,10 @@ public class Member {
             throw new IllegalArgumentException("No child data in member object");
         }
         this.children.remove(child);
+    }
+
+    public AddressTag getAddressTag() {
+        return this.address.getAddressTag();
     }
 
 }

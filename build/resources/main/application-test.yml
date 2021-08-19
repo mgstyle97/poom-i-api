@@ -1,9 +1,5 @@
-db: h2
+db: test
 spring:
-  servlet:
-    multipart:
-      location: C:\Users\user\IdeaProjects\Capstone-Project-Poom-I
-
   h2:
     console:
       enabled: true
@@ -13,7 +9,7 @@ spring:
       hibernate:
         format_sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     database-platform: org.hibernate.dialect.H2Dialect
   datasource:
     data: classpath*:db/${db}/data-${db}.sql
@@ -22,14 +18,6 @@ spring:
     url: jdbc:h2:mem:testdb
     username: sa
     password:
-server:
-  port: 8081
 
 jwt:
-  secret: MjAyMSBjYXBzdG9uZSBkZXNpZ24gcHJvamVjdCBwb29tLWk=
-
-ncs:
-  accessKey: ${NCS_ACCESS_KEY}
-  secretKey: ${NCS_SECRET_KEY}
-  serviceId: ${NCS_SERVICE_ID}
-  from: ${NCS_FROM}
+  secret: MjAyMSBjYXBzdG9uZSBkZXNpZ24gcHJvamVjdCBwb29tLWkgdGVzdA==

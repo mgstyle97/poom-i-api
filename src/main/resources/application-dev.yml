@@ -1,3 +1,4 @@
+db: h2
 spring:
   servlet:
     multipart:
@@ -15,12 +16,12 @@ spring:
       ddl-auto: update
     database-platform: org.hibernate.dialect.H2Dialect
   datasource:
+    data: classpath*:db/${db}/data-${db}.sql
+    schema: classpath*:db/${db}/schema.sql
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:testdb
     username: sa
     password:
-    initialization-mode: always
-    platform: h2
 server:
   port: 8081
 
