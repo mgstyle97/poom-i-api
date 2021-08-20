@@ -13,12 +13,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -92,12 +95,22 @@ public class Member {
     @OneToMany(mappedBy = "writer", fetch = FetchType.LAZY)
     private List<ClassProgram> writtenClasses;
 
-    public static Member of(SignupRequest joinRequest, PasswordEncoder passwordEncoder) {
+    public static Member of(final SignupRequest joinRequest, final PasswordEncoder passwordEncoder) {
         Member member = new Member();
         BeanUtils.copyProperties(joinRequest, member);
         member.setPassword(passwordEncoder.encode(member.getPassword()));
         member.setAuthorities(Collections.singleton(new Authority(1L, "ROLE_USER")));
         return member;
+    }
+
+    public Authentication toAuthentication() {
+        Collection<? extends GrantedAuthority> authorities = this.authorities.stream()
+                .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
+                .collect(Collectors.toList());
+
+        return new UsernamePasswordAuthenticationToken(
+                this.email, this.password, authorities
+        );
     }
 
     public String getAuthority() {
@@ -107,12 +120,12 @@ public class Member {
                 .getAuthority();
     }
 
-    public Member setOAuthAccountName(String name) {
+    public Member setOAuthAccountName(final String name) {
         this.name = name;
         return this;
     }
 
-    public void removeChild(Child child) {
+    public void removeChild(final Child child) {
         if (!this.children.contains(child)) {
             throw new IllegalArgumentException("No child data in member object");
         }
@@ -121,6 +134,16 @@ public class Member {
 
     public AddressTag getAddressTag() {
         return this.address.getAddressTag();
+    }
+
+    public void addClass(final ClassProgram classProgram) {
+        if (this.writtenClasses == null) {
+            this.writtenClasses = new ArrayList<>();
+        }
+
+        if (!writtenClasses.contains(classProgram)) {
+            this.writtenClasses.add(classProgram);
+        }
     }
 
 }

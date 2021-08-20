@@ -32,14 +32,14 @@ public class SmsCertification {
     private String certificationNumber;
 
     @Builder
-    public SmsCertification(String phoneNumber, String certificationNumber) {
+    public SmsCertification(final String phoneNumber, final String certificationNumber) {
         this.phoneNumber = phoneNumber;
         this.certificationNumber = certificationNumber;
     }
 
-    public void verifyCertificationNumber(String certificationNumber) {
+    public void verifyCertificationNumber(final String certificationNumber) {
         if (!this.certificationNumber.equals(certificationNumber)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("No match certification number");
         }
     }
 

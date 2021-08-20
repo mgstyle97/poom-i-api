@@ -17,18 +17,18 @@ public class OAuthAttributes {
     private String email;
 
     @Builder
-    public OAuthAttributes(Map<String, Object> attributes,
-                           String nameAttributeKey,
-                           String name, String email) {
+    public OAuthAttributes(final Map<String, Object> attributes,
+                           final String nameAttributeKey,
+                           final String name, final String email) {
         this.attributes = attributes;
         this.nameAttributeKey = nameAttributeKey;
         this.name = name;
         this.email = email;
     }
 
-    public static OAuthAttributes of(String registrationId,
-                                     String userNameAttributeName,
-                                     Map<String, Object> attributes) {
+    public static OAuthAttributes of(final String registrationId,
+                                     final String userNameAttributeName,
+                                     final Map<String, Object> attributes) {
         switch (registrationId) {
             case "google":
                 return ofGoogle(userNameAttributeName, attributes);
@@ -40,8 +40,8 @@ public class OAuthAttributes {
         return ofGoogle(userNameAttributeName, attributes);
     }
 
-    private static OAuthAttributes ofGoogle(String userNameAttributeName,
-                                            Map<String, Object> attributes) {
+    private static OAuthAttributes ofGoogle(final String userNameAttributeName,
+                                            final Map<String, Object> attributes) {
         return OAuthAttributes.builder()
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
@@ -50,8 +50,8 @@ public class OAuthAttributes {
                 .build();
     }
 
-    private static OAuthAttributes ofFacebook(String userNameAttributeName,
-                                              Map<String, Object> attributes) {
+    private static OAuthAttributes ofFacebook(final String userNameAttributeName,
+                                              final Map<String, Object> attributes) {
         return OAuthAttributes.builder()
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
@@ -60,8 +60,8 @@ public class OAuthAttributes {
                 .build();
     }
 
-    private static OAuthAttributes ofKakao(String userNameAttributeName,
-                                           Map<String, Object> attributes) {
+    private static OAuthAttributes ofKakao(final String userNameAttributeName,
+                                           final Map<String, Object> attributes) {
         String name = (String) ((Map<String, Object>) attributes.get("properties")).get("nickname");
         String email = (String) ((Map<String, Object>) attributes.get("kakao_account")).get("email");
         return OAuthAttributes.builder()

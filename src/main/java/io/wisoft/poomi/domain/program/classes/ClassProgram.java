@@ -1,5 +1,6 @@
 package io.wisoft.poomi.domain.program.classes;
 
+import io.wisoft.poomi.bind.request.ClassProgramRegisterRequest;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.program.BaseTimeEntity;
@@ -72,6 +73,20 @@ public class ClassProgram extends BaseTimeEntity {
         this.isBoard = isBoard;
         this.writer = writer;
         this.addressTag = writer.getAddressTag();
+    }
+
+    public static ClassProgram of(final Member member,
+                                  final ClassProgramRegisterRequest classProgramRegisterRequest) {
+        ClassProgram classProgram = ClassProgram.builder()
+                .title(classProgramRegisterRequest.getTitle())
+                .contents(classProgramRegisterRequest.getContents())
+                .capacity(classProgramRegisterRequest.getCapacity())
+                .isRecruit(classProgramRegisterRequest.getIsRecruit())
+                .isBoard(classProgramRegisterRequest.getIsBoard())
+                .writer(member)
+                .build();
+
+        return classProgram;
     }
 
 }

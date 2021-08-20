@@ -1,5 +1,7 @@
 package io.wisoft.poomi.bind.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +12,12 @@ import java.util.Date;
 public class AddressDto {
 
     private String email;
+
+    @JsonProperty("tag_name")
     private String tagName;
+
+    @JsonProperty("registered_at")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date registeredAt;
 
     public static AddressDto from(String email, String tagName) {

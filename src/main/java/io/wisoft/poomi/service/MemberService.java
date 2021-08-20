@@ -51,7 +51,8 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public SigninDto signin(SigninRequest signinRequest) {
-        Authentication authentication = toAuthentication(signinRequest);
+        Member member = memberRepository.getMemberByEmail(signinRequest.getEmail());
+        Authentication authentication = toAuthentication(signinRequest, member.getAuthority());
 
         String accessToken = jwtTokenProvider.generateToken(authentication);
         log.info("Generate JWT token: {}", accessToken);
@@ -98,10 +99,11 @@ public class MemberService {
         return member;
     }
 
-    private Authentication toAuthentication(SigninRequest signinRequest) {
+    private Authentication toAuthentication(final SigninRequest signinRequest,
+                                            final String authority) {
         Authentication authentication = authenticationManagerBuilder
                 .getObject()
-                .authenticate(signinRequest.toAuthentication());
+                .authenticate(signinRequest.toAuthentication(authority));
 
         log.info("Generate authentication: {}", authentication.getPrincipal());
         log.info("Authenticate member: {}", signinRequest.getEmail());

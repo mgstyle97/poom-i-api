@@ -31,28 +31,29 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/signin")
-    public ApiResponse<SigninDto> signin(@RequestBody @Valid SigninRequest signinRequest) {
+    public ApiResponse<SigninDto> signin(
+            @RequestBody @Valid final SigninRequest signinRequest) {
         return ApiResponse.succeed(HttpStatus.OK, memberService.signin(signinRequest));
     }
 
     @PostMapping("/signup")
     public ApiResponse<SignupDto> signup(
-            @ModelAttribute SignupRequest signupRequest,
-            @RequestPart(value = "images", required = false) List<MultipartFile> images) {
+            @ModelAttribute final SignupRequest signupRequest,
+            @RequestPart(value = "images", required = false) final List<MultipartFile> images) {
         return ApiResponse.succeed(HttpStatus.CREATED, memberService.signup(signupRequest, images));
     }
 
     @PostMapping("/member/childminder-info")
     public ApiResponse<CMInfoRegisterDto> cmInfoRegist(
-            @RequestBody @Valid CMInfoRegisterRequest cmInfoRegisterRequest,
-            HttpServletRequest request) {
+            @RequestBody @Valid final CMInfoRegisterRequest cmInfoRegisterRequest,
+            final HttpServletRequest request) {
         Member member = memberService.generateMemberThroughRequest(request);
 
         return ApiResponse.succeed(HttpStatus.CREATED, memberService.cmInfoRegist(member, cmInfoRegisterRequest));
     }
 
     @GetMapping("/oauth2/success")
-    public ApiResponse<SigninDto> oauthSignin(HttpServletRequest request) {
+    public ApiResponse<SigninDto> oauthSignin(final HttpServletRequest request) {
         SigninDto dto = (SigninDto) request.getAttribute("signin-dto");
 
         return ApiResponse.succeed(HttpStatus.OK, dto);
