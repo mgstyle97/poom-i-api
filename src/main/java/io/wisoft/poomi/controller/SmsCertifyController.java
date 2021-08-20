@@ -22,7 +22,8 @@ public class SmsCertifyController {
     private final SmsService smsService;
 
     @PostMapping("/sms-certification/send")
-    public ApiResponse<SmsResultDto> sendCertificationNumber(@RequestBody @Valid SmsSendRequest smsSendRequest) {
+    public ApiResponse<SmsResultDto> sendCertificationNumber(
+            @RequestBody @Valid final SmsSendRequest smsSendRequest) {
         try {
             return ApiResponse.succeed(HttpStatus.CREATED, smsService.sendSms(smsSendRequest.getPhoneNumber()));
         } catch (JsonProcessingException | URISyntaxException e) {
@@ -31,7 +32,8 @@ public class SmsCertifyController {
     }
 
     @PostMapping("/sms-certification/verify")
-    public ApiResponse<SmsVerifyDto> verifyCertificationNumber(@RequestBody @Valid SmsVerifyRequest smsVerifyRequest) {
+    public ApiResponse<SmsVerifyDto> verifyCertificationNumber(
+            @RequestBody @Valid final SmsVerifyRequest smsVerifyRequest) {
         return ApiResponse.succeed(HttpStatus.OK, smsService.verify(smsVerifyRequest));
     }
 

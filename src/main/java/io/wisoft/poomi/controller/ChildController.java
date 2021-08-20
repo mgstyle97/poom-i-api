@@ -24,15 +24,18 @@ public class ChildController {
     private final ChildService childService;
 
     @PostMapping
-    public ApiResponse<ChildAddDto> addChildren(@RequestBody @Valid List<ChildAddRequest> childAddRequest,
-                                                HttpServletRequest request) {
+    public ApiResponse<ChildAddDto> addChildren(
+            @RequestBody @Valid final List<ChildAddRequest> childAddRequest,
+                                final HttpServletRequest request) {
         Member member = memberService.generateMemberThroughRequest(request);
 
         return ApiResponse.succeed(HttpStatus.CREATED, childService.addChildren(member, childAddRequest));
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<DeleteChildDto> deleteChild(@PathVariable Long id, HttpServletRequest request) {
+    public ApiResponse<DeleteChildDto> deleteChild(
+            @PathVariable final Long id,
+            final HttpServletRequest request) {
         Member member = memberService.generateMemberThroughRequest(request);
 
         return ApiResponse.succeed(HttpStatus.OK, childService.deleteChild(id, member));

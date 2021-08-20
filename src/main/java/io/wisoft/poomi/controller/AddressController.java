@@ -23,8 +23,9 @@ public class AddressController {
     private final MemberService memberService;
 
     @PutMapping("/member/address")
-    public ApiResponse<?> address(@RequestBody @Valid AddressRegisterRequest addressRegisterRequest,
-                                  HttpServletRequest request) {
+    public ApiResponse<?> address(
+            @RequestBody @Valid final AddressRegisterRequest addressRegisterRequest,
+                                final HttpServletRequest request) {
         Member member = memberService.generateMemberThroughRequest(request);
 
         return ApiResponse.succeed(HttpStatus.OK, addressService.registerAddress(member, addressRegisterRequest));

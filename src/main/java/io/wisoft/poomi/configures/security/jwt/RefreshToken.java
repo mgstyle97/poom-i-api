@@ -33,7 +33,7 @@ public class RefreshToken {
     private String refreshToken;
 
     @Builder
-    public RefreshToken(String email, String refreshToken) {
+    public RefreshToken(final String email, final String refreshToken) {
         this.email = email;
         this.refreshToken = refreshToken;
     }

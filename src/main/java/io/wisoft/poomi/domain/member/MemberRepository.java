@@ -10,7 +10,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByEmail(String email);
 
-    default Member getMemberByEmail(String email) {
+    default Member getMemberByEmail(final String email) {
         Member member = this.findByEmail(email).orElseThrow(
                 () -> new UsernameNotFoundException("No member data about email")
         );

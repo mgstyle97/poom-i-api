@@ -44,7 +44,7 @@ public class ChildminderInfo {
     @Column(name = "score")
     private int score;
 
-    public static ChildminderInfo from(CMInfoRegisterRequest request) {
+    public static ChildminderInfo from(final CMInfoRegisterRequest request) {
         ChildminderInfo childminderInfo = new ChildminderInfo();
         BeanUtils.copyProperties(request, childminderInfo);
 

@@ -23,7 +23,7 @@ public class CustomOAuth2Service implements OAuth2UserService<OAuth2UserRequest,
     private final AuthorityRepository authorityRepository;
 
     @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+    public OAuth2User loadUser(final OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate =
                 new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
@@ -40,7 +40,7 @@ public class CustomOAuth2Service implements OAuth2UserService<OAuth2UserRequest,
         OAuthAttributes attributes = OAuthAttributes
                 .of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
-        Member member = saveOfUpdate(attributes);
+        Member member = saveOrUpdate(attributes);
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(member.getAuthority())),
@@ -49,7 +49,7 @@ public class CustomOAuth2Service implements OAuth2UserService<OAuth2UserRequest,
         );
     }
 
-    private Member saveOfUpdate(OAuthAttributes attributes) {
+    private Member saveOrUpdate(final OAuthAttributes attributes) {
         Member member = memberRepository.findByEmail(attributes.getEmail())
                 .map(entity -> entity.setOAuthAccountName(attributes.getName()))
                 .orElse(attributes.toEntity(authorityRepository.getUserAuthority()));

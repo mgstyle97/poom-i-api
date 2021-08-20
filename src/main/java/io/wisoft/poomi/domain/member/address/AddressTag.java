@@ -31,7 +31,7 @@ public class AddressTag {
     @Column(name = "extra_address")
     private String extraAddress;
 
-    public AddressTag(String extraAddress) {
+    public AddressTag(final String extraAddress) {
         this.extraAddress = extraAddress;
     }
 

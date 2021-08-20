@@ -87,5 +87,7 @@ CREATE TABLE class_program(
     is_recruit boolean default false,
     is_board boolean default true,
     member_id integer not null,
-    foreign key (member_id) references member(id)
+    address_tag_id integer not null,
+    foreign key (member_id) references member(id),
+    foreign key (address_tag_id) references address_tag(id)
 );

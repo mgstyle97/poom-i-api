@@ -46,8 +46,8 @@ public class Address {
 
     @Transactional
     public void of(final AddressRepository addressRepository,
-                      final AddressTagRepository tagRepository,
-                      final AddressRegisterRequest request) {
+                    final AddressTagRepository tagRepository,
+                    final AddressRegisterRequest request) {
         this.postCode = request.getPostCode();
         this.detailAddress = request.getDetailAddress();
         this.addressTag = tagRepository.getAddressTagByExtraAddress(request.getExtraAddress());

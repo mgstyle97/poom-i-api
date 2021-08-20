@@ -32,7 +32,8 @@ public class JwtTokenProvider {
     private final Key key;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey, RefreshTokenRepository refreshTokenRepository) {
+    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey,
+                            RefreshTokenRepository refreshTokenRepository) {
         this.refreshTokenRepository = refreshTokenRepository;
         byte[] keyBytes = Base64.getDecoder().decode(secretKey.getBytes());
         this.key = Keys.hmacShaKeyFor(keyBytes);

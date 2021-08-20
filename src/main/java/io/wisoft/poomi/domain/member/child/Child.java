@@ -38,7 +38,7 @@ public class Child {
     @Column(name = "special_note")
     private String specialNote;
 
-    public static Child of(ChildAddRequest childAddRequest, ChildRepository childRepository) {
+    public static Child of(final ChildAddRequest childAddRequest, final ChildRepository childRepository) {
         Child child = childRepository.findByName(childAddRequest.getName())
                 .orElse(new Child());
 

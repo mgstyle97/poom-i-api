@@ -29,9 +29,9 @@ public class OAuthAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request,
-                                        HttpServletResponse response,
-                                        Authentication authentication) throws ServletException, IOException {
+    public void onAuthenticationSuccess(final HttpServletRequest request,
+                                        final HttpServletResponse response,
+                                        final Authentication authentication) throws ServletException, IOException {
         OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) authentication;
         OAuth2User oAuth2User = oAuth2AuthenticationToken.getPrincipal();
 
@@ -43,12 +43,12 @@ public class OAuthAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
         dispatcher.forward(request, response);
     }
 
-    private Authentication toUsernamePasswordToken(OAuth2User oAuth2User) {
+    private Authentication toUsernamePasswordToken(final OAuth2User oAuth2User) {
         String userEmail = getOAuth2UserEmail(oAuth2User.getAttributes());
-        return new UsernamePasswordAuthenticationToken(userEmail, null);
+        return new UsernamePasswordAuthenticationToken(userEmail, null, oAuth2User.getAuthorities());
     }
 
-    private String getOAuth2UserEmail(Map<String, Object> attributes) {
+    private String getOAuth2UserEmail(final Map<String, Object> attributes) {
         String email = (String) attributes.get("email");
         if (email == null) {
             Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
