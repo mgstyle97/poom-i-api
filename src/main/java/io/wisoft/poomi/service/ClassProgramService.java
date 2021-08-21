@@ -1,5 +1,6 @@
 package io.wisoft.poomi.service;
 
+import io.wisoft.poomi.bind.dto.ClassProgramLookupDto;
 import io.wisoft.poomi.bind.dto.ClassProgramRegisterDto;
 import io.wisoft.poomi.bind.request.ClassProgramRegisterRequest;
 import io.wisoft.poomi.domain.member.Member;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,8 +23,10 @@ public class ClassProgramService {
     private final ClassProgramRepository classProgramRepository;
 
     @Transactional(readOnly = true)
-    public List<ClassProgram> findByAddressTag(final AddressTag addressTag) {
-        return classProgramRepository.findByAddressTag(addressTag);
+    public List<ClassProgramLookupDto> findByAddressTag(final AddressTag addressTag) {
+        return classProgramRepository.findByAddressTag(addressTag).stream()
+                .map(ClassProgramLookupDto::new)
+                .collect(Collectors.toList());
     }
 
     @Transactional

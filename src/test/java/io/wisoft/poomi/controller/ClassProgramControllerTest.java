@@ -1,7 +1,11 @@
-package io.wisoft.poomi.service;
+package io.wisoft.poomi.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.wisoft.poomi.bind.ApiResponse;
 import io.wisoft.poomi.bind.dto.ClassProgramLookupDto;
-import io.wisoft.poomi.bind.request.ClassProgramRegisterRequest;
+import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.MemberRepository;
 import io.wisoft.poomi.domain.member.address.Address;
@@ -11,43 +15,52 @@ import io.wisoft.poomi.domain.member.address.AddressTagRepository;
 import io.wisoft.poomi.domain.member.authority.AuthorityRepository;
 import io.wisoft.poomi.domain.program.classes.ClassProgram;
 import io.wisoft.poomi.domain.program.classes.ClassProgramRepository;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ClassProgramServiceTest {
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+)
+class ClassProgramControllerTest {
+
+    @LocalServerPort
+    private int port;
 
     @Autowired
-    private ClassProgramService classProgramService;
-
+    private TestRestTemplate restTemplate;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private AuthorityRepository authorityRepository;
+    @Autowired
+    private AddressTagRepository addressTagRepository;
+    @Autowired
+    private AddressRepository addressRepository;
+    @Autowired
+    private MemberRepository memberRepository;
     @Autowired
     private ClassProgramRepository classProgramRepository;
 
-    @Autowired
-    private AuthorityRepository authorityRepository;
-
-    @Autowired
-    private AddressTagRepository addressTagRepository;
-
-    @Autowired
-    private AddressRepository addressRepository;
-
-    @Autowired
-    private MemberRepository memberRepository;
-
     private Member member;
+    private String token;
+    private HttpHeaders headers;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
-    @BeforeAll
+    @BeforeEach
     void setup() {
         // given
         AddressTag addressTag = new AddressTag("city");
@@ -71,6 +84,13 @@ class ClassProgramServiceTest {
                 .build();
         memberRepository.save(member);
 
+        token = jwtTokenProvider.generateToken(
+                member.toAuthentication()
+        );
+
+        headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+
         ClassProgram classProgram = ClassProgram.builder()
                 .title("테스트")
                 .contents("테스트입니다.")
@@ -92,28 +112,22 @@ class ClassProgramServiceTest {
     }
 
     @Test
-    @DisplayName("테스트: 주소 태그를 통한 조회")
-    void select_through_address_tag() {
-        List<ClassProgramLookupDto> result = classProgramService.findByAddressTag(member.getAddressTag());
-        result
-                .forEach(classProgramLookupDto -> System.out.println(classProgramLookupDto.getTitle()));
-    }
+    @DisplayName("테스트: 클래스 프로그램 전체 조회 api")
+    void get_all_class_program() throws JsonProcessingException {
+        String url = "http://localhost:" + port + "/api/class";
+        HttpEntity<?> httpEntity = new HttpEntity<>(headers);
 
-    @Test
-    @DisplayName("테스트: 클래스 프로그램 저장")
-    void save_class_program() {
-        ClassProgramRegisterRequest classProgramRegisterRequest = new ClassProgramRegisterRequest();
-        classProgramRegisterRequest.setTitle("테스트3");
-        classProgramRegisterRequest.setContents("테스트3입니다.");
-        classProgramRegisterRequest.setIsRecruit(false);
-        classProgramRegisterRequest.setIsBoard(false);
-        classProgramRegisterRequest.setCapacity(12L);
+        ResponseEntity<? extends ApiResponse> responseEntity =
+                restTemplate.exchange(
+                        url, HttpMethod.GET, httpEntity,
+                        new ApiResponse<List<ClassProgramLookupDto>>().getClass()
+                );
+        ApiResponse<List<ClassProgramLookupDto>> result = responseEntity.getBody();
+        List<ClassProgramLookupDto> classPrograms = objectMapper
+                .readValue(objectMapper.writeValueAsString(
+                        result.getData()), new TypeReference<List<ClassProgramLookupDto>>() {});
 
-        classProgramService.registerClassProgram(member, classProgramRegisterRequest);
-
-        List<ClassProgramLookupDto> result = classProgramService.findByAddressTag(member.getAddressTag());
-        result
-                .forEach(classProgramLookupDto -> System.out.println(classProgramLookupDto.getTitle()));
+        classPrograms.forEach(classProgramLookupDto -> System.out.println(classProgramLookupDto.getTitle()));
     }
 
 }
