@@ -33,3 +33,7 @@ ncs:
   secretKey: ${NCS_SECRET_KEY}
   serviceId: ${NCS_SERVICE_ID}
   from: ${NCS_FROM}
+
+lombok:
+  anyConstructor:
+    addConstructorProperties: true

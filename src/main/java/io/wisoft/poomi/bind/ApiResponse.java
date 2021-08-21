@@ -2,9 +2,11 @@ package io.wisoft.poomi.bind;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @Getter
+@NoArgsConstructor
 public class ApiResponse<T> {
 
     @JsonProperty("status_code")
@@ -12,7 +14,7 @@ public class ApiResponse<T> {
     private T data;
     private T error;
 
-    private ApiResponse(final HttpStatus httpStatus, final T data, final T error) {
+    public ApiResponse(final HttpStatus httpStatus, final T data, final T error) {
         this.statusCode = httpStatus.value();
         this.data = data;
         this.error = error;
