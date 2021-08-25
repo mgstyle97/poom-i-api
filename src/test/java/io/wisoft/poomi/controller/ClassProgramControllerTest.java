@@ -125,7 +125,7 @@ class ClassProgramControllerTest {
         ApiResponse<List<ClassProgramLookupDto>> result = responseEntity.getBody();
         List<ClassProgramLookupDto> classPrograms = objectMapper
                 .readValue(objectMapper.writeValueAsString(
-                        result.getData()), new TypeReference<List<ClassProgramLookupDto>>() {});
+                        result.getData()), new TypeReference<>() {});
 
         classPrograms.forEach(classProgramLookupDto -> System.out.println(classProgramLookupDto.getTitle()));
     }
