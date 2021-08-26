@@ -22,13 +22,10 @@ public class ChildService {
     private final ChildRepository childRepository;
 
     @Transactional
-    public ChildAddDto addChildren(Member member, List<ChildAddRequest> childAddRequests) {
-        List<Child> children = childAddRequests.stream()
-                        .map(this::transferToChild)
-                        .collect(Collectors.toList());
-        log.info("Generate child through request data");
+    public ChildAddDto updateChildren(Member member, List<ChildAddRequest> childAddRequests) {
 
-        member.setChildren(children);
+        member.setChildren(childAddRequests, childRepository);
+        log.info("Generate child through request data and set");
 
         return ChildAddDto.of(member);
     }
@@ -43,10 +40,6 @@ public class ChildService {
         log.info("Delete child data: {}", childId);
 
         return new DeleteChildDto(childId, member.getId());
-    }
-
-    private Child transferToChild(ChildAddRequest childAddRequest) {
-        return Child.of(childAddRequest, childRepository);
     }
 
 }

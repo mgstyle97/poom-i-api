@@ -73,8 +73,8 @@ CREATE TABLE member(
 );
 
 CREATE TABLE member_authority(
-    member_id integer ,
-    authority_id integer ,
+    member_id integer not null ,
+    authority_id integer not null,
     foreign key (member_id) references member(id),
     foreign key (authority_id) references authority(id)
 );
@@ -84,10 +84,20 @@ CREATE TABLE class_program(
     title varchar not null,
     contents CLOB not null,
     capacity bigint,
+    created_at date,
+    modified_at date,
+    expired_at date,
     is_recruit boolean default false,
     is_board boolean default true,
     member_id integer not null,
     address_tag_id integer not null,
     foreign key (member_id) references member(id),
     foreign key (address_tag_id) references address_tag(id)
+);
+
+CREATE TABLE class_applier(
+    class_id integer not null,
+    member_id integer not null,
+    foreign key(class_id) references class_program(id),
+    foreign key(member_id) references member(id)
 );

@@ -2,6 +2,7 @@ package io.wisoft.poomi.controller;
 
 import io.wisoft.poomi.bind.ApiResponse;
 import io.wisoft.poomi.bind.request.AddressRegisterRequest;
+import io.wisoft.poomi.configures.web.SignInMember;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.service.AddressService;
 import io.wisoft.poomi.service.MemberService;
@@ -20,14 +21,11 @@ import javax.validation.Valid;
 public class AddressController {
 
     private final AddressService addressService;
-    private final MemberService memberService;
 
     @PutMapping("/member/address")
     public ApiResponse<?> address(
             @RequestBody @Valid final AddressRegisterRequest addressRegisterRequest,
-                                final HttpServletRequest request) {
-        Member member = memberService.generateMemberThroughRequest(request);
-
+            @SignInMember final Member member) {
         return ApiResponse.succeed(HttpStatus.OK, addressService.registerAddress(member, addressRegisterRequest));
     }
 

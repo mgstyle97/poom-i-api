@@ -1,7 +1,6 @@
 package io.wisoft.poomi.bind.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.wisoft.poomi.domain.member.child.Child;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,6 +31,7 @@ public class SignupRequest {
     @JsonProperty("address")
     private AddressRegisterRequest address;
 
-    private List<Child> children;
+    @JsonProperty("children")
+    private List<ChildAddRequest> children;
 
 }

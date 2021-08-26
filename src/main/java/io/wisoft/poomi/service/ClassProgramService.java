@@ -41,4 +41,12 @@ public class ClassProgramService {
         return ClassProgramRegisterDto.from(classProgram);
     }
 
+    @Transactional
+    public void applyClassProgram(final Long id, final Member member) {
+        ClassProgram classProgram = classProgramRepository.findClassProgramById(id);
+        log.info("Generate class program id: {}", id);
+
+        classProgram.addApplier(member);
+    }
+
 }
