@@ -8,7 +8,8 @@ DROP TABLE IF EXISTS child CASCADE;
 DROP TABLE IF EXISTS sms_certification CASCADE;
 DROP TABLE IF EXISTS refresh_token CASCADE;
 DROP TABLE IF EXISTS class_program CASCADE;
-
+DROP TABLE IF EXISTS class_applier CASCADE;
+DROP TABLE IF EXISTS class_likes CASCADE;
 
 
 CREATE TABLE sms_certification(
@@ -96,6 +97,13 @@ CREATE TABLE class_program(
 );
 
 CREATE TABLE class_applier(
+    class_id integer not null,
+    member_id integer not null,
+    foreign key(class_id) references class_program(id),
+    foreign key(member_id) references member(id)
+);
+
+CREATE TABLE class_likes(
     class_id integer not null,
     member_id integer not null,
     foreign key(class_id) references class_program(id),

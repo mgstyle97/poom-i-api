@@ -71,6 +71,14 @@ public class ClassProgram extends BaseTimeEntity {
     )
     private List<Member> appliers;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "class_likes",
+        joinColumns = {@JoinColumn(name = "class_id", referencedColumnName = "id")},
+        inverseJoinColumns = {@JoinColumn(name = "member_id", referencedColumnName = "id")}
+    )
+    private List<Member> likes;
+
     @Builder
     public ClassProgram(final String title, final String contents,
                         final Long capacity,
@@ -84,6 +92,7 @@ public class ClassProgram extends BaseTimeEntity {
         this.writer = writer;
         this.addressTag = writer.getAddressTag();
         this.appliers = new ArrayList<>();
+        this.likes = new ArrayList<>();
     }
 
     public static ClassProgram of(final Member member,
@@ -102,12 +111,18 @@ public class ClassProgram extends BaseTimeEntity {
     }
 
     public void addApplier(final Member member) {
-
         if (!this.appliers.contains(member)) {
             this.appliers.add(member);
             member.addAppliedClass(this);
         }
 
+    }
+
+    public void addLikes(final Member member) {
+        if (!this.likes.contains(member)) {
+            this.likes.add(member);
+            member.addLikedClass(this);
+        }
     }
 
 }

@@ -43,10 +43,23 @@ public class ClassProgramService {
 
     @Transactional
     public void applyClassProgram(final Long id, final Member member) {
+        ClassProgram classProgram = generateClassProgramById(id);
+
+        classProgram.addApplier(member);
+    }
+
+    @Transactional
+    public void likeClassProgram(final Long id, final Member member) {
+        ClassProgram classProgram = generateClassProgramById(id);
+
+        classProgram.addLikes(member);
+    }
+
+    private ClassProgram generateClassProgramById(final Long id) {
         ClassProgram classProgram = classProgramRepository.findClassProgramById(id);
         log.info("Generate class program id: {}", id);
 
-        classProgram.addApplier(member);
+        return classProgram;
     }
 
 }

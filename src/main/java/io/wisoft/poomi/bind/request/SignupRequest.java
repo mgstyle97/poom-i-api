@@ -27,6 +27,9 @@ public class SignupRequest {
     @NotBlank(message = "닉네임을 입력해야 합니다.")
     private String nick;
 
+    @NotBlank(message = "성별을 선택해야 합니다.")
+    private String gender;
+
     @NotBlank(message = "주소 정보를 입력해야 합니다.")
     @JsonProperty("address")
     private AddressRegisterRequest address;

@@ -1,6 +1,7 @@
 package io.wisoft.poomi.controller;
 
 import io.wisoft.poomi.bind.ApiResponse;
+import io.wisoft.poomi.bind.dto.MyPageDto;
 import io.wisoft.poomi.bind.dto.SigninDto;
 import io.wisoft.poomi.bind.dto.CMInfoRegisterDto;
 import io.wisoft.poomi.bind.dto.SignupDto;
@@ -37,6 +38,11 @@ public class MemberController {
             @ModelAttribute final SignupRequest signupRequest,
             @RequestPart(value = "images", required = false) final List<MultipartFile> images) {
         return ApiResponse.succeed(HttpStatus.CREATED, memberService.signup(signupRequest, images));
+    }
+
+    @GetMapping("/member/me")
+    public ApiResponse<MyPageDto> myPage(@SignInMember final Member member) {
+        return ApiResponse.succeed(HttpStatus.OK, MyPageDto.of(member));
     }
 
     @PostMapping("/member/childminder-info")

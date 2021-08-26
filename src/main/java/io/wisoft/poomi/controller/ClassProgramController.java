@@ -45,4 +45,9 @@ public class ClassProgramController {
         classProgramService.applyClassProgram(id, member);
     }
 
+    @GetMapping("/{id}/like")
+    public void likeClassProgram(@PathVariable("id") final Long id, @SignInMember final Member member) {
+        classProgramService.likeClassProgram(id, member);
+    }
+
 }

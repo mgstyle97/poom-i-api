@@ -55,6 +55,9 @@ public class Member {
     @Column(name = "nick")
     private String nick;
 
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "member_authority",
@@ -93,6 +96,9 @@ public class Member {
     @ManyToMany(mappedBy = "appliers", fetch = FetchType.LAZY)
     private List<ClassProgram> appliedClasses;
 
+    @ManyToMany(mappedBy = "likes", fetch = FetchType.LAZY)
+    private List<ClassProgram> likedClasses;
+
     public Member() {
         this.writtenClasses = new ArrayList<>();
         this.appliedClasses = new ArrayList<>();
@@ -101,13 +107,15 @@ public class Member {
     @Builder
     public Member(final String name, final String phoneNumber,
                   final String email, final String password,
-                  final String nick, final Set<Authority> authorities,
+                  final String nick, final Gender gender,
+                  final Set<Authority> authorities,
                   final Address address) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.password = password;
         this.nick = nick;
+        this.gender = gender;
         this.authorities = authorities;
         this.address = address;
         this.children = new ArrayList<>();
@@ -124,6 +132,7 @@ public class Member {
                 .email(signupRequest.getEmail())
                 .password(passwordEncoder.encode(signupRequest.getPassword()))
                 .nick(signupRequest.getNick())
+                .gender(Gender.getGender(signupRequest.getGender()))
                 .authorities(Collections.singleton(authorityRepository.getUserAuthority()))
                 .build();
         return member;
@@ -180,16 +189,20 @@ public class Member {
     }
 
     public void addClass(final ClassProgram classProgram) {
-
         if (!this.writtenClasses.contains(classProgram)) {
             this.writtenClasses.add(classProgram);
         }
     }
 
     public void addAppliedClass(final ClassProgram classProgram) {
-
         if (!this.appliedClasses.contains(classProgram)) {
             this.appliedClasses.add(classProgram);
+        }
+    }
+
+    public void addLikedClass(final ClassProgram classProgram) {
+        if (!this.likedClasses.contains(classProgram)) {
+            this.likedClasses.add(classProgram);
         }
     }
 
