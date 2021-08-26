@@ -32,7 +32,7 @@ public class AddressService {
         Address address = generateAddressAndSave(addressRegisterRequest, addressTag);
         log.info("Save address info: {}", address.getId());
 
-        member.setAddress(address);
+        member.updateAddressInfo(address);
         memberRepository.save(member);
         log.info("Modify member address info");
 

@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -61,6 +63,14 @@ public class ClassProgram extends BaseTimeEntity {
     )
     private AddressTag addressTag;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "class_applier",
+            joinColumns = {@JoinColumn(name = "class_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "member_id", referencedColumnName = "id")}
+    )
+    private List<Member> appliers;
+
     @Builder
     public ClassProgram(final String title, final String contents,
                         final Long capacity,
@@ -73,6 +83,7 @@ public class ClassProgram extends BaseTimeEntity {
         this.isBoard = isBoard;
         this.writer = writer;
         this.addressTag = writer.getAddressTag();
+        this.appliers = new ArrayList<>();
     }
 
     public static ClassProgram of(final Member member,
@@ -85,8 +96,18 @@ public class ClassProgram extends BaseTimeEntity {
                 .isBoard(classProgramRegisterRequest.getIsBoard())
                 .writer(member)
                 .build();
+        member.addClass(classProgram);
 
         return classProgram;
+    }
+
+    public void addApplier(final Member member) {
+
+        if (!this.appliers.contains(member)) {
+            this.appliers.add(member);
+            member.addAppliedClass(this);
+        }
+
     }
 
 }

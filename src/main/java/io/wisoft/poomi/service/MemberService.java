@@ -9,6 +9,8 @@ import io.wisoft.poomi.bind.request.SignupRequest;
 import io.wisoft.poomi.bind.utils.FileUtils;
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.domain.member.address.Address;
+import io.wisoft.poomi.domain.member.authority.AuthorityRepository;
+import io.wisoft.poomi.domain.member.child.ChildRepository;
 import io.wisoft.poomi.domain.member.cmInfo.ChildminderInfo;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.address.AddressRepository;
@@ -33,13 +35,15 @@ public class MemberService {
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
+    private final AuthorityRepository authorityRepository;
     private final AddressRepository addressRepository;
     private final AddressTagRepository addressTagRepository;
+    private final ChildRepository childRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Transactional
-    public SignupDto signup(SignupRequest signupRequest, List<MultipartFile> images) {
+    public SignupDto signup(final SignupRequest signupRequest, final List<MultipartFile> images) {
         Member member = saveMember(signupRequest);
 
         log.info("Generate member: {}", member.getEmail());
@@ -61,38 +65,26 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public CMInfoRegisterDto cmInfoRegist(Member member,
+    public CMInfoRegisterDto cmInfoUpdate(Member member,
                                           final CMInfoRegisterRequest cmInfoRegisterRequest) {
-        member.setChildminderInfo(ChildminderInfo.from(cmInfoRegisterRequest));
+        member.updateChildminderInfo(ChildminderInfo.from(cmInfoRegisterRequest));
         memberRepository.save(member);
 
         return new CMInfoRegisterDto(member.getChildminderInfo().getId(), member.getEmail());
     }
 
-    @Transactional
-    public Member generateMemberThroughRequest(final HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveToken(request);
-        log.info("Resolve JWT token: {}", token);
-
-        String email = jwtTokenProvider.getUsernameFromToken(token);
-        log.info("Generate member email: {}", email);
-
-        Member member = memberRepository.getMemberByEmail(email);
-        log.info("Generate member of email: {}", email);
-
-        return member;
-    }
-
     private Member saveMember(final SignupRequest signupRequest) {
-        Member member = Member.of(signupRequest, passwordEncoder);
+        Member member = Member.of(signupRequest, passwordEncoder, authorityRepository);
         log.info("Generate member data through request");
 
         Address address = new Address();
         address.of(addressRepository, addressTagRepository, signupRequest.getAddress());
         log.info("Generate address data through request");
 
-        member.setAddress(address);
+        member.updateAddressInfo(address);
         memberRepository.save(member);
+
+        member.setChildren(signupRequest.getChildren(), childRepository);
 
         log.info("Save member data through member repository");
 

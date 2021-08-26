@@ -1,18 +1,16 @@
 package io.wisoft.poomi.domain.member;
 
+import io.wisoft.poomi.bind.request.ChildAddRequest;
 import io.wisoft.poomi.bind.request.SignupRequest;
-import io.wisoft.poomi.common.error.exceptions.WrongMemberPasswordException;
 import io.wisoft.poomi.domain.member.address.Address;
 import io.wisoft.poomi.domain.member.address.AddressTag;
+import io.wisoft.poomi.domain.member.authority.AuthorityRepository;
 import io.wisoft.poomi.domain.member.child.Child;
+import io.wisoft.poomi.domain.member.child.ChildRepository;
 import io.wisoft.poomi.domain.member.cmInfo.ChildminderInfo;
 import io.wisoft.poomi.domain.member.authority.Authority;
 import io.wisoft.poomi.domain.program.classes.ClassProgram;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.BeanUtils;
+import lombok.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,10 +21,7 @@ import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Getter
 @Entity
 @SequenceGenerator(
         name = "member_sequence_generator",
@@ -95,12 +90,60 @@ public class Member {
     @OneToMany(mappedBy = "writer", fetch = FetchType.LAZY)
     private List<ClassProgram> writtenClasses;
 
-    public static Member of(final SignupRequest joinRequest, final PasswordEncoder passwordEncoder) {
-        Member member = new Member();
-        BeanUtils.copyProperties(joinRequest, member);
-        member.setPassword(passwordEncoder.encode(member.getPassword()));
-        member.setAuthorities(Collections.singleton(new Authority(1L, "ROLE_USER")));
+    @ManyToMany(mappedBy = "appliers", fetch = FetchType.LAZY)
+    private List<ClassProgram> appliedClasses;
+
+    public Member() {
+        this.writtenClasses = new ArrayList<>();
+        this.appliedClasses = new ArrayList<>();
+    }
+
+    @Builder
+    public Member(final String name, final String phoneNumber,
+                  final String email, final String password,
+                  final String nick, final Set<Authority> authorities,
+                  final Address address) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.password = password;
+        this.nick = nick;
+        this.authorities = authorities;
+        this.address = address;
+        this.children = new ArrayList<>();
+        this.writtenClasses = new ArrayList<>();
+        this.appliedClasses = new ArrayList<>();
+    }
+
+    public static Member of(final SignupRequest signupRequest,
+                            final PasswordEncoder passwordEncoder,
+                            final AuthorityRepository authorityRepository) {
+        Member member = Member.builder()
+                .name(signupRequest.getName())
+                .phoneNumber(signupRequest.getPhoneNumber())
+                .email(signupRequest.getEmail())
+                .password(passwordEncoder.encode(signupRequest.getPassword()))
+                .nick(signupRequest.getNick())
+                .authorities(Collections.singleton(authorityRepository.getUserAuthority()))
+                .build();
         return member;
+    }
+
+    public void updateAddressInfo(final Address address) {
+        this.address = address;
+    }
+
+    public void updateChildminderInfo(final ChildminderInfo childminderInfo) {
+        this.childminderInfo = childminderInfo;
+    }
+
+    public void setChildren(final List<ChildAddRequest> children, final ChildRepository childRepository) {
+        if (children == null) {
+            return;
+        }
+        children.stream()
+                .map(childAddRequest -> Child.of(childAddRequest, childRepository))
+                .forEach(this.children::add);
     }
 
     public Authentication toAuthentication() {
@@ -137,12 +180,16 @@ public class Member {
     }
 
     public void addClass(final ClassProgram classProgram) {
-        if (this.writtenClasses == null) {
-            this.writtenClasses = new ArrayList<>();
-        }
 
-        if (!writtenClasses.contains(classProgram)) {
+        if (!this.writtenClasses.contains(classProgram)) {
             this.writtenClasses.add(classProgram);
+        }
+    }
+
+    public void addAppliedClass(final ClassProgram classProgram) {
+
+        if (!this.appliedClasses.contains(classProgram)) {
+            this.appliedClasses.add(classProgram);
         }
     }
 
