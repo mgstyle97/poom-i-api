@@ -9,6 +9,7 @@ import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.member.address.AddressTagRepository;
 import io.wisoft.poomi.domain.member.authority.AuthorityRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -83,6 +84,7 @@ class HelloControllerTest {
     }
 
     @Test
+    @Disabled
     void return_hello_string() throws Exception {
         String hello = "hello";
 

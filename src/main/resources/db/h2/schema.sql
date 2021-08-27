@@ -9,7 +9,6 @@ DROP TABLE IF EXISTS sms_certification CASCADE;
 DROP TABLE IF EXISTS refresh_token CASCADE;
 DROP TABLE IF EXISTS class_program CASCADE;
 DROP TABLE IF EXISTS class_applier CASCADE;
-DROP TABLE IF EXISTS class_likes CASCADE;
 
 
 CREATE TABLE sms_certification(
@@ -26,7 +25,7 @@ CREATE TABLE refresh_token (
 
 CREATE TABLE address_tag (
     id integer primary key,
-    extra_address varchar unique
+    extra_address varchar not null
 );
 
 CREATE TABLE address (
@@ -60,11 +59,11 @@ CREATE TABLE childminder_info(
 
 CREATE TABLE member(
     id integer primary key,
-        name varchar not null,
-    phone_number varchar ,
-    email varchar unique,
-    password varchar ,
-    nick varchar,
+    name varchar not null,
+    phone_number varchar not null,
+    email varchar not null,
+    password varchar not null,
+    nick varchar not null,
     cm_info_id integer,
     address_id integer,
     child_id integer,
@@ -97,13 +96,6 @@ CREATE TABLE class_program(
 );
 
 CREATE TABLE class_applier(
-    class_id integer not null,
-    member_id integer not null,
-    foreign key(class_id) references class_program(id),
-    foreign key(member_id) references member(id)
-);
-
-CREATE TABLE class_likes(
     class_id integer not null,
     member_id integer not null,
     foreign key(class_id) references class_program(id),
