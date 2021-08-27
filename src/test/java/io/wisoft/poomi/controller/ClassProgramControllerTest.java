@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.wisoft.poomi.bind.ApiResponse;
 import io.wisoft.poomi.bind.dto.ClassProgramLookupDto;
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
+import io.wisoft.poomi.domain.member.Gender;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.MemberRepository;
 import io.wisoft.poomi.domain.member.address.Address;
@@ -81,6 +82,7 @@ class ClassProgramControllerTest {
                 .authorities(Collections.singleton(authorityRepository.getUserAuthority()))
                 .address(address)
                 .nick("test")
+                .gender(Gender.FEMALE)
                 .build();
         memberRepository.save(member);
 

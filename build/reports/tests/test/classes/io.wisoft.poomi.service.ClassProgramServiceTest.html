@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - ClassProgramServiceTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>ClassProgramServiceTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/io.wisoft.poomi.service.html">io.wisoft.poomi.service</a> &gt; ClassProgramServiceTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">2</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.462s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Method name</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">테스트: 클래스 프로그램 저장</td>
+<td class="success">save_class_program()</td>
+<td class="success">0.447s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">테스트: 주소 태그를 통한 조회</td>
+<td class="success">select_through_address_tag()</td>
+<td class="success">0.015s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>11:46:08.444 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
+11:46:08.465 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
+11:46:08.506 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [io.wisoft.poomi.service.ClassProgramServiceTest] from class [org.springframework.boot.test.context.SpringBootTestContextBootstrapper]
+11:46:08.531 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [io.wisoft.poomi.service.ClassProgramServiceTest], using SpringBootContextLoader
+11:46:08.539 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [io.wisoft.poomi.service.ClassProgramServiceTest]: class path resource [io/wisoft/poomi/service/ClassProgramServiceTest-context.xml] does not exist
+11:46:08.541 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [io.wisoft.poomi.service.ClassProgramServiceTest]: class path resource [io/wisoft/poomi/service/ClassProgramServiceTestContext.groovy] does not exist
+11:46:08.542 [Test worker] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [io.wisoft.poomi.service.ClassProgramServiceTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+11:46:08.544 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [io.wisoft.poomi.service.ClassProgramServiceTest]: ClassProgramServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+11:46:08.633 [Test worker] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [io.wisoft.poomi.service.ClassProgramServiceTest]
+11:46:08.811 [Test worker] DEBUG org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider - Identified candidate component class: file [C:\Users\user\IdeaProjects\Capstone-Project-Poom-I\build\classes\java\main\io\wisoft\poomi\PoomIApplication.class]
+11:46:08.811 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration io.wisoft.poomi.PoomIApplication for test class io.wisoft.poomi.service.ClassProgramServiceTest
+11:46:09.117 [Test worker] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - @TestExecutionListeners is not present for class [io.wisoft.poomi.service.ClassProgramServiceTest]: using defaults.
+11:46:09.120 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener, org.springframework.security.test.context.support.ReactorContextTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+11:46:09.190 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@70b43d, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@4fc6538a, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@475d7dcd, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@13b20b60, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@16668477, org.springframework.test.context.support.DirtiesContextTestExecutionListener@6b41df32, org.springframework.test.context.transaction.TransactionalTestExecutionListener@47de7482, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@44b49e12, org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener@66d3ffcf, org.springframework.test.context.event.EventPublishingTestExecutionListener@30e1468, org.springframework.security.test.context.support.ReactorContextTestExecutionListener@37c01aef, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@57e4560b, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@2eb0f6bf, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@5dee0a55, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@6ace6465, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@1fef2339, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@36433b75]
+11:46:09.256 [Test worker] DEBUG org.springframework.test.context.support.TestPropertySourceUtils - Adding inlined properties to environment: {spring.jmx.enabled=false, org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.5.2)
+
+2021-08-27 11:46:10.405  INFO 20584 --- [    Test worker] i.w.p.service.ClassProgramServiceTest    : Starting ClassProgramServiceTest using Java 11 on DESKTOP-5UTSPQ7 with PID 20584 (started by user in C:\Users\user\IdeaProjects\Capstone-Project-Poom-I)
+2021-08-27 11:46:10.413  INFO 20584 --- [    Test worker] i.w.p.service.ClassProgramServiceTest    : The following profiles are active: oauth,dev
+2021-08-27 11:46:12.995  INFO 20584 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-08-27 11:46:13.355  INFO 20584 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 340 ms. Found 8 JPA repository interfaces.
+2021-08-27 11:46:14.331  INFO 20584 --- [    Test worker] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@6704bf2' of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-08-27 11:46:14.358  INFO 20584 --- [    Test worker] trationDelegate$BeanPostProcessorChecker : Bean 'methodSecurityMetadataSource' of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-08-27 11:46:14.575  INFO 20584 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2021-08-27 11:46:14.978  INFO 20584 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2021-08-27 11:46:15.333  INFO 20584 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-08-27 11:46:15.460  INFO 20584 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-08-27 11:46:15.782  INFO 20584 --- [    Test worker] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-08-27 11:46:16.120  INFO 20584 --- [    Test worker] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+Hibernate: 
+    
+    alter table child 
+       add column child_id bigint
+Hibernate: 
+    
+    create table class_likes (
+       class_id bigint not null,
+        member_id bigint not null
+    )
+Hibernate: create sequence ad_tag_sequence start with 1 increment by 1
+Hibernate: create sequence address_sequence start with 1 increment by 1
+Hibernate: create sequence child_sequence start with 1 increment by 1
+Hibernate: create sequence childminder_info_seq start with 1 increment by 1
+Hibernate: create sequence class_sequence start with 1 increment by 1
+Hibernate: create sequence hibernate_sequence start with 1 increment by 1
+Hibernate: create sequence member_sequence start with 1 increment by 1
+Hibernate: create sequence refresh_token_sequence start with 1 increment by 1
+Hibernate: create sequence sms_certification_sequence start with 1 increment by 1
+Hibernate: 
+    
+    alter table child 
+       add constraint FKr8nk7sxrigxffxypg011a3q65 
+       foreign key (child_id) 
+       references member
+Hibernate: 
+    
+    alter table class_likes 
+       add constraint FK62m5ipqeg4wcw6581apbip5vk 
+       foreign key (member_id) 
+       references member
+Hibernate: 
+    
+    alter table class_likes 
+       add constraint FKcocfo4nnrugbsd779omd6721h 
+       foreign key (class_id) 
+       references class_program
+2021-08-27 11:46:18.074  INFO 20584 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-08-27 11:46:18.090  INFO 20584 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-08-27 11:46:19.070  WARN 20584 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2021-08-27 11:46:19.674  INFO 20584 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure org.springframework.boot.autoconfigure.security.servlet.PathRequest$H2ConsoleRequestMatcher@1f607aee with []
+2021-08-27 11:46:20.031  INFO 20584 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@39c7ee4e, org.springframework.security.web.context.SecurityContextPersistenceFilter@3cea975a, org.springframework.security.web.header.HeaderWriterFilter@386c1bb4, org.springframework.web.filter.CorsFilter@50d8fa2d, org.springframework.security.web.authentication.logout.LogoutFilter@6828ce9d, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@4d3ec8c4, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@6159d073, io.wisoft.poomi.configures.security.jwt.JwtAuthenticationFilter@40ba740f, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@3fb32be3, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@2da975e, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@336cf2fd, org.springframework.security.web.session.SessionManagementFilter@19bb3a53, org.springframework.security.web.access.ExceptionTranslationFilter@73c48cfa, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@753b19fc]
+2021-08-27 11:46:20.039  WARN 20584 --- [    Test worker] o.s.s.c.a.web.builders.WebSecurity       : 
+
+********************************************************************
+**********        Security debugging is enabled.       *************
+**********    This may include sensitive information.  *************
+**********      Do not use in a production system!     *************
+********************************************************************
+
+
+2021-08-27 11:46:21.217  INFO 20584 --- [    Test worker] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
+2021-08-27 11:46:21.384  INFO 20584 --- [    Test worker] i.w.p.service.ClassProgramServiceTest    : Started ClassProgramServiceTest in 12.102 seconds (JVM running for 15.951)
+Hibernate: 
+    call next value for ad_tag_sequence
+Hibernate: 
+    insert 
+    into
+        address_tag
+        (extra_address, id) 
+    values
+        (?, ?)
+Hibernate: 
+    call next value for address_sequence
+Hibernate: 
+    insert 
+    into
+        address
+        (ad_tag_id, detail_address, post_code, id) 
+    values
+        (?, ?, ?, ?)
+Hibernate: 
+    select
+        authority0_.id as id1_2_0_,
+        authority0_.authority as authorit2_2_0_ 
+    from
+        authority authority0_ 
+    where
+        authority0_.id=?
+Hibernate: 
+    call next value for member_sequence
+Hibernate: 
+    insert 
+    into
+        member
+        (address_id, cm_info_id, email, gender, name, nick, password, phone_number, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        member_authority
+        (member_id, authority_id) 
+    values
+        (?, ?)
+Hibernate: 
+    call next value for class_sequence
+Hibernate: 
+    call next value for class_sequence
+Hibernate: 
+    insert 
+    into
+        class_program
+        (created_at, expired_at, modified_at, address_tag_id, capacity, contents, is_board, is_recruit, title, member_id, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        class_program
+        (created_at, expired_at, modified_at, address_tag_id, capacity, contents, is_board, is_recruit, title, member_id, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2021-08-27 11:46:21.873  INFO 20584 --- [    Test worker] i.w.poomi.service.ClassProgramService    : Generate class program title: 테스트3
+Hibernate: 
+    call next value for class_sequence
+2021-08-27 11:46:21.875  INFO 20584 --- [    Test worker] i.w.poomi.service.ClassProgramService    : Save class program id: 3
+Hibernate: 
+    insert 
+    into
+        class_program
+        (created_at, expired_at, modified_at, address_tag_id, capacity, contents, is_board, is_recruit, title, member_id, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        classprogr0_.id as id1_7_,
+        classprogr0_.created_at as created_2_7_,
+        classprogr0_.expired_at as expired_3_7_,
+        classprogr0_.modified_at as modified4_7_,
+        classprogr0_.address_tag_id as address10_7_,
+        classprogr0_.capacity as capacity5_7_,
+        classprogr0_.contents as contents6_7_,
+        classprogr0_.is_board as is_board7_7_,
+        classprogr0_.is_recruit as is_recru8_7_,
+        classprogr0_.title as title9_7_,
+        classprogr0_.member_id as member_11_7_ 
+    from
+        class_program classprogr0_ 
+    where
+        classprogr0_.address_tag_id=?
+Hibernate: 
+    select
+        addresstag0_.id as id1_1_0_,
+        addresstag0_.extra_address as extra_ad2_1_0_ 
+    from
+        address_tag addresstag0_ 
+    where
+        addresstag0_.id=?
+Hibernate: 
+    select
+        member0_.id as id1_8_0_,
+        member0_.address_id as address_8_8_0_,
+        member0_.cm_info_id as cm_info_9_8_0_,
+        member0_.email as email2_8_0_,
+        member0_.gender as gender3_8_0_,
+        member0_.name as name4_8_0_,
+        member0_.nick as nick5_8_0_,
+        member0_.password as password6_8_0_,
+        member0_.phone_number as phone_nu7_8_0_,
+        address1_.id as id1_0_1_,
+        address1_.ad_tag_id as ad_tag_i4_0_1_,
+        address1_.detail_address as detail_a2_0_1_,
+        address1_.post_code as post_cod3_0_1_,
+        addresstag2_.id as id1_1_2_,
+        addresstag2_.extra_address as extra_ad2_1_2_,
+        authoritie3_.member_id as member_i1_9_3_,
+        authority4_.id as authorit2_9_3_,
+        authority4_.id as id1_2_4_,
+        authority4_.authority as authorit2_2_4_ 
+    from
+        member member0_ 
+    left outer join
+        address address1_ 
+            on member0_.address_id=address1_.id 
+    left outer join
+        address_tag addresstag2_ 
+            on address1_.ad_tag_id=addresstag2_.id 
+    left outer join
+        member_authority authoritie3_ 
+            on member0_.id=authoritie3_.member_id 
+    left outer join
+        authority authority4_ 
+            on authoritie3_.authority_id=authority4_.id 
+    where
+        member0_.id=?
+테스트
+테스트2
+테스트3
+Hibernate: 
+    select
+        classprogr0_.id as id1_7_,
+        classprogr0_.created_at as created_2_7_,
+        classprogr0_.expired_at as expired_3_7_,
+        classprogr0_.modified_at as modified4_7_,
+        classprogr0_.address_tag_id as address10_7_,
+        classprogr0_.capacity as capacity5_7_,
+        classprogr0_.contents as contents6_7_,
+        classprogr0_.is_board as is_board7_7_,
+        classprogr0_.is_recruit as is_recru8_7_,
+        classprogr0_.title as title9_7_,
+        classprogr0_.member_id as member_11_7_ 
+    from
+        class_program classprogr0_ 
+    where
+        classprogr0_.address_tag_id=?
+Hibernate: 
+    select
+        addresstag0_.id as id1_1_0_,
+        addresstag0_.extra_address as extra_ad2_1_0_ 
+    from
+        address_tag addresstag0_ 
+    where
+        addresstag0_.id=?
+Hibernate: 
+    select
+        member0_.id as id1_8_0_,
+        member0_.address_id as address_8_8_0_,
+        member0_.cm_info_id as cm_info_9_8_0_,
+        member0_.email as email2_8_0_,
+        member0_.gender as gender3_8_0_,
+        member0_.name as name4_8_0_,
+        member0_.nick as nick5_8_0_,
+        member0_.password as password6_8_0_,
+        member0_.phone_number as phone_nu7_8_0_,
+        address1_.id as id1_0_1_,
+        address1_.ad_tag_id as ad_tag_i4_0_1_,
+        address1_.detail_address as detail_a2_0_1_,
+        address1_.post_code as post_cod3_0_1_,
+        addresstag2_.id as id1_1_2_,
+        addresstag2_.extra_address as extra_ad2_1_2_,
+        authoritie3_.member_id as member_i1_9_3_,
+        authority4_.id as authorit2_9_3_,
+        authority4_.id as id1_2_4_,
+        authority4_.authority as authorit2_2_4_ 
+    from
+        member member0_ 
+    left outer join
+        address address1_ 
+            on member0_.address_id=address1_.id 
+    left outer join
+        address_tag addresstag2_ 
+            on address1_.ad_tag_id=addresstag2_.id 
+    left outer join
+        member_authority authoritie3_ 
+            on member0_.id=authoritie3_.member_id 
+    left outer join
+        authority authority4_ 
+            on authoritie3_.authority_id=authority4_.id 
+    where
+        member0_.id=?
+테스트
+테스트2
+테스트3
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 7.1.1</a> at 2021. 8. 27. 오전 11:46:28</p>
+</div>
+</div>
+</body>
+</html>

@@ -2,6 +2,7 @@ package io.wisoft.poomi.service;
 
 import io.wisoft.poomi.bind.dto.ClassProgramLookupDto;
 import io.wisoft.poomi.bind.request.ClassProgramRegisterRequest;
+import io.wisoft.poomi.domain.member.Gender;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.MemberRepository;
 import io.wisoft.poomi.domain.member.address.Address;
@@ -68,6 +69,7 @@ class ClassProgramServiceTest {
                 .authorities(Collections.singleton(authorityRepository.getUserAuthority()))
                 .address(address)
                 .nick("test")
+                .gender(Gender.MALE)
                 .build();
         memberRepository.save(member);
 

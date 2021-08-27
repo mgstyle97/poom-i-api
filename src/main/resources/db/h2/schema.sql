@@ -64,6 +64,7 @@ CREATE TABLE member(
     email varchar not null,
     password varchar not null,
     nick varchar not null,
+    gender varchar not null,
     cm_info_id integer,
     address_id integer,
     child_id integer,
