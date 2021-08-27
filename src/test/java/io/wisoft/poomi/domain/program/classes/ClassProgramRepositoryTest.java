@@ -1,5 +1,6 @@
 package io.wisoft.poomi.domain.program.classes;
 
+import io.wisoft.poomi.domain.member.Gender;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.MemberRepository;
 import io.wisoft.poomi.domain.member.address.Address;
@@ -70,6 +71,7 @@ class ClassProgramRepositoryTest {
                 .authorities(Collections.singleton(authorityRepository.getUserAuthority()))
                 .address(address)
                 .nick("test")
+                .gender(Gender.MALE)
                 .build();
         memberRepository.save(member);
     }

@@ -35,13 +35,13 @@
 </td>
 <td>
 <div class="infoBox" id="ignored">
-<div class="counter">0</div>
+<div class="counter">1</div>
 <p>ignored</p>
 </div>
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.882s</div>
+<div class="counter">0s</div>
 <p>duration</p>
 </div>
 </td>
@@ -50,8 +50,8 @@
 </div>
 </td>
 <td>
-<div class="infoBox success" id="successRate">
-<div class="percent">100%</div>
+<div class="infoBox skipped" id="successRate">
+<div class="percent">-</div>
 <p>successful</p>
 </div>
 </td>
@@ -78,230 +78,21 @@
 </tr>
 </thead>
 <tr>
-<td class="success">return_hello_string()</td>
-<td class="success">0.882s</td>
-<td class="success">passed</td>
+<td class="skipped">return_hello_string()</td>
+<td class="skipped">-</td>
+<td class="skipped">ignored</td>
 </tr>
 </table>
 </div>
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>21:51:21.029 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
-21:51:21.044 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
-21:51:21.075 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [io.wisoft.poomi.controller.HelloControllerTest] from class [org.springframework.boot.test.context.SpringBootTestContextBootstrapper]
-21:51:21.091 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [io.wisoft.poomi.controller.HelloControllerTest], using SpringBootContextLoader
-21:51:21.107 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [io.wisoft.poomi.controller.HelloControllerTest]: class path resource [io/wisoft/poomi/controller/HelloControllerTest-context.xml] does not exist
-21:51:21.108 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [io.wisoft.poomi.controller.HelloControllerTest]: class path resource [io/wisoft/poomi/controller/HelloControllerTestContext.groovy] does not exist
-21:51:21.108 [Test worker] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [io.wisoft.poomi.controller.HelloControllerTest]: no resource found for suffixes {-context.xml, Context.groovy}.
-21:51:21.110 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [io.wisoft.poomi.controller.HelloControllerTest]: HelloControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-21:51:21.149 [Test worker] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [io.wisoft.poomi.controller.HelloControllerTest]
-21:51:21.289 [Test worker] DEBUG org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider - Identified candidate component class: file [C:\Users\user\IdeaProjects\Capstone-Project-Poom-I\build\classes\java\main\io\wisoft\poomi\PoomIApplication.class]
-21:51:21.289 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration io.wisoft.poomi.PoomIApplication for test class io.wisoft.poomi.controller.HelloControllerTest
-21:51:21.430 [Test worker] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - @TestExecutionListeners is not present for class [io.wisoft.poomi.controller.HelloControllerTest]: using defaults.
-21:51:21.430 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener, org.springframework.security.test.context.support.ReactorContextTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
-21:51:21.446 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@5ffc4e12, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@42ed89b0, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@eb1fe60, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@67b8526c, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@5a090c57, org.springframework.test.context.support.DirtiesContextTestExecutionListener@7407aeaf, org.springframework.test.context.transaction.TransactionalTestExecutionListener@75c40cb1, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@504a1b57, org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener@4233debd, org.springframework.test.context.event.EventPublishingTestExecutionListener@b886282, org.springframework.security.test.context.support.ReactorContextTestExecutionListener@5e7c46c6, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@5e6c7efd, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@2f695bb, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@4a226b15, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@76d44ee1, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@4bf24d50, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@7d9f42d8]
-21:51:21.461 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@7ffa180f testClass = HelloControllerTest, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@799463f6 testClass = HelloControllerTest, locations = '{}', classes = '{class io.wisoft.poomi.PoomIApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true, server.port=0}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@4457b0d7, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@712dd4eb, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@3a94abd8, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@544a9ca5, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@352893a0, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@1e8dce71], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; false]], class annotated with @DirtiesContext [false] with mode [null].
-21:51:21.477 [Test worker] DEBUG org.springframework.test.context.support.DependencyInjectionTestExecutionListener - Performing dependency injection for test context [[DefaultTestContext@7ffa180f testClass = HelloControllerTest, testInstance = io.wisoft.poomi.controller.HelloControllerTest@37c01aef, testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@799463f6 testClass = HelloControllerTest, locations = '{}', classes = '{class io.wisoft.poomi.PoomIApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true, server.port=0}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@4457b0d7, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@712dd4eb, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@3a94abd8, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@544a9ca5, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@352893a0, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@1e8dce71], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; false, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -&gt; false]]].
-21:51:21.508 [Test worker] DEBUG org.springframework.test.context.support.TestPropertySourceUtils - Adding inlined properties to environment: {spring.jmx.enabled=false, org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true, server.port=0}
-
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
- :: Spring Boot ::                (v2.5.2)
-
-2021-08-26 21:51:21.968  INFO 8948 --- [    Test worker] i.w.p.controller.HelloControllerTest     : Starting HelloControllerTest using Java 11 on DESKTOP-5UTSPQ7 with PID 8948 (started by user in C:\Users\user\IdeaProjects\Capstone-Project-Poom-I)
-2021-08-26 21:51:21.983  INFO 8948 --- [    Test worker] i.w.p.controller.HelloControllerTest     : The following profiles are active: oauth,dev
-2021-08-26 21:51:22.962  INFO 8948 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2021-08-26 21:51:23.087  INFO 8948 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 126 ms. Found 8 JPA repository interfaces.
-2021-08-26 21:51:23.578  INFO 8948 --- [    Test worker] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@1050b817' of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2021-08-26 21:51:23.594  INFO 8948 --- [    Test worker] trationDelegate$BeanPostProcessorChecker : Bean 'methodSecurityMetadataSource' of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2021-08-26 21:51:24.016  INFO 8948 --- [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 0 (http)
-2021-08-26 21:51:24.031  INFO 8948 --- [    Test worker] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2021-08-26 21:51:24.031  INFO 8948 --- [    Test worker] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.48]
-2021-08-26 21:51:24.213  INFO 8948 --- [    Test worker] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2021-08-26 21:51:24.213  INFO 8948 --- [    Test worker] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2214 ms
-2021-08-26 21:51:24.276  INFO 8948 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2021-08-26 21:51:24.526  INFO 8948 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2021-08-26 21:51:24.542  INFO 8948 --- [    Test worker] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
-2021-08-26 21:51:24.922  INFO 8948 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2021-08-26 21:51:25.015  INFO 8948 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.32.Final
-2021-08-26 21:51:25.266  INFO 8948 --- [    Test worker] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2021-08-26 21:51:25.438  INFO 8948 --- [    Test worker] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
-Hibernate: 
-    
-    alter table child 
-       add column child_id bigint
-Hibernate: create sequence ad_tag_sequence start with 1 increment by 1
-Hibernate: create sequence address_sequence start with 1 increment by 1
-Hibernate: create sequence child_sequence start with 1 increment by 1
-Hibernate: create sequence childminder_info_seq start with 1 increment by 1
-Hibernate: create sequence class_sequence start with 1 increment by 1
-Hibernate: create sequence hibernate_sequence start with 1 increment by 1
-Hibernate: create sequence member_sequence start with 1 increment by 1
-Hibernate: create sequence refresh_token_sequence start with 1 increment by 1
-Hibernate: create sequence sms_certification_sequence start with 1 increment by 1
-Hibernate: 
-    
-    alter table child 
-       add constraint FKr8nk7sxrigxffxypg011a3q65 
-       foreign key (child_id) 
-       references member
-2021-08-26 21:51:26.629  INFO 8948 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2021-08-26 21:51:26.644  INFO 8948 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2021-08-26 21:51:27.273  WARN 8948 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2021-08-26 21:51:27.785  INFO 8948 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure org.springframework.boot.autoconfigure.security.servlet.PathRequest$H2ConsoleRequestMatcher@2360853a with []
-2021-08-26 21:51:27.967  INFO 8948 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@70314f47, org.springframework.security.web.context.SecurityContextPersistenceFilter@1949c9a8, org.springframework.security.web.header.HeaderWriterFilter@64873fd2, org.springframework.web.filter.CorsFilter@590bb8ba, org.springframework.security.web.authentication.logout.LogoutFilter@4ee55148, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@324766b3, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@3e26393f, io.wisoft.poomi.configures.security.jwt.JwtAuthenticationFilter@5faffbb3, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@60ca4cab, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@36cef77a, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7d077cff, org.springframework.security.web.session.SessionManagementFilter@5462b4b2, org.springframework.security.web.access.ExceptionTranslationFilter@2d0647d3, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@223071b]
-2021-08-26 21:51:27.983  WARN 8948 --- [    Test worker] o.s.s.c.a.web.builders.WebSecurity       : 
-
-********************************************************************
-**********        Security debugging is enabled.       *************
-**********    This may include sensitive information.  *************
-**********      Do not use in a production system!     *************
-********************************************************************
-
-
-2021-08-26 21:51:28.696  INFO 8948 --- [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 54264 (http) with context path ''
-2021-08-26 21:51:28.713  INFO 8948 --- [    Test worker] i.w.p.controller.HelloControllerTest     : Started HelloControllerTest in 7.198 seconds (JVM running for 9.341)
-Hibernate: 
-    call next value for ad_tag_sequence
-Hibernate: 
-    insert 
-    into
-        address_tag
-        (extra_address, id) 
-    values
-        (?, ?)
-Hibernate: 
-    call next value for address_sequence
-Hibernate: 
-    insert 
-    into
-        address
-        (ad_tag_id, detail_address, post_code, id) 
-    values
-        (?, ?, ?, ?)
-Hibernate: 
-    select
-        authority0_.id as id1_2_0_,
-        authority0_.authority as authorit2_2_0_ 
-    from
-        authority authority0_ 
-    where
-        authority0_.id=?
-Hibernate: 
-    call next value for member_sequence
-Hibernate: 
-    insert 
-    into
-        member
-        (address_id, cm_info_id, email, name, nick, password, phone_number, id) 
-    values
-        (?, ?, ?, ?, ?, ?, ?, ?)
-Hibernate: 
-    insert 
-    into
-        member_authority
-        (member_id, authority_id) 
-    values
-        (?, ?)
-Hibernate: 
-    call next value for refresh_token_sequence
-Hibernate: 
-    insert 
-    into
-        refresh_token
-        (member_email, refresh_token, id) 
-    values
-        (?, ?, ?)
-2021-08-26 21:51:29.267  INFO 8948 --- [o-auto-1-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2021-08-26 21:51:29.267  INFO 8948 --- [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2021-08-26 21:51:29.267  INFO 8948 --- [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
-2021-08-26 21:51:29.283  INFO 8948 --- [o-auto-1-exec-1] Spring Security Debugger                 : 
-
-************************************************************
-
-Request received for GET '/hello':
-
-org.apache.catalina.connector.RequestFacade@3a79d7ea
-
-servletPath:/hello
-pathInfo:null
-headers: 
-accept: text/plain, application/json, application/*+json, */*
-authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2Mjk5ODQwODl9.V8h57fenjuX6ZFH4Ss-_21RcLvJZkZ3NRMF2qaN3Zco
-user-agent: Java/11
-host: localhost:54264
-connection: keep-alive
-
-
-Security filter chain: [
-  WebAsyncManagerIntegrationFilter
-  SecurityContextPersistenceFilter
-  HeaderWriterFilter
-  CorsFilter
-  LogoutFilter
-  OAuth2AuthorizationRequestRedirectFilter
-  OAuth2LoginAuthenticationFilter
-  JwtAuthenticationFilter
-  RequestCacheAwareFilter
-  SecurityContextHolderAwareRequestFilter
-  AnonymousAuthenticationFilter
-  SessionManagementFilter
-  ExceptionTranslationFilter
-  FilterSecurityInterceptor
-]
-
-
-************************************************************
-
-
-Hibernate: 
-    select
-        member0_.id as id1_7_,
-        member0_.address_id as address_7_7_,
-        member0_.cm_info_id as cm_info_8_7_,
-        member0_.email as email2_7_,
-        member0_.name as name3_7_,
-        member0_.nick as nick4_7_,
-        member0_.password as password5_7_,
-        member0_.phone_number as phone_nu6_7_ 
-    from
-        member member0_ 
-    where
-        member0_.email=?
-Hibernate: 
-    select
-        address0_.id as id1_0_0_,
-        address0_.ad_tag_id as ad_tag_i4_0_0_,
-        address0_.detail_address as detail_a2_0_0_,
-        address0_.post_code as post_cod3_0_0_,
-        addresstag1_.id as id1_1_1_,
-        addresstag1_.extra_address as extra_ad2_1_1_ 
-    from
-        address address0_ 
-    left outer join
-        address_tag addresstag1_ 
-            on address0_.ad_tag_id=addresstag1_.id 
-    where
-        address0_.id=?
-Hibernate: 
-    select
-        authoritie0_.member_id as member_i1_8_0_,
-        authoritie0_.authority_id as authorit2_8_0_,
-        authority1_.id as id1_2_1_,
-        authority1_.authority as authorit2_2_1_ 
-    from
-        member_authority authoritie0_ 
-    inner join
-        authority authority1_ 
-            on authoritie0_.authority_id=authority1_.id 
-    where
-        authoritie0_.member_id=?
-1
+<pre>2021-08-27 11:46:26.064  INFO 20584 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Neither @ContextConfiguration nor @ContextHierarchy found for test class [io.wisoft.poomi.controller.HelloControllerTest], using SpringBootContextLoader
+2021-08-27 11:46:26.065  INFO 20584 --- [    Test worker] o.s.t.c.support.AbstractContextLoader    : Could not detect default resource locations for test class [io.wisoft.poomi.controller.HelloControllerTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+2021-08-27 11:46:26.065  INFO 20584 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [io.wisoft.poomi.controller.HelloControllerTest]: HelloControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2021-08-27 11:46:26.066  INFO 20584 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration io.wisoft.poomi.PoomIApplication for test class io.wisoft.poomi.controller.HelloControllerTest
+2021-08-27 11:46:26.068  INFO 20584 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener, org.springframework.security.test.context.support.ReactorContextTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+2021-08-27 11:46:26.071  INFO 20584 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@51e38ebd, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@68adb3a3, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@3cf043b, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@7188e67e, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@3c531894, org.springframework.test.context.support.DirtiesContextTestExecutionListener@39e68416, org.springframework.test.context.transaction.TransactionalTestExecutionListener@4273a1cd, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@74fe14eb, org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener@50cd2558, org.springframework.test.context.event.EventPublishingTestExecutionListener@5d86dd63, org.springframework.security.test.context.support.ReactorContextTestExecutionListener@2a472d7, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@6f97724, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@3f276546, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@54a1da04, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@7532288d, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@383f2158, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@3cb66e4c]
 </pre>
 </span>
 </div>
@@ -313,7 +104,7 @@ Hibernate:
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 7.1.1</a> at 2021. 8. 26. 오후 9:51:30</p>
+<a href="http://www.gradle.org">Gradle 7.1.1</a> at 2021. 8. 27. 오전 11:46:28</p>
 </div>
 </div>
 </body>
