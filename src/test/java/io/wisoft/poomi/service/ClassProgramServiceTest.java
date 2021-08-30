@@ -12,17 +12,12 @@ import io.wisoft.poomi.domain.member.address.AddressTagRepository;
 import io.wisoft.poomi.domain.member.authority.AuthorityRepository;
 import io.wisoft.poomi.domain.program.classes.ClassProgram;
 import io.wisoft.poomi.domain.program.classes.ClassProgramRepository;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Collections;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -51,8 +46,9 @@ class ClassProgramServiceTest {
     @BeforeAll
     void setup() {
         // given
+
         AddressTag addressTag = new AddressTag("city");
-        addressTagRepository.save(addressTag);
+        addressTagRepository.saveAddressTagWithExtraAddress(addressTag);
 
         Address address = Address.builder()
                 .addressTag(addressTag)
@@ -91,6 +87,14 @@ class ClassProgramServiceTest {
                 .writer(member)
                 .build();
         classProgramRepository.saveAll(List.of(classProgram, classProgram2));
+    }
+
+    @AfterAll
+    void cleanup() {
+        classProgramRepository.deleteAll();
+        memberRepository.deleteAll();
+        addressRepository.deleteAll();
+        addressTagRepository.deleteAll();
     }
 
     @Test
