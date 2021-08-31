@@ -15,9 +15,13 @@ import io.wisoft.poomi.domain.program.classes.ClassProgramRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -120,6 +124,36 @@ class ClassProgramServiceTest {
         List<ClassProgramLookupDto> result = classProgramService.findByAddressTag(member.getAddressTag());
         result
                 .forEach(classProgramLookupDto -> System.out.println(classProgramLookupDto.getTitle()));
+    }
+
+    @Test
+    @DisplayName("테스트: 클래스 프로그램 지원")
+    @Transactional
+    void apply_class_program() {
+        classProgramService.applyClassProgram(1L, member);
+
+        ClassProgram classProgram = classProgramRepository.findClassProgramById(1L);
+        List<ClassProgram> appliedClasses = member.getClassProgramProperties().getAppliedClasses();
+
+        assertAll(
+                () -> assertEquals(classProgram.getTitle(), appliedClasses.get(0).getTitle()),
+                () -> assertEquals(classProgram.getAppliers().get(0).getId(), member.getId())
+        );
+    }
+
+    @Test
+    @DisplayName("테스트: 클래스 프로그램 좋아요")
+    @Transactional
+    void like_class_program() {
+        classProgramService.likeClassProgram(1L, member);
+
+        ClassProgram classProgram = classProgramRepository.findClassProgramById(1L);
+        List<ClassProgram> likedClasses = member.getClassProgramProperties().getLikedClasses();
+
+        assertAll(
+                () -> assertEquals(classProgram.getTitle(), likedClasses.get(0).getTitle()),
+                () -> assertEquals(classProgram.getLikes().get(0).getId(), member.getId())
+        );
     }
 
 }

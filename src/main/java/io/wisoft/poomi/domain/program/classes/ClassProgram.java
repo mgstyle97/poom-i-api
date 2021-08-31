@@ -1,6 +1,8 @@
 package io.wisoft.poomi.domain.program.classes;
 
+import io.wisoft.poomi.bind.request.ClassProgramModifiedRequest;
 import io.wisoft.poomi.bind.request.ClassProgramRegisterRequest;
+import io.wisoft.poomi.common.error.exceptions.NoPermissionOfClassProgram;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.program.BaseTimeEntity;
@@ -9,8 +11,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
@@ -69,7 +71,7 @@ public class ClassProgram extends BaseTimeEntity {
             joinColumns = {@JoinColumn(name = "class_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "member_id", referencedColumnName = "id")}
     )
-    private List<Member> appliers;
+    private Set<Member> appliers;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -77,7 +79,7 @@ public class ClassProgram extends BaseTimeEntity {
         joinColumns = {@JoinColumn(name = "class_id", referencedColumnName = "id")},
         inverseJoinColumns = {@JoinColumn(name = "member_id", referencedColumnName = "id")}
     )
-    private List<Member> likes;
+    private Set<Member> likes;
 
     @Builder
     public ClassProgram(final String title, final String contents,
@@ -91,8 +93,8 @@ public class ClassProgram extends BaseTimeEntity {
         this.isBoard = isBoard;
         this.writer = writer;
         this.addressTag = writer.getAddressTag();
-        this.appliers = new ArrayList<>();
-        this.likes = new ArrayList<>();
+        this.appliers = new HashSet<>();
+        this.likes = new HashSet<>();
     }
 
     public static ClassProgram of(final Member member,
@@ -115,7 +117,6 @@ public class ClassProgram extends BaseTimeEntity {
             this.appliers.add(member);
             member.addAppliedClass(this);
         }
-
     }
 
     public void addLikes(final Member member) {
@@ -123,6 +124,54 @@ public class ClassProgram extends BaseTimeEntity {
             this.likes.add(member);
             member.addLikedClass(this);
         }
+    }
+
+    public void verifyPermission(final Member member) {
+        if (!this.writer.getId().equals(member.getId()) &&
+            !member.getAuthority().substring(5).equals("ROLE")) {
+            throw new NoPermissionOfClassProgram("No have permission to modify class program: " + this.id);
+        }
+    }
+
+    public void modifiedFor(final ClassProgramModifiedRequest classProgramModifiedRequest) {
+        changeContents(classProgramModifiedRequest.getContents());
+        changeIsBoard(classProgramModifiedRequest.getIsBoard());
+        changeIsRecruit(classProgramModifiedRequest.getIsRecruit());
+        changeCapacity(classProgramModifiedRequest.getCapacity());
+    }
+
+    public void resetAssociated() {
+        this.writer.removeWrittenClassProgram(this);
+        this.appliers.forEach(applier -> applier.removeAppliedClassProgram(this));
+        this.likes.forEach(like -> like.removeLikedClassProgram(this));
+    }
+
+    private void changeContents(final String newContents) {
+        if (newContents == null) {
+            return;
+        }
+        this.contents = newContents;
+    }
+
+    private void changeIsBoard(final Boolean isBoard) {
+        if (isBoard == null) {
+            return;
+        }
+        this.isBoard = isBoard;
+    }
+
+    private void changeIsRecruit(final Boolean isRecruit) {
+        if (isRecruit == null) {
+            return;
+        }
+        this.isRecruit = isRecruit;
+    }
+
+    private void changeCapacity(final Long capacity) {
+        if (capacity == null) {
+            return;
+        }
+        this.capacity = capacity;
     }
 
 }
