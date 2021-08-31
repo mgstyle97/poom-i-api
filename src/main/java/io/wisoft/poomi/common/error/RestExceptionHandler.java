@@ -9,15 +9,44 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
 public class RestExceptionHandler {
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    public ApiResponse<ErrorResponse> methodNotAllowed(HttpRequestMethodNotSupportedException e) {
+        return ApiResponse.failure(HttpStatus.METHOD_NOT_ALLOWED, ErrorResponse.builder()
+                .message(e.getMessage())
+                .build());
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ApiResponse<ErrorResponse> unauthorized(AuthenticationException e) {
+        return ApiResponse
+                .failure(HttpStatus.UNAUTHORIZED, ErrorResponse.builder()
+                    .message(e.getMessage())
+                    .build());
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiResponse<ErrorResponse> notFound(NoHandlerFoundException e) {
+        return ApiResponse.failure(HttpStatus.NOT_FOUND, ErrorResponse.builder()
+                .message(e.getMessage())
+                .build());
+    }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ApiResponse<ErrorResponse> illegalArgument(IllegalArgumentException e) {

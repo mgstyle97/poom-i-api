@@ -22,4 +22,9 @@ public class HelloController {
         return "hello";
     }
 
+    @GetMapping("/login/oauth2/code/google")
+    public void result(HttpServletRequest request) {
+        System.out.println("Success");
+    }
+
 }

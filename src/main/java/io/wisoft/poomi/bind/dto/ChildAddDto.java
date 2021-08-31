@@ -6,7 +6,7 @@ import io.wisoft.poomi.domain.member.child.Child;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -15,7 +15,7 @@ public class ChildAddDto {
     @JsonProperty("email")
     private String email;
 
-    private List<Child> children;
+    private Set<Child> children;
 
     public static ChildAddDto of(Member member) {
         ChildAddDto childAddDto = new ChildAddDto();

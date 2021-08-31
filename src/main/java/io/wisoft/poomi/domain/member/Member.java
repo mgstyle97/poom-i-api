@@ -21,6 +21,7 @@ import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@NoArgsConstructor
 @Getter
 @Entity
 @SequenceGenerator(
@@ -81,7 +82,7 @@ public class Member {
             name = "child_id",
             referencedColumnName = "id"
     )
-    private List<Child> children;
+    private Set<Child> children;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(
@@ -90,19 +91,8 @@ public class Member {
     )
     private ChildminderInfo childminderInfo;
 
-    @OneToMany(mappedBy = "writer", fetch = FetchType.LAZY)
-    private List<ClassProgram> writtenClasses;
-
-    @ManyToMany(mappedBy = "appliers", fetch = FetchType.LAZY)
-    private List<ClassProgram> appliedClasses;
-
-    @ManyToMany(mappedBy = "likes", fetch = FetchType.LAZY)
-    private List<ClassProgram> likedClasses;
-
-    public Member() {
-        this.writtenClasses = new ArrayList<>();
-        this.appliedClasses = new ArrayList<>();
-    }
+    @Embedded
+    private ClassProgramProperties classProgramProperties;
 
     @Builder
     public Member(final String name, final String phoneNumber,
@@ -118,9 +108,8 @@ public class Member {
         this.gender = gender;
         this.authorities = authorities;
         this.address = address;
-        this.children = new ArrayList<>();
-        this.writtenClasses = new ArrayList<>();
-        this.appliedClasses = new ArrayList<>();
+        this.children = new HashSet<>();
+        this.classProgramProperties = new ClassProgramProperties();
     }
 
     public static Member of(final SignupRequest signupRequest,
@@ -189,21 +178,30 @@ public class Member {
     }
 
     public void addClass(final ClassProgram classProgram) {
-        if (!this.writtenClasses.contains(classProgram)) {
-            this.writtenClasses.add(classProgram);
-        }
+        Set<ClassProgram> writtenClasses = this.classProgramProperties.getWrittenClasses();
+        writtenClasses.add(classProgram);
+    }
+
+    public void removeWrittenClassProgram(final ClassProgram classProgram) {
+        this.classProgramProperties.getWrittenClasses().remove(classProgram);
+    }
+
+    public void removeLikedClassProgram(final ClassProgram classProgram) {
+        this.classProgramProperties.getLikedClasses().remove(classProgram);
+    }
+
+    public void removeAppliedClassProgram(final ClassProgram classProgram) {
+        this.classProgramProperties.getAppliedClasses().remove(classProgram);
     }
 
     public void addAppliedClass(final ClassProgram classProgram) {
-        if (!this.appliedClasses.contains(classProgram)) {
-            this.appliedClasses.add(classProgram);
-        }
+        Set<ClassProgram> appliedClasses = this.classProgramProperties.getAppliedClasses();
+        appliedClasses.add(classProgram);
     }
 
     public void addLikedClass(final ClassProgram classProgram) {
-        if (!this.likedClasses.contains(classProgram)) {
-            this.likedClasses.add(classProgram);
-        }
+        Set<ClassProgram> likedClasses = this.classProgramProperties.getLikedClasses();
+        likedClasses.add(classProgram);
     }
 
 }
