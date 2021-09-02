@@ -20,8 +20,4 @@ public class BaseTimeEntity {
     @LastModifiedDate
     private LocalDateTime modifiedAt;
 
-    @Column(name = "expired_at")
-    @Temporal(TemporalType.DATE)
-    private Date expiredAt;
-
 }

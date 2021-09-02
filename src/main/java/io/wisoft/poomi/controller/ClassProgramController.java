@@ -68,7 +68,7 @@ public class ClassProgramController {
     public void applyClassProgram(@PathVariable("id") final Long id, @SignInMember final Member member) {
         classProgramService.applyClassProgram(id, member);
     }
-    
+
     @GetMapping("/{id}/like")
     public void likeClassProgram(@PathVariable("id") final Long id, @SignInMember final Member member) {
         classProgramService.likeClassProgram(id, member);
