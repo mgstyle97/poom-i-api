@@ -6,11 +6,13 @@ import io.wisoft.poomi.common.error.exceptions.NoPermissionOfClassProgram;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.program.BaseTimeEntity;
+import io.wisoft.poomi.domain.program.classes.comment.Comment;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,6 +53,10 @@ public class ClassProgram extends BaseTimeEntity {
     @Column(name = "is_board")
     private Boolean isBoard;
 
+    @Column(name = "expired_at")
+    @Temporal(TemporalType.DATE)
+    private Date expiredAt;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(
             name = "member_id",
@@ -81,6 +87,12 @@ public class ClassProgram extends BaseTimeEntity {
     )
     private Set<Member> likes;
 
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "classProgram"
+    )
+    private Set<Comment> comments;
+
     @Builder
     public ClassProgram(final String title, final String contents,
                         final Long capacity,
@@ -95,6 +107,7 @@ public class ClassProgram extends BaseTimeEntity {
         this.addressTag = writer.getAddressTag();
         this.appliers = new HashSet<>();
         this.likes = new HashSet<>();
+        this.comments = new HashSet<>();
     }
 
     public static ClassProgram of(final Member member,
@@ -144,6 +157,10 @@ public class ClassProgram extends BaseTimeEntity {
         this.writer.removeWrittenClassProgram(this);
         this.appliers.forEach(applier -> applier.removeAppliedClassProgram(this));
         this.likes.forEach(like -> like.removeLikedClassProgram(this));
+    }
+
+    public void addComment(final Comment comment) {
+        this.comments.add(comment);
     }
 
     private void changeContents(final String newContents) {

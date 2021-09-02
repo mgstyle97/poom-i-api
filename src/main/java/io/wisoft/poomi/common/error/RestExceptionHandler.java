@@ -59,6 +59,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(DuplicateMemberException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ApiResponse<ErrorResponse> duplicateMember() {
         return ApiResponse
                 .failure(HttpStatus.CONFLICT, ErrorResponse.builder()
