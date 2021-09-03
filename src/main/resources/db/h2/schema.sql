@@ -32,6 +32,7 @@ CREATE TABLE address_tag (
 CREATE TABLE address (
     id integer primary key,
     post_code varchar not null,
+    address varchar not null,
     detail_address varchar not null,
     ad_tag_id integer,
     foreign key(ad_tag_id) references address_tag(id)
@@ -40,14 +41,6 @@ CREATE TABLE address (
 CREATE TABLE authority (
     id integer primary key,
     authority varchar unique
-);
-
-CREATE TABLE child(
-    id integer primary key,
-    name varchar not null,
-    birthday date not null,
-    school varchar not null,
-    special_note varchar
 );
 
 CREATE TABLE childminder_info(
@@ -68,10 +61,8 @@ CREATE TABLE member(
     gender varchar,
     cm_info_id integer,
     address_id integer,
-    child_id integer,
     foreign key (cm_info_id) references childminder_info(id),
-    foreign key (address_id) references address(id),
-    foreign key (child_id) references  child(id)
+    foreign key (address_id) references address(id)
 );
 
 CREATE TABLE member_authority(
@@ -81,6 +72,16 @@ CREATE TABLE member_authority(
     foreign key (authority_id) references authority(id)
 );
 
+CREATE TABLE child(
+    id integer primary key,
+    name varchar not null,
+    birthday date not null,
+    school varchar not null,
+    special_note varchar,
+    member_id integer not null,
+    foreign key(member_id) references member(id)
+);
+
 CREATE TABLE class_program(
     id integer primary key,
     title varchar not null,
@@ -88,9 +89,7 @@ CREATE TABLE class_program(
     capacity bigint,
     created_at date,
     modified_at date,
-    expired_at date,
     is_recruit boolean default false,
-    is_board boolean default true,
     member_id integer not null,
     address_tag_id integer not null,
     foreign key (member_id) references member(id),

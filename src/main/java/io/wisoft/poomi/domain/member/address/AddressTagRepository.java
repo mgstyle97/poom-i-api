@@ -22,11 +22,11 @@ public interface AddressTagRepository extends JpaRepository<AddressTag, Long> {
         return addressTag.get();
     }
 
-    default AddressTag saveAddressTagWithExtraAddress(final AddressTag addressTag) {
-        if (this.existsAddressTagByExtraAddress(addressTag.getExtraAddress())) {
-            return addressTag;
+    default AddressTag saveAddressTagWithExtraAddress(final String extraAddress) {
+        if (this.existsAddressTagByExtraAddress(extraAddress)) {
+            return this.findByExtraAddress(extraAddress).get();
         }
 
-        return this.save(addressTag);
+        return this.save(new AddressTag(extraAddress));
     }
 }

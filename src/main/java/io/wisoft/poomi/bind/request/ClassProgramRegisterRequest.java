@@ -17,7 +17,5 @@ public class ClassProgramRegisterRequest {
     @JsonProperty("is_recruit")
     private Boolean isRecruit;
 
-    @JsonProperty("is_board")
-    private Boolean isBoard;
 
 }

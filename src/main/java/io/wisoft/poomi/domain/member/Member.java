@@ -76,11 +76,7 @@ public class Member {
 
     @OneToMany(
             fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL
-    )
-    @JoinColumn(
-            name = "child_id",
-            referencedColumnName = "id"
+            mappedBy = "parent"
     )
     private Set<Child> children;
 
@@ -135,12 +131,12 @@ public class Member {
         this.childminderInfo = childminderInfo;
     }
 
-    public void setChildren(final List<ChildAddRequest> children, final ChildRepository childRepository) {
+    public void setChildren(final List<ChildAddRequest> children) {
         if (children == null) {
             return;
         }
         children.stream()
-                .map(childAddRequest -> Child.of(childAddRequest, childRepository))
+                .map(childAddRequest -> Child.of(childAddRequest, this))
                 .forEach(this.children::add);
     }
 

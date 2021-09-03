@@ -84,7 +84,6 @@ class ClassProgramRepositoryTest {
                         .title("테스트")
                         .contents("테스트입니다.")
                         .capacity(15L)
-                        .isBoard(false)
                         .isRecruit(false)
                         .writer(member)
                         .build();
@@ -96,7 +95,6 @@ class ClassProgramRepositoryTest {
                 () -> assertEquals("테스트", classProgram.getTitle()),
                 () -> assertEquals("테스트입니다.", classProgram.getContents()),
                 () -> assertEquals(15L, classProgram.getCapacity()),
-                () -> assertFalse(classProgram.getIsBoard()),
                 () -> assertFalse(classProgram.getIsRecruit()),
                 () -> assertNotNull(classProgram.getCreatedAt())
         );
@@ -110,7 +108,6 @@ class ClassProgramRepositoryTest {
                 .title("테스트")
                 .contents("테스트입니다.")
                 .capacity(15L)
-                .isBoard(false)
                 .isRecruit(false)
                 .writer(member)
                 .build();
