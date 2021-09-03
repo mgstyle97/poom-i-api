@@ -43,6 +43,7 @@ public class AddressService {
         Address address = Address
                 .builder()
                 .postCode(addressRegisterRequest.getPostCode())
+                .address(addressRegisterRequest.getAddress())
                 .detailAddress(addressRegisterRequest.getDetailAddress())
                 .addressTag(addressTag)
                 .build();

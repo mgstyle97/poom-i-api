@@ -9,6 +9,7 @@ import io.wisoft.poomi.bind.request.SignupRequest;
 import io.wisoft.poomi.bind.utils.FileUtils;
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.domain.member.address.Address;
+import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.member.authority.AuthorityRepository;
 import io.wisoft.poomi.domain.member.child.ChildRepository;
 import io.wisoft.poomi.domain.member.cmInfo.ChildminderInfo;
@@ -77,15 +78,18 @@ public class MemberService {
         Member member = Member.of(signupRequest, passwordEncoder, authorityRepository);
         log.info("Generate member data through request");
 
-        Address address = new Address();
-        address.of(addressRepository, addressTagRepository, signupRequest.getAddress());
+        AddressTag addressTag = addressTagRepository
+                .saveAddressTagWithExtraAddress(signupRequest.getAddress().getExtraAddress());
+        log.info("Generate address tag data through request");
+
+        Address address = Address.of(signupRequest.getAddress(), addressTag);
+        addressRepository.save(address);
         log.info("Generate address data through request");
 
         member.updateAddressInfo(address);
+        member.setChildren(signupRequest.getChildren());
         memberRepository.save(member);
-
-        member.setChildren(signupRequest.getChildren(), childRepository);
-
+        childRepository.saveAll(member.getChildren());
         log.info("Save member data through member repository");
 
         return member;

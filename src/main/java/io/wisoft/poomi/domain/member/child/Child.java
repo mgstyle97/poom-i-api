@@ -1,13 +1,18 @@
 package io.wisoft.poomi.domain.member.child;
 
 import io.wisoft.poomi.bind.request.ChildAddRequest;
-import lombok.Data;
-import org.springframework.beans.BeanUtils;
+import io.wisoft.poomi.domain.member.Member;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Data
+@Getter
+@NoArgsConstructor
 @Entity
 @SequenceGenerator(
         name = "child_sequence_generator",
@@ -38,14 +43,32 @@ public class Child {
     @Column(name = "special_note")
     private String specialNote;
 
-    public static Child of(final ChildAddRequest childAddRequest, final ChildRepository childRepository) {
-        Child child = childRepository.findByName(childAddRequest.getName())
-                .orElse(new Child());
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(
+            name = "member_id",
+            referencedColumnName = "id"
+    )
+    private Member parent;
 
-        BeanUtils.copyProperties(childAddRequest, child);
-        childRepository.save(child);
+    @Builder
+    public Child(final String name, final Date birthday,
+                 final String school, final String specialNote,
+                 final Member parent) {
+        this.name = name;
+        this.birthday = birthday;
+        this.school = school;
+        this.specialNote = specialNote;
+        this.parent = parent;
+    }
 
-        return child;
+    public static Child of(final ChildAddRequest childAddRequest, final Member parent) {
+        return Child.builder()
+                .name(childAddRequest.getName())
+                .birthday(childAddRequest.getBirthday())
+                .school(childAddRequest.getSchool())
+                .specialNote(childAddRequest.getSpecialNote())
+                .parent(parent)
+                .build();
     }
 
 }

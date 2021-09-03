@@ -19,9 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -51,8 +52,8 @@ class ClassProgramServiceTest {
     void setup() {
         // given
 
-        AddressTag addressTag = new AddressTag("city");
-        addressTagRepository.saveAddressTagWithExtraAddress(addressTag);
+        AddressTag addressTag = addressTagRepository
+                .saveAddressTagWithExtraAddress("city");
 
         Address address = Address.builder()
                 .addressTag(addressTag)
@@ -77,7 +78,6 @@ class ClassProgramServiceTest {
                 .title("테스트")
                 .contents("테스트입니다.")
                 .capacity(15L)
-                .isBoard(false)
                 .isRecruit(false)
                 .writer(member)
                 .build();
@@ -86,7 +86,6 @@ class ClassProgramServiceTest {
                 .title("테스트2")
                 .contents("테스트2입니다.")
                 .capacity(12L)
-                .isBoard(false)
                 .isRecruit(false)
                 .writer(member)
                 .build();
@@ -116,7 +115,6 @@ class ClassProgramServiceTest {
         classProgramRegisterRequest.setTitle("테스트3");
         classProgramRegisterRequest.setContents("테스트3입니다.");
         classProgramRegisterRequest.setIsRecruit(false);
-        classProgramRegisterRequest.setIsBoard(false);
         classProgramRegisterRequest.setCapacity(12L);
 
         classProgramService.registerClassProgram(member, classProgramRegisterRequest);
@@ -133,11 +131,14 @@ class ClassProgramServiceTest {
         classProgramService.applyClassProgram(1L, member);
 
         ClassProgram classProgram = classProgramRepository.findClassProgramById(1L);
-        List<ClassProgram> appliedClasses = member.getClassProgramProperties().getAppliedClasses();
+        Set<ClassProgram> appliedClasses = member.getClassProgramProperties().getAppliedClasses();
 
+        ClassProgram classProgram1 = appliedClasses.stream()
+                .filter(appliedClass -> classProgram.getTitle().equals(appliedClass.getTitle()))
+                .collect(Collectors.toList()).get(0);
         assertAll(
-                () -> assertEquals(classProgram.getTitle(), appliedClasses.get(0).getTitle()),
-                () -> assertEquals(classProgram.getAppliers().get(0).getId(), member.getId())
+                () -> assertNotNull(classProgram1),
+                () -> assertTrue(classProgram1.getAppliers().contains(member))
         );
     }
 
@@ -148,12 +149,17 @@ class ClassProgramServiceTest {
         classProgramService.likeClassProgram(1L, member);
 
         ClassProgram classProgram = classProgramRepository.findClassProgramById(1L);
-        List<ClassProgram> likedClasses = member.getClassProgramProperties().getLikedClasses();
+        Set<ClassProgram> likedClasses = member.getClassProgramProperties().getLikedClasses();
+
+        ClassProgram classProgram1 = likedClasses.stream()
+                        .filter(likedClass -> classProgram.getTitle().equals(likedClass.getTitle()))
+                        .collect(Collectors.toList()).get(0);
 
         assertAll(
-                () -> assertEquals(classProgram.getTitle(), likedClasses.get(0).getTitle()),
-                () -> assertEquals(classProgram.getLikes().get(0).getId(), member.getId())
+                () -> assertNotNull(classProgram1),
+                () -> assertTrue(classProgram1.getLikes().contains(member))
         );
+
     }
 
 }

@@ -24,7 +24,8 @@ public class ChildService {
     @Transactional
     public ChildAddDto updateChildren(Member member, List<ChildAddRequest> childAddRequests) {
 
-        member.setChildren(childAddRequests, childRepository);
+        member.setChildren(childAddRequests);
+        childRepository.saveAll(member.getChildren());
         log.info("Generate child through request data and set");
 
         return ChildAddDto.of(member);

@@ -64,8 +64,7 @@ class ClassProgramControllerTest {
     @BeforeEach
     void setup() {
         // given
-        AddressTag addressTag = new AddressTag("city");
-        addressTagRepository.save(addressTag);
+        AddressTag addressTag = addressTagRepository.saveAddressTagWithExtraAddress("city");
 
         Address address = Address.builder()
                 .addressTag(addressTag)
@@ -97,7 +96,6 @@ class ClassProgramControllerTest {
                 .title("테스트")
                 .contents("테스트입니다.")
                 .capacity(15L)
-                .isBoard(false)
                 .isRecruit(false)
                 .writer(member)
                 .build();
@@ -106,7 +104,6 @@ class ClassProgramControllerTest {
                 .title("테스트2")
                 .contents("테스트2입니다.")
                 .capacity(12L)
-                .isBoard(false)
                 .isRecruit(false)
                 .writer(member)
                 .build();

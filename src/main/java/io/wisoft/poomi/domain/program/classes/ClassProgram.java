@@ -50,13 +50,6 @@ public class ClassProgram extends BaseTimeEntity {
     @Column(name = "is_recruit")
     private Boolean isRecruit;
 
-    @Column(name = "is_board")
-    private Boolean isBoard;
-
-    @Column(name = "expired_at")
-    @Temporal(TemporalType.DATE)
-    private Date expiredAt;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(
             name = "member_id",
@@ -96,13 +89,11 @@ public class ClassProgram extends BaseTimeEntity {
     @Builder
     public ClassProgram(final String title, final String contents,
                         final Long capacity,
-                        final Boolean isRecruit, final Boolean isBoard,
-                        final Member writer) {
+                        final Boolean isRecruit, final Member writer) {
         this.title = title;
         this.contents = contents;
         this.capacity = capacity;
         this.isRecruit = isRecruit;
-        this.isBoard = isBoard;
         this.writer = writer;
         this.addressTag = writer.getAddressTag();
         this.appliers = new HashSet<>();
@@ -117,7 +108,6 @@ public class ClassProgram extends BaseTimeEntity {
                 .contents(classProgramRegisterRequest.getContents())
                 .capacity(classProgramRegisterRequest.getCapacity())
                 .isRecruit(classProgramRegisterRequest.getIsRecruit())
-                .isBoard(classProgramRegisterRequest.getIsBoard())
                 .writer(member)
                 .build();
         member.addClass(classProgram);
@@ -148,7 +138,6 @@ public class ClassProgram extends BaseTimeEntity {
 
     public void modifiedFor(final ClassProgramModifiedRequest classProgramModifiedRequest) {
         changeContents(classProgramModifiedRequest.getContents());
-        changeIsBoard(classProgramModifiedRequest.getIsBoard());
         changeIsRecruit(classProgramModifiedRequest.getIsRecruit());
         changeCapacity(classProgramModifiedRequest.getCapacity());
     }
@@ -168,13 +157,6 @@ public class ClassProgram extends BaseTimeEntity {
             return;
         }
         this.contents = newContents;
-    }
-
-    private void changeIsBoard(final Boolean isBoard) {
-        if (isBoard == null) {
-            return;
-        }
-        this.isBoard = isBoard;
     }
 
     private void changeIsRecruit(final Boolean isRecruit) {

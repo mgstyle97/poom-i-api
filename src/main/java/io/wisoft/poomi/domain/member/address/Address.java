@@ -1,18 +1,14 @@
 package io.wisoft.poomi.domain.member.address;
 
 import io.wisoft.poomi.bind.request.AddressRegisterRequest;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
 @SequenceGenerator(
         name = "address_sequence_generator",
@@ -34,6 +30,9 @@ public class Address {
     @Column(name = "post_code")
     private String postCode;
 
+    @Column(name = "address")
+    private String address;
+
     @Column(name = "detail_address")
     private String detailAddress;
 
@@ -44,15 +43,25 @@ public class Address {
     )
     private AddressTag addressTag;
 
-    @Transactional
-    public void of(final AddressRepository addressRepository,
-                    final AddressTagRepository tagRepository,
-                    final AddressRegisterRequest request) {
-        this.postCode = request.getPostCode();
-        this.detailAddress = request.getDetailAddress();
-        this.addressTag = tagRepository.getAddressTagByExtraAddress(request.getExtraAddress());
+    @Builder
+    public Address(final String postCode, final String address,
+                   final String detailAddress, final AddressTag addressTag) {
+        this.postCode = postCode;
+        this.address = address;
+        this.detailAddress = detailAddress;
+        this.addressTag = addressTag;
+    }
 
-        addressRepository.save(this);
+    public static Address of(final AddressRegisterRequest request,
+                             final AddressTag addressTag) {
+        Address address = Address.builder()
+                .postCode(request.getPostCode())
+                .address(request.getAddress())
+                .detailAddress(request.getDetailAddress())
+                .addressTag(addressTag)
+                .build();
+
+        return address;
     }
 
 }
