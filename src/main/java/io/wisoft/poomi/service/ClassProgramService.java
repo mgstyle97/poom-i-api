@@ -6,17 +6,25 @@ import io.wisoft.poomi.bind.dto.ClassProgramModifiedDto;
 import io.wisoft.poomi.bind.dto.ClassProgramRegisterDto;
 import io.wisoft.poomi.bind.request.ClassProgramModifiedRequest;
 import io.wisoft.poomi.bind.request.ClassProgramRegisterRequest;
+import io.wisoft.poomi.bind.utils.FileUtils;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.MemberRepository;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.program.classes.ClassProgram;
 import io.wisoft.poomi.domain.program.classes.ClassProgramRepository;
+import io.wisoft.poomi.domain.program.classes.image.Image;
+import io.wisoft.poomi.domain.program.classes.image.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -25,6 +33,7 @@ import java.util.stream.Collectors;
 public class ClassProgramService {
 
     private final ClassProgramRepository classProgramRepository;
+    private final ImageRepository imageRepository;
     private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
@@ -36,12 +45,15 @@ public class ClassProgramService {
 
     @Transactional
     public ClassProgramRegisterDto registerClassProgram(final Member member,
-                                                        final ClassProgramRegisterRequest classProgramRegisterRequest) {
+                                                        final ClassProgramRegisterRequest classProgramRegisterRequest,
+                                                        final List<MultipartFile> images) {
         ClassProgram classProgram = ClassProgram.of(member, classProgramRegisterRequest);
         log.info("Generate class program title: {}", classProgram.getTitle());
 
         classProgramRepository.save(classProgram);
         log.info("Save class program id: {}", classProgram.getId());
+
+        saveFiles(classProgram, images);
 
         memberRepository.save(member);
 
@@ -85,6 +97,16 @@ public class ClassProgramService {
 
         classProgram.addLikes(member);
         memberRepository.save(member);
+    }
+
+    private void saveFiles(final ClassProgram classProgram, final List<MultipartFile> images) {
+        Set<Image> imageEntities = FileUtils.saveImageWithClassId(classProgram, images);
+
+        if (CollectionUtils.isEmpty(imageEntities)) {
+            imageRepository.saveAll(imageEntities);
+        }
+
+        classProgram.setImages(imageEntities);
     }
 
     private ClassProgram generateClassProgramById(final Long id) {
