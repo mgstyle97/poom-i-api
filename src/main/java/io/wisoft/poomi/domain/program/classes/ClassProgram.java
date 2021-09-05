@@ -7,6 +7,7 @@ import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.program.BaseTimeEntity;
 import io.wisoft.poomi.domain.program.classes.comment.Comment;
+import io.wisoft.poomi.domain.program.classes.image.Image;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,6 +50,9 @@ public class ClassProgram extends BaseTimeEntity {
 
     @Column(name = "is_recruit")
     private Boolean isRecruit;
+
+    @OneToMany(mappedBy = "classProgram")
+    private Set<Image> images;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(
@@ -94,6 +98,7 @@ public class ClassProgram extends BaseTimeEntity {
         this.contents = contents;
         this.capacity = capacity;
         this.isRecruit = isRecruit;
+        this.images = new HashSet<>();
         this.writer = writer;
         this.addressTag = writer.getAddressTag();
         this.appliers = new HashSet<>();
@@ -113,6 +118,10 @@ public class ClassProgram extends BaseTimeEntity {
         member.addClass(classProgram);
 
         return classProgram;
+    }
+
+    public void setImages(final Set<Image> images) {
+        this.images = images;
     }
 
     public void addApplier(final Member member) {

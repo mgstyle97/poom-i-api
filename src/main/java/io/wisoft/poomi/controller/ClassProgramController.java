@@ -13,6 +13,7 @@ import io.wisoft.poomi.service.ClassProgramService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -35,12 +36,13 @@ public class ClassProgramController {
 
     @PostMapping
     public ApiResponse<ClassProgramRegisterDto> registerClassProgram(
-            @RequestBody @Valid final ClassProgramRegisterRequest classProgramRegisterRequest,
+            @ModelAttribute @Valid final ClassProgramRegisterRequest classProgramRegisterRequest,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
             @SignInMember final Member member) {
         return ApiResponse
                 .succeed(
                         HttpStatus.CREATED,
-                        classProgramService.registerClassProgram(member, classProgramRegisterRequest)
+                        classProgramService.registerClassProgram(member, classProgramRegisterRequest, images)
                 );
     }
     @PatchMapping("/{id}")
