@@ -7,6 +7,7 @@ import io.wisoft.poomi.domain.program.classes.ClassProgram;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 
@@ -67,6 +68,14 @@ public class Comment extends BaseTimeEntity {
         classProgram.addComment(comment);
 
         return comment;
+    }
+
+    public void updateContents(final String contents) {
+        if (!StringUtils.hasText(contents) &&
+                this.contents.equals(contents)) {
+            return;
+        }
+        this.contents = contents;
     }
 
 }

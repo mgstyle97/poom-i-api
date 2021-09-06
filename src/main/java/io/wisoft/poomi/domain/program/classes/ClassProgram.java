@@ -7,10 +7,12 @@ import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.program.BaseTimeEntity;
 import io.wisoft.poomi.domain.program.classes.comment.Comment;
+import io.wisoft.poomi.domain.program.classes.comment.CommentRepository;
 import io.wisoft.poomi.domain.program.classes.image.Image;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -155,6 +157,7 @@ public class ClassProgram extends BaseTimeEntity {
         this.writer.removeWrittenClassProgram(this);
         this.appliers.forEach(applier -> applier.removeAppliedClassProgram(this));
         this.likes.forEach(like -> like.removeLikedClassProgram(this));
+        this.comments.clear();
     }
 
     public void addComment(final Comment comment) {
@@ -162,7 +165,8 @@ public class ClassProgram extends BaseTimeEntity {
     }
 
     private void changeContents(final String newContents) {
-        if (newContents == null) {
+        if (!StringUtils.hasText(newContents) ||
+                this.contents.equals(newContents)) {
             return;
         }
         this.contents = newContents;

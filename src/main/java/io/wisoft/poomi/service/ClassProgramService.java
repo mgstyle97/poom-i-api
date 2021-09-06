@@ -1,9 +1,6 @@
 package io.wisoft.poomi.service;
 
-import io.wisoft.poomi.bind.dto.ClassProgramDeleteDto;
-import io.wisoft.poomi.bind.dto.ClassProgramLookupDto;
-import io.wisoft.poomi.bind.dto.ClassProgramModifiedDto;
-import io.wisoft.poomi.bind.dto.ClassProgramRegisterDto;
+import io.wisoft.poomi.bind.dto.*;
 import io.wisoft.poomi.bind.request.ClassProgramModifiedRequest;
 import io.wisoft.poomi.bind.request.ClassProgramRegisterRequest;
 import io.wisoft.poomi.bind.utils.FileUtils;
@@ -12,6 +9,7 @@ import io.wisoft.poomi.domain.member.MemberRepository;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.program.classes.ClassProgram;
 import io.wisoft.poomi.domain.program.classes.ClassProgramRepository;
+import io.wisoft.poomi.domain.program.classes.comment.CommentRepository;
 import io.wisoft.poomi.domain.program.classes.image.Image;
 import io.wisoft.poomi.domain.program.classes.image.ImageRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +33,8 @@ public class ClassProgramService {
     private final ClassProgramRepository classProgramRepository;
     private final ImageRepository imageRepository;
     private final MemberRepository memberRepository;
+
+    private final CommentService commentService;
 
     @Transactional(readOnly = true)
     public List<ClassProgramLookupDto> findByAddressTag(final AddressTag addressTag) {
@@ -72,6 +72,13 @@ public class ClassProgramService {
         return ClassProgramModifiedDto.of(id);
     }
 
+    @Transactional(readOnly = true)
+    public ClassProgramSinglePageDto callClassProgramSinglePage(final Long classId, final String domainInfo) {
+        ClassProgram classProgram = generateClassProgramById(classId);
+
+        return ClassProgramSinglePageDto.of(classProgram, domainInfo);
+    }
+
     @Transactional
     public ClassProgramDeleteDto removeClassProgram(final Member member, final Long id) {
         ClassProgram classProgram = generateClassProgramById(id);
@@ -102,7 +109,7 @@ public class ClassProgramService {
     private void saveFiles(final ClassProgram classProgram, final List<MultipartFile> images) {
         Set<Image> imageEntities = FileUtils.saveImageWithClassId(classProgram, images);
 
-        if (CollectionUtils.isEmpty(imageEntities)) {
+        if (!CollectionUtils.isEmpty(imageEntities)) {
             imageRepository.saveAll(imageEntities);
         }
 
@@ -129,6 +136,8 @@ public class ClassProgramService {
     }
 
     private void deleteClassProgram(final ClassProgram classProgram, final Member member) {
+        commentService.deleteAll(classProgram.getComments(), classProgram.getId());
+        imageRepository.deleteAll(classProgram.getImages());
         classProgram.resetAssociated();
         classProgramRepository.delete(classProgram);
         log.info("Delete class program id: {}", classProgram.getId());
