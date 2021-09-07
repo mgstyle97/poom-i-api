@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import java.net.SocketException;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -101,5 +103,27 @@ public class RestExceptionHandler {
                 .failure(HttpStatus.BAD_REQUEST, ErrorResponse.builder()
                 .message(errorCodes)
                 .build());
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+    public ApiResponse<ErrorResponse> unsupportedMediaType(HttpRequestMethodNotSupportedException e) {
+        return ApiResponse.failure(
+                HttpStatus.UNSUPPORTED_MEDIA_TYPE,
+                ErrorResponse.builder()
+                        .message(e.getMessage())
+                        .build()
+        );
+    }
+
+    @ExceptionHandler(SocketException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ApiResponse<ErrorResponse> socketException() {
+        return ApiResponse.failure(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ErrorResponse.builder()
+                        .message("서버측 네트워크 연결이 불안정합니다. 잠시만 기다려주세요")
+                        .build()
+        );
     }
 }
