@@ -1,16 +1,14 @@
 package io.wisoft.poomi.controller;
 
 import io.wisoft.poomi.bind.ApiResponse;
-import io.wisoft.poomi.bind.dto.MyPageDto;
-import io.wisoft.poomi.bind.dto.SigninDto;
-import io.wisoft.poomi.bind.dto.CMInfoRegisterDto;
-import io.wisoft.poomi.bind.dto.SignupDto;
+import io.wisoft.poomi.bind.dto.*;
 import io.wisoft.poomi.bind.request.SigninRequest;
 import io.wisoft.poomi.bind.request.CMInfoRegisterRequest;
 import io.wisoft.poomi.bind.request.SignupRequest;
 import io.wisoft.poomi.configures.web.SignInMember;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.service.MemberService;
+import io.wisoft.poomi.service.OAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,6 +26,7 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
+    private final OAuthService oAuthService;
 
     @PostMapping("/signin")
     public ApiResponse<SigninDto> signin(
@@ -40,16 +39,6 @@ public class MemberController {
             @ModelAttribute final SignupRequest signupRequest,
             @RequestPart(value = "images", required = false) final List<MultipartFile> images) {
         return ApiResponse.succeed(HttpStatus.CREATED, memberService.signup(signupRequest, images));
-    }
-
-    @GetMapping("/signin/oauth2")
-    public ResponseEntity<?> sigininOAuth() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("location", "https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=12514042527-pm3r9q9804rtlfumt8ino77hmcpsjhcu.apps.googleusercontent.com&scope=profile%20email&state=OQ7BLLoFYEWswnp9YoJuBn6fCAdwUARK9pwD9HR_7yU%3D&redirect_uri=http://localhost:8081/login/oauth2/code/google");
-
-
-        return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
-
     }
 
     @GetMapping("/member/me")
@@ -69,6 +58,14 @@ public class MemberController {
         SigninDto dto = (SigninDto) request.getAttribute("signin-dto");
 
         return ApiResponse.succeed(HttpStatus.OK, dto);
+    }
+
+    @GetMapping("/oauth2")
+    public ApiResponse<OAuthUserProperties> oauthCodeToUserInfo(@RequestParam("code") String code) {
+        return ApiResponse.succeed(
+                HttpStatus.OK,
+                oAuthService.getUserProperties(code)
+        );
     }
 
 }
