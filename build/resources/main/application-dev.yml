@@ -43,6 +43,6 @@ lombok:
     addConstructorProperties: true
 
 slack:
-  url: https://slack.com/api/chat.postMessage
-  token: xoxb-2476970646052-2471396620226-9ke1pFCcti4NMUhEBdJsR7az
-  channel: C02DUND810B
+  url: ${SLACK_POST_URL}
+  token: ${SLACK_TOKEN}
+  channel: ${SLACK_CHANNEL}
