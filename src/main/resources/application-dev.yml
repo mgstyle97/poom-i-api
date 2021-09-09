@@ -41,3 +41,6 @@ ncs:
 lombok:
   anyConstructor:
     addConstructorProperties: true
+
+web-hook:
+  url: https://hooks.slack.com/services/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

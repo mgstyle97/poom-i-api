@@ -7,6 +7,8 @@ import io.wisoft.poomi.bind.request.SigninRequest;
 import io.wisoft.poomi.bind.request.CMInfoRegisterRequest;
 import io.wisoft.poomi.bind.request.SignupRequest;
 import io.wisoft.poomi.bind.utils.FileUtils;
+import io.wisoft.poomi.common.error.exceptions.AlreadyExistsMemberInfoException;
+import io.wisoft.poomi.common.error.exceptions.DuplicateMemberException;
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.domain.member.address.Address;
 import io.wisoft.poomi.domain.member.address.AddressTag;
@@ -75,7 +77,10 @@ public class MemberService {
     }
 
     private Member saveMember(final SignupRequest signupRequest) {
-        Member member = Member.of(signupRequest, passwordEncoder, authorityRepository);
+        verifyEmailAndNick(signupRequest.getEmail(), signupRequest.getNick());
+        log.info("Verify email and nick from request");
+
+        Member member = Member.of(signupRequest, passwordEncoder, authorityRepository.getUserAuthority());
         log.info("Generate member data through request");
 
         AddressTag addressTag = addressTagRepository
@@ -88,11 +93,23 @@ public class MemberService {
 
         member.updateAddressInfo(address);
         member.setChildren(signupRequest.getChildren());
+        log.info("Set request data to member properties");
+
         memberRepository.save(member);
         childRepository.saveAll(member.getChildren());
         log.info("Save member data through member repository");
 
         return member;
+    }
+
+    private void verifyEmailAndNick(final String email, final String nick) {
+        if (memberRepository.existsByEmail(email)) {
+            throw new DuplicateMemberException("이미 존재하는 이메일입니다.");
+        }
+
+        if (memberRepository.existsByNick(nick)) {
+            throw new DuplicateMemberException("이미 존재하는 닉네임입니다.");
+        }
     }
 
     private Authentication toAuthentication(final SigninRequest signinRequest,

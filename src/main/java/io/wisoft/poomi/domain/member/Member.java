@@ -110,7 +110,7 @@ public class Member {
 
     public static Member of(final SignupRequest signupRequest,
                             final PasswordEncoder passwordEncoder,
-                            final AuthorityRepository authorityRepository) {
+                            final Authority userAuthority) {
         Member member = Member.builder()
                 .name(signupRequest.getName())
                 .phoneNumber(signupRequest.getPhoneNumber())
@@ -118,7 +118,7 @@ public class Member {
                 .password(passwordEncoder.encode(signupRequest.getPassword()))
                 .nick(signupRequest.getNick())
                 .gender(Gender.getGender(signupRequest.getGender()))
-                .authorities(Collections.singleton(authorityRepository.getUserAuthority()))
+                .authorities(Collections.singleton(userAuthority))
                 .build();
         return member;
     }
