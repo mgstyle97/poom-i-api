@@ -7,7 +7,6 @@ import io.wisoft.poomi.bind.request.SigninRequest;
 import io.wisoft.poomi.bind.request.CMInfoRegisterRequest;
 import io.wisoft.poomi.bind.request.SignupRequest;
 import io.wisoft.poomi.bind.utils.FileUtils;
-import io.wisoft.poomi.common.error.exceptions.AlreadyExistsMemberInfoException;
 import io.wisoft.poomi.common.error.exceptions.DuplicateMemberException;
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.domain.member.address.Address;
@@ -28,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Slf4j
