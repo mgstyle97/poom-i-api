@@ -42,5 +42,7 @@ lombok:
   anyConstructor:
     addConstructorProperties: true
 
-web-hook:
-  url: https://hooks.slack.com/services/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
+slack:
+  url: https://slack.com/api/chat.postMessage
+  token: xoxb-2476970646052-2471396620226-9ke1pFCcti4NMUhEBdJsR7az
+  channel: C02DUND810B

@@ -1,13 +1,7 @@
 package io.wisoft.poomi.bind.utils;
 
-import io.wisoft.poomi.bind.ApiResponse;
-import io.wisoft.poomi.common.error.ErrorResponse;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.*;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -21,22 +15,29 @@ public class ErrorNotificationUtils {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    @Value("${web-hook.url}")
-    private String webHookUrl;
+    @Value("${slack.url}")
+    private String slackUrl;
+
+    @Value("${slack.token}")
+    private String slackToken;
+
+    @Value("${slack.channel}")
+    private String slackChannel;
 
     public void sendErrorInfo2Slack(final String errorMessage) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + slackToken);
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+
         Map<String, Object> request = new HashMap<>();
-        request.put("username", "poom-i-error-bot");
+        request.put("channel", slackChannel);
         request.put("text", "[Poom-i]\n" + getCurrentTime() + "\n" + errorMessage);
 
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(request);
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(request, headers);
 
-        restTemplate.exchange(
-                webHookUrl,
-                HttpMethod.POST,
-                entity,
-                String.class
-        );
+
+        ResponseEntity<String> response = restTemplate.exchange(slackUrl, HttpMethod.POST, entity, String.class);
+
     }
 
     private String getCurrentTime() {

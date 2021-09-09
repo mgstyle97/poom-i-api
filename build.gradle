@@ -42,6 +42,11 @@ dependencies {
     // file 업로드 관련 의존성
     implementation 'commons-io:commons-io:2.6'
 
+    // slack SDK
+    implementation 'com.slack.api:slack-app-backend:1.6.2'
+    implementation 'com.slack.api:slack-api-model:1.6.2'
+    implementation 'com.slack.api:slack-api-client:1.6.2'
+
 }
 
 test {

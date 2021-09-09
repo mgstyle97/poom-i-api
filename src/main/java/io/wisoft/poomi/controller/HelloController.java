@@ -4,8 +4,9 @@ import io.wisoft.poomi.configures.web.SignInMember;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.parsing.Problem;
+import org.springframework.http.*;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,9 @@ import java.util.Map;
 @RestController
 public class HelloController {
 
+    @Value("${slack.token}")
+    private String slackToken;
+
     @Autowired
     private MemberService memberService;
 
@@ -25,26 +29,6 @@ public class HelloController {
     public String hello(@SignInMember final Member member) {
         System.out.println(member.getId());
         return "hello";
-    }
-
-    @GetMapping("/login/oauth2/code/google")
-    public void result(HttpServletRequest request) {
-        System.out.println("Success");
-    }
-
-    @GetMapping("/error-log")
-    public void errorLog() {
-        RestTemplate restTemplate = new RestTemplate();
-
-        Map<String, Object> request = new HashMap<>();
-        request.put("username", "error-bot");
-        request.put("text", "test");
-
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(request);
-
-        String url = "";
-
-        restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
     }
 
 }
