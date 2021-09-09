@@ -59,7 +59,7 @@ CREATE TABLE member(
     phone_number varchar,
     email varchar unique ,
     password varchar,
-    nick varchar,
+    nick varchar unique,
     gender varchar,
     cm_info_id integer,
     address_id integer,

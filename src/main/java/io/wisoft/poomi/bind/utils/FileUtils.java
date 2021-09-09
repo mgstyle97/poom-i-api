@@ -22,6 +22,10 @@ public class FileUtils {
     public static void saveImageWithUserEmail(String email, List<MultipartFile> images) {
         int idx = 1;
 
+        if (images == null) {
+            throw new IllegalArgumentException("회원의 신분을 입증할 파일이 없습니다.");
+        }
+
         try {
             for (MultipartFile image : images) {
                 String extension = FilenameUtils.getExtension(image.getOriginalFilename());

@@ -10,9 +10,7 @@ import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.service.MemberService;
 import io.wisoft.poomi.service.OAuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,8 +34,8 @@ public class MemberController {
 
     @PostMapping("/signup")
     public ApiResponse<SignupDto> signup(
-            @ModelAttribute final SignupRequest signupRequest,
-            @RequestPart(value = "images", required = false) final List<MultipartFile> images) {
+            @ModelAttribute @Valid final SignupRequest signupRequest,
+            @RequestPart(value = "images", required = false) @Valid final List<MultipartFile> images) {
         return ApiResponse.succeed(HttpStatus.CREATED, memberService.signup(signupRequest, images));
     }
 

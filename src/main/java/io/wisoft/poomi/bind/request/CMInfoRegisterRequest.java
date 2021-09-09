@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.lang.NonNull;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 @Getter
@@ -12,8 +13,9 @@ import java.util.Date;
 public class CMInfoRegisterRequest {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @NonNull()
     private Date date;
+
+    @NotBlank(message = "품앗이 정보에 대한 자세한 설명을 입력해주세요.")
     private String experience;
     private String greeting;
 
