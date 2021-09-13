@@ -34,7 +34,7 @@ public class MemberController {
 
     @PostMapping("/signup")
     public ApiResponse<SignupDto> signup(
-            @ModelAttribute @Valid final SignupRequest signupRequest,
+            @RequestPart("data") @Valid final SignupRequest signupRequest,
             @RequestPart(value = "images", required = false) @Valid final List<MultipartFile> images) {
         return ApiResponse.succeed(HttpStatus.CREATED, memberService.signup(signupRequest, images));
     }
