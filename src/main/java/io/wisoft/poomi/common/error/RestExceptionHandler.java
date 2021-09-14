@@ -164,7 +164,7 @@ public class RestExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<ErrorResponse> httpClientError(final HttpClientErrorException ex) {
         String errorMessage = ex.getMessage() + "\n" + "오류 코드를 확인 후 해당 소셜에서 확인해보세요.";
-
+        log.error("소셜 로그인 요청 에러");
         errorNotificationUtils.sendErrorInfo2Slack(errorMessage);
 
         return ApiResponse.failure(
