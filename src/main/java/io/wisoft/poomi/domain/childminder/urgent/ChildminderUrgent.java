@@ -1,11 +1,15 @@
 package io.wisoft.poomi.domain.childminder.urgent;
 
+import io.wisoft.poomi.bind.request.childminder.urgent.ChildminderUrgentModifiedRequest;
 import io.wisoft.poomi.bind.request.childminder.urgent.ChildminderUrgentRegisterRequest;
+import io.wisoft.poomi.common.error.exceptions.NoPermissionOfClass;
+import io.wisoft.poomi.common.error.exceptions.NoPermissionOfUrgent;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.childminder.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -74,6 +78,49 @@ public class ChildminderUrgent extends BaseTimeEntity {
         member.addUrgent(childminderUrgent);
 
         return childminderUrgent;
+    }
+
+    public void verifyPermission(final Member member) {
+        if (!this.writer.getId().equals(member.getId())) {
+            throw new NoPermissionOfUrgent("No have permission to modify class program: " + this.id);
+        }
+    }
+
+    public void modifiedFor(final ChildminderUrgentModifiedRequest childminderUrgentModifiedRequest) {
+        changeContents(childminderUrgentModifiedRequest.getContents());
+        changeIsRecruit(childminderUrgentModifiedRequest.getIsRecruit());
+        changeStartTime(childminderUrgentModifiedRequest.getStartTime());
+        changeEndTime(childminderUrgentModifiedRequest.getEndTime());
+    }
+
+    private void changeContents(final String contents) {
+        if(!StringUtils.hasText(contents)) {
+            return;
+        }
+        this.contents = contents;
+    }
+
+    private void changeIsRecruit(final Boolean isRecruit) {
+        if (this.isRecruit.equals(isRecruit)) {
+            return;
+        }
+        this.isRecruit = isRecruit;
+    }
+
+    private void changeStartTime(final LocalDateTime startTime) {
+        if(this.startTime.equals(startTime)) {
+            return;
+        }
+
+        this.startTime = startTime;
+    }
+
+    private void changeEndTime(final LocalDateTime endTime) {
+        if (this.endTime.equals(endTime)) {
+            return;
+        }
+
+        this.endTime = endTime;
     }
 
 }
