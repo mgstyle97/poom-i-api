@@ -6,6 +6,7 @@ import io.wisoft.poomi.common.error.exceptions.NoPermissionOfClass;
 import io.wisoft.poomi.common.error.exceptions.NoPermissionOfUrgent;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.childminder.BaseTimeEntity;
+import io.wisoft.poomi.domain.member.address.AddressTag;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,6 +56,13 @@ public class ChildminderUrgent extends BaseTimeEntity {
     )
     private Member writer;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(
+            name = "address_tag_id",
+            referencedColumnName = "id"
+    )
+    private AddressTag addressTag;
+
     @Builder
     public ChildminderUrgent(final String contents, final Boolean isRecruit,
                              final LocalDateTime startTime, final LocalDateTime endTime,
@@ -64,6 +72,7 @@ public class ChildminderUrgent extends BaseTimeEntity {
         this.startTime = startTime;
         this.endTime = endTime;
         this.writer = writer;
+        this.addressTag = writer.getAddressTag();
     }
 
     public static ChildminderUrgent of(final ChildminderUrgentRegisterRequest childminderUrgentRegisterRequest,

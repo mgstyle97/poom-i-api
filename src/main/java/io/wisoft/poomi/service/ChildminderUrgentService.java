@@ -1,5 +1,6 @@
 package io.wisoft.poomi.service;
 
+import io.wisoft.poomi.bind.dto.childminder.urgent.ChildminderUrgentLookupDto;
 import io.wisoft.poomi.bind.dto.childminder.urgent.ChildminderUrgentModifiedDto;
 import io.wisoft.poomi.bind.dto.childminder.urgent.ChildminderUrgentRegisterDto;
 import io.wisoft.poomi.bind.request.childminder.urgent.ChildminderUrgentModifiedRequest;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,6 +24,15 @@ import java.time.LocalDateTime;
 public class ChildminderUrgentService {
 
     private final ChildminderUrgentRepository childminderUrgentRepository;
+
+    @Transactional(readOnly = true)
+    public List<ChildminderUrgentLookupDto> lookupAllChildminderUrgent(final Member member) {
+        List<ChildminderUrgent> childminderUrgentList = childminderUrgentRepository
+                .findAllByAddressTag(member.getAddressTag());
+        return childminderUrgentList.stream()
+                .map(ChildminderUrgentLookupDto::of)
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public ChildminderUrgentRegisterDto registerChildminderUrgent(
