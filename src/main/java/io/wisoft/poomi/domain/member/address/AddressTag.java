@@ -14,7 +14,7 @@ import javax.persistence.*;
 @SequenceGenerator(
         name = "ad_tag_sequence_generator",
         sequenceName = "ad_tag_sequence",
-        initialValue = 1,
+        initialValue = 2,
         allocationSize = 1
 )
 public class AddressTag {
