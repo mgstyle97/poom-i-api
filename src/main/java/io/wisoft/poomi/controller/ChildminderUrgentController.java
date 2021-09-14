@@ -1,6 +1,7 @@
 package io.wisoft.poomi.controller;
 
 import io.wisoft.poomi.bind.ApiResponse;
+import io.wisoft.poomi.bind.dto.childminder.urgent.ChildminderUrgentLookupDto;
 import io.wisoft.poomi.bind.dto.childminder.urgent.ChildminderUrgentModifiedDto;
 import io.wisoft.poomi.bind.dto.childminder.urgent.ChildminderUrgentRegisterDto;
 import io.wisoft.poomi.bind.request.childminder.urgent.ChildminderUrgentModifiedRequest;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -20,6 +22,15 @@ import javax.validation.Valid;
 public class ChildminderUrgentController {
 
     private final ChildminderUrgentService childminderUrgentService;
+
+    @GetMapping
+    public ApiResponse<List<ChildminderUrgentLookupDto>> lookupAllChildminderUrgent(
+            @SignInMember final Member member) {
+        return ApiResponse.succeed(
+                HttpStatus.OK,
+                childminderUrgentService.lookupAllChildminderUrgent(member)
+        );
+    }
 
     @PostMapping
     public ApiResponse<ChildminderUrgentRegisterDto> registerChildminderUrgent(
@@ -43,5 +54,6 @@ public class ChildminderUrgentController {
                 )
         );
     }
+
 
 }
