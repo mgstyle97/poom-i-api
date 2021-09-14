@@ -1,15 +1,14 @@
 package io.wisoft.poomi.domain.member;
 
-import io.wisoft.poomi.bind.request.ChildAddRequest;
-import io.wisoft.poomi.bind.request.SignupRequest;
+import io.wisoft.poomi.bind.request.member.ChildAddRequest;
+import io.wisoft.poomi.bind.request.member.SignupRequest;
+import io.wisoft.poomi.domain.childminder.urgent.ChildminderUrgent;
 import io.wisoft.poomi.domain.member.address.Address;
 import io.wisoft.poomi.domain.member.address.AddressTag;
-import io.wisoft.poomi.domain.member.authority.AuthorityRepository;
 import io.wisoft.poomi.domain.member.child.Child;
-import io.wisoft.poomi.domain.member.child.ChildRepository;
 import io.wisoft.poomi.domain.member.cmInfo.ChildminderInfo;
 import io.wisoft.poomi.domain.member.authority.Authority;
-import io.wisoft.poomi.domain.program.classes.ClassProgram;
+import io.wisoft.poomi.domain.childminder.classes.ChildminderClass;
 import lombok.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -88,7 +87,13 @@ public class Member {
     private ChildminderInfo childminderInfo;
 
     @Embedded
-    private ClassProgramProperties classProgramProperties;
+    private ChildminderClassProperties childminderClassProperties;
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "writer"
+    )
+    private Set<ChildminderUrgent> writtenUrgents;
 
     @Builder
     public Member(final String name, final String phoneNumber,
@@ -105,7 +110,8 @@ public class Member {
         this.authorities = authorities;
         this.address = address;
         this.children = new HashSet<>();
-        this.classProgramProperties = new ClassProgramProperties();
+        this.childminderClassProperties = new ChildminderClassProperties();
+        this.writtenUrgents = new HashSet<>();
     }
 
     public static Member of(final SignupRequest signupRequest,
@@ -173,31 +179,35 @@ public class Member {
         return this.address.getAddressTag();
     }
 
-    public void addClass(final ClassProgram classProgram) {
-        Set<ClassProgram> writtenClasses = this.classProgramProperties.getWrittenClasses();
-        writtenClasses.add(classProgram);
+    public void addClass(final ChildminderClass childminderClass) {
+        Set<ChildminderClass> writtenClasses = this.childminderClassProperties.getWrittenClasses();
+        writtenClasses.add(childminderClass);
     }
 
-    public void removeWrittenClassProgram(final ClassProgram classProgram) {
-        this.classProgramProperties.getWrittenClasses().remove(classProgram);
+    public void removeWrittenClassProgram(final ChildminderClass childminderClass) {
+        this.childminderClassProperties.getWrittenClasses().remove(childminderClass);
     }
 
-    public void removeLikedClassProgram(final ClassProgram classProgram) {
-        this.classProgramProperties.getLikedClasses().remove(classProgram);
+    public void removeLikedClassProgram(final ChildminderClass childminderClass) {
+        this.childminderClassProperties.getLikedClasses().remove(childminderClass);
     }
 
-    public void removeAppliedClassProgram(final ClassProgram classProgram) {
-        this.classProgramProperties.getAppliedClasses().remove(classProgram);
+    public void removeAppliedClassProgram(final ChildminderClass childminderClass) {
+        this.childminderClassProperties.getAppliedClasses().remove(childminderClass);
     }
 
-    public void addAppliedClass(final ClassProgram classProgram) {
-        Set<ClassProgram> appliedClasses = this.classProgramProperties.getAppliedClasses();
-        appliedClasses.add(classProgram);
+    public void addAppliedClass(final ChildminderClass childminderClass) {
+        Set<ChildminderClass> appliedClasses = this.childminderClassProperties.getAppliedClasses();
+        appliedClasses.add(childminderClass);
     }
 
-    public void addLikedClass(final ClassProgram classProgram) {
-        Set<ClassProgram> likedClasses = this.classProgramProperties.getLikedClasses();
-        likedClasses.add(classProgram);
+    public void addLikedClass(final ChildminderClass childminderClass) {
+        Set<ChildminderClass> likedClasses = this.childminderClassProperties.getLikedClasses();
+        likedClasses.add(childminderClass);
+    }
+
+    public void addUrgent(final ChildminderUrgent childminderUrgent) {
+        this.writtenUrgents.add(childminderUrgent);
     }
 
 }

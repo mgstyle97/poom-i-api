@@ -1,16 +1,16 @@
 package io.wisoft.poomi.service;
 
-import io.wisoft.poomi.bind.dto.CommentDeleteDto;
-import io.wisoft.poomi.bind.dto.CommentModifiedDto;
-import io.wisoft.poomi.bind.dto.CommentRegistDto;
-import io.wisoft.poomi.bind.request.CommentModifiedRequest;
-import io.wisoft.poomi.bind.request.CommentRegistRequest;
+import io.wisoft.poomi.bind.dto.childminder.classes.comment.CommentDeleteDto;
+import io.wisoft.poomi.bind.dto.childminder.classes.comment.CommentModifiedDto;
+import io.wisoft.poomi.bind.dto.childminder.classes.comment.CommentRegistDto;
+import io.wisoft.poomi.bind.request.childminder.classes.CommentModifiedRequest;
+import io.wisoft.poomi.bind.request.childminder.classes.CommentRegisterRequest;
 import io.wisoft.poomi.common.error.exceptions.AuthorizationException;
 import io.wisoft.poomi.domain.member.Member;
-import io.wisoft.poomi.domain.program.classes.ClassProgram;
-import io.wisoft.poomi.domain.program.classes.ClassProgramRepository;
-import io.wisoft.poomi.domain.program.classes.comment.Comment;
-import io.wisoft.poomi.domain.program.classes.comment.CommentRepository;
+import io.wisoft.poomi.domain.childminder.classes.ChildminderClass;
+import io.wisoft.poomi.domain.childminder.classes.ChildminderClassRepository;
+import io.wisoft.poomi.domain.childminder.classes.comment.Comment;
+import io.wisoft.poomi.domain.childminder.classes.comment.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,16 +24,16 @@ import java.util.Set;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final ClassProgramRepository classProgramRepository;
+    private final ChildminderClassRepository childminderClassRepository;
 
     @Transactional
     public CommentRegistDto registComment(final Long classId,
-                                final CommentRegistRequest commentRegistRequest,
+                                final CommentRegisterRequest commentRegisterRequest,
                                 final Member member) {
-        ClassProgram classProgram = classProgramRepository.findClassProgramById(classId);
+        ChildminderClass childminderClass = childminderClassRepository.findChildminderClassById(classId);
         log.info("Generate class program id: {}", classId);
 
-        Comment comment = Comment.of(commentRegistRequest, member, classProgram);
+        Comment comment = Comment.of(commentRegisterRequest, member, childminderClass);
         log.info("Generate comment entity from request");
 
         commentRepository.save(comment);

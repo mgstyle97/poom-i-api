@@ -2,11 +2,11 @@ package io.wisoft.poomi.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.wisoft.poomi.bind.dto.SmsResultDto;
-import io.wisoft.poomi.bind.dto.SmsVerifyDto;
-import io.wisoft.poomi.bind.request.MessageRequest;
-import io.wisoft.poomi.bind.request.SmsRequest;
-import io.wisoft.poomi.bind.request.SmsVerifyRequest;
+import io.wisoft.poomi.bind.dto.member.sms.SmsResultDto;
+import io.wisoft.poomi.bind.dto.member.sms.SmsVerifyDto;
+import io.wisoft.poomi.bind.request.member.sms.MessageRequest;
+import io.wisoft.poomi.bind.request.member.sms.SmsRequest;
+import io.wisoft.poomi.bind.request.member.sms.SmsVerifyRequest;
 import io.wisoft.poomi.common.property.NCSProperty;
 import io.wisoft.poomi.domain.member.sms.SmsCertification;
 import io.wisoft.poomi.domain.member.sms.SmsCertificationRepository;

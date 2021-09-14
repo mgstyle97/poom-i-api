@@ -1,8 +1,7 @@
 package io.wisoft.poomi.domain.member.address;
 
-import io.wisoft.poomi.bind.request.AddressRegisterRequest;
+import io.wisoft.poomi.bind.request.member.AddressRegisterRequest;
 import lombok.*;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 

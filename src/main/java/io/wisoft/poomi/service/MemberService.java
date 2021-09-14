@@ -1,11 +1,11 @@
 package io.wisoft.poomi.service;
 
-import io.wisoft.poomi.bind.dto.SigninDto;
-import io.wisoft.poomi.bind.dto.CMInfoRegisterDto;
-import io.wisoft.poomi.bind.dto.SignupDto;
-import io.wisoft.poomi.bind.request.SigninRequest;
-import io.wisoft.poomi.bind.request.CMInfoRegisterRequest;
-import io.wisoft.poomi.bind.request.SignupRequest;
+import io.wisoft.poomi.bind.dto.member.SigninDto;
+import io.wisoft.poomi.bind.dto.member.CMInfoRegisterDto;
+import io.wisoft.poomi.bind.dto.member.SignupDto;
+import io.wisoft.poomi.bind.request.member.SigninRequest;
+import io.wisoft.poomi.bind.request.member.CMInfoRegisterRequest;
+import io.wisoft.poomi.bind.request.member.SignupRequest;
 import io.wisoft.poomi.bind.utils.FileUtils;
 import io.wisoft.poomi.common.error.exceptions.DuplicateMemberException;
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;

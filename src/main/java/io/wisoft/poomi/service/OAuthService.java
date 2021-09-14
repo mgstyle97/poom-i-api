@@ -2,9 +2,9 @@ package io.wisoft.poomi.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.wisoft.poomi.bind.dto.KakaoTokenResponseDto;
-import io.wisoft.poomi.bind.dto.KakaoUserInfoDto;
-import io.wisoft.poomi.bind.dto.OAuthUserProperties;
+import io.wisoft.poomi.bind.dto.oauth.KakaoTokenResponseDto;
+import io.wisoft.poomi.bind.dto.oauth.KakaoUserInfoDto;
+import io.wisoft.poomi.bind.dto.oauth.OAuthUserProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
