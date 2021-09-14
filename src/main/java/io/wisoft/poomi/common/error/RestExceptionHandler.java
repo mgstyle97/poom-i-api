@@ -18,6 +18,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -156,6 +157,21 @@ public class RestExceptionHandler {
                 ErrorResponse.builder()
                         .message("서버측 네트워크 연결이 불안정합니다. 잠시만 기다려주세요")
                         .build()
+        );
+    }
+
+    @ExceptionHandler(HttpClientErrorException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiResponse<ErrorResponse> httpClientError(final HttpClientErrorException ex) {
+        String errorMessage = ex.getMessage() + "\n" + "오류 코드를 확인 후 해당 소셜에서 확인해보세요.";
+
+        errorNotificationUtils.sendErrorInfo2Slack(errorMessage);
+
+        return ApiResponse.failure(
+            HttpStatus.BAD_REQUEST,
+            ErrorResponse.builder()
+                .message(errorMessage)
+                .build()
         );
     }
 
