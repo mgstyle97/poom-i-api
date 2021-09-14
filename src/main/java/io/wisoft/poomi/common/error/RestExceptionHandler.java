@@ -118,7 +118,7 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-    public ApiResponse<ErrorResponse> unsupportedMediaType(HttpRequestMethodNotSupportedException e) {
+    public ApiResponse<ErrorResponse> unsupportedMediaType(HttpMediaTypeNotSupportedException e) {
         errorNotificationUtils.sendErrorInfo2Slack(e.getMessage());
 
         return ApiResponse.failure(

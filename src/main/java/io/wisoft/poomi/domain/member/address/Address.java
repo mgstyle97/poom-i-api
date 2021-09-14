@@ -13,7 +13,7 @@ import javax.persistence.*;
 @SequenceGenerator(
         name = "address_sequence_generator",
         sequenceName = "address_sequence",
-        initialValue = 1,
+        initialValue = 2,
         allocationSize = 1
 )
 @Table(name = "ADDRESS")

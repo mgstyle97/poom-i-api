@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @SequenceGenerator(
         name = "member_sequence_generator",
         sequenceName = "member_sequence",
-        initialValue = 1,
+        initialValue = 2,
         allocationSize = 1
 )
 @Table(name = "MEMBER")
