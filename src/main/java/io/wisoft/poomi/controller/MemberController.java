@@ -1,10 +1,14 @@
 package io.wisoft.poomi.controller;
 
 import io.wisoft.poomi.bind.ApiResponse;
-import io.wisoft.poomi.bind.dto.*;
-import io.wisoft.poomi.bind.request.SigninRequest;
-import io.wisoft.poomi.bind.request.CMInfoRegisterRequest;
-import io.wisoft.poomi.bind.request.SignupRequest;
+import io.wisoft.poomi.bind.dto.member.CMInfoRegisterDto;
+import io.wisoft.poomi.bind.dto.member.MyPageDto;
+import io.wisoft.poomi.bind.dto.member.SigninDto;
+import io.wisoft.poomi.bind.dto.member.SignupDto;
+import io.wisoft.poomi.bind.dto.oauth.OAuthUserProperties;
+import io.wisoft.poomi.bind.request.member.SigninRequest;
+import io.wisoft.poomi.bind.request.member.CMInfoRegisterRequest;
+import io.wisoft.poomi.bind.request.member.SignupRequest;
 import io.wisoft.poomi.configures.web.SignInMember;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.service.MemberService;

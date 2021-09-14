@@ -1,7 +1,7 @@
 package io.wisoft.poomi.service;
 
-import io.wisoft.poomi.bind.dto.AddressDto;
-import io.wisoft.poomi.bind.request.AddressRegisterRequest;
+import io.wisoft.poomi.bind.dto.member.AddressDto;
+import io.wisoft.poomi.bind.request.member.AddressRegisterRequest;
 import io.wisoft.poomi.domain.member.address.Address;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.member.Member;

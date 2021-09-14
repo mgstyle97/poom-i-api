@@ -1,8 +1,8 @@
 package io.wisoft.poomi.service;
 
-import io.wisoft.poomi.bind.dto.ChildAddDto;
-import io.wisoft.poomi.bind.dto.DeleteChildDto;
-import io.wisoft.poomi.bind.request.ChildAddRequest;
+import io.wisoft.poomi.bind.dto.member.ChildAddDto;
+import io.wisoft.poomi.bind.dto.member.ChildDeleteDto;
+import io.wisoft.poomi.bind.request.member.ChildAddRequest;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.domain.member.child.ChildRepository;
@@ -22,17 +22,19 @@ public class ChildService {
     private final ChildRepository childRepository;
 
     @Transactional
-    public ChildAddDto updateChildren(Member member, List<ChildAddRequest> childAddRequests) {
+    public List<ChildAddDto> updateChildren(final Member member, final List<ChildAddRequest> childAddRequests) {
 
         member.setChildren(childAddRequests);
         childRepository.saveAll(member.getChildren());
         log.info("Generate child through request data and set");
 
-        return ChildAddDto.of(member);
+        return member.getChildren().stream()
+                .map(ChildAddDto::of)
+                .collect(Collectors.toList());
     }
 
     @Transactional
-    public DeleteChildDto deleteChild(Long childId, Member member) {
+    public ChildDeleteDto deleteChild(final Long childId, final Member member) {
         Child child = childRepository.getById(childId);
         log.info("Generate child data through child-id: {}", child.getId());
 
@@ -40,7 +42,7 @@ public class ChildService {
         childRepository.delete(child);
         log.info("Delete child data: {}", childId);
 
-        return new DeleteChildDto(childId, member.getId());
+        return new ChildDeleteDto(childId, member.getId());
     }
 
 }

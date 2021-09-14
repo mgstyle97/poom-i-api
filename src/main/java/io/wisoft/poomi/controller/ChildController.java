@@ -1,9 +1,9 @@
 package io.wisoft.poomi.controller;
 
 import io.wisoft.poomi.bind.ApiResponse;
-import io.wisoft.poomi.bind.dto.ChildAddDto;
-import io.wisoft.poomi.bind.dto.DeleteChildDto;
-import io.wisoft.poomi.bind.request.ChildAddRequest;
+import io.wisoft.poomi.bind.dto.member.ChildAddDto;
+import io.wisoft.poomi.bind.dto.member.ChildDeleteDto;
+import io.wisoft.poomi.bind.request.member.ChildAddRequest;
 import io.wisoft.poomi.configures.web.SignInMember;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.service.ChildService;
@@ -22,14 +22,14 @@ public class ChildController {
     private final ChildService childService;
 
     @PostMapping
-    public ApiResponse<ChildAddDto> addChildren(
+    public ApiResponse<List<ChildAddDto>> addChildren(
             @RequestBody @Valid final List<ChildAddRequest> childAddRequest,
             @SignInMember final Member member) {
         return ApiResponse.succeed(HttpStatus.CREATED, childService.updateChildren(member, childAddRequest));
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<DeleteChildDto> deleteChild(
+    public ApiResponse<ChildDeleteDto> deleteChild(
             @PathVariable final Long id,
             @SignInMember final Member member) {
         return ApiResponse.succeed(HttpStatus.OK, childService.deleteChild(id, member));

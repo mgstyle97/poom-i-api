@@ -1,7 +1,7 @@
 package io.wisoft.poomi.bind.utils;
 
-import io.wisoft.poomi.domain.program.classes.ClassProgram;
-import io.wisoft.poomi.domain.program.classes.image.Image;
+import io.wisoft.poomi.domain.childminder.classes.ChildminderClass;
+import io.wisoft.poomi.domain.childminder.classes.image.Image;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Component;
@@ -45,14 +45,16 @@ public class FileUtils {
         }
     }
 
-    public static Set<Image> saveImageWithClassId(final ClassProgram classProgram, List<MultipartFile> images) {
+    public static Set<Image> saveImageWithClassId(final ChildminderClass childminderClass,
+                                                  final List<MultipartFile> images,
+                                                  final String domainInfo) {
         int idx = 1;
 
         Set<Image> imageEntities = new HashSet<>();
         try {
             for (MultipartFile image : images) {
                 String extension = FilenameUtils.getExtension(image.getOriginalFilename());
-                Long classId = classProgram.getId();
+                Long classId = childminderClass.getId();
                 File destImage =
                     new File(
                         IMAGE_SAVE_PATH + classId + "/" + classId + "_" + idx + "." + extension
@@ -66,7 +68,7 @@ public class FileUtils {
                 idx++;
 
                 imageEntities.add(
-                    Image.of(destImage, classProgram, image.getOriginalFilename())
+                    Image.of(destImage, childminderClass, image.getOriginalFilename(), domainInfo)
                 );
             }
         } catch (IOException e) {

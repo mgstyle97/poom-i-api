@@ -91,15 +91,15 @@ public class RestExceptionHandler {
                 .build());
     }
 
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ApiResponse<ErrorResponse> invalidJSONFormatExp() {
-        errorNotificationUtils.sendErrorInfo2Slack("Invalid JSON Format Request");
-
-        return ApiResponse
-                .failure(HttpStatus.BAD_REQUEST, ErrorResponse.builder()
-                .message("Invalid JSON Format Request")
-                .build());
-    }
+//    @ExceptionHandler(HttpMessageNotReadableException.class)
+//    public ApiResponse<ErrorResponse> invalidJSONFormatExp() {
+//        errorNotificationUtils.sendErrorInfo2Slack("Invalid JSON Format Request");
+//
+//        return ApiResponse
+//                .failure(HttpStatus.BAD_REQUEST, ErrorResponse.builder()
+//                .message("Invalid JSON Format Request")
+//                .build());
+//    }
 
     @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
     public ApiResponse<ErrorResponse> handleBindData(BindException ex) {

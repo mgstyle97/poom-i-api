@@ -7,11 +7,12 @@ DROP TABLE IF EXISTS member_authority CASCADE;
 DROP TABLE IF EXISTS child CASCADE;
 DROP TABLE IF EXISTS sms_certification CASCADE;
 DROP TABLE IF EXISTS refresh_token CASCADE;
-DROP TABLE IF EXISTS class_program CASCADE;
+DROP TABLE IF EXISTS childminder_class CASCADE;
 DROP TABLE IF EXISTS class_applier CASCADE;
 DROP TABLE IF EXISTS class_likes CASCADE;
 DROP TABLE IF EXISTS comment CASCADE;
 DROP TABLE IF EXISTS image CASCADE;
+DROP TABLE IF EXISTS childminder_urgent CASCADE;
 
 
 CREATE TABLE sms_certification(
@@ -84,7 +85,7 @@ CREATE TABLE child(
     foreign key(member_id) references member(id)
 );
 
-CREATE TABLE class_program(
+CREATE TABLE childminder_class(
     id integer primary key,
     title varchar not null,
     contents CLOB not null,
@@ -101,14 +102,14 @@ CREATE TABLE class_program(
 CREATE TABLE class_applier(
     class_id integer not null,
     member_id integer not null,
-    foreign key(class_id) references class_program(id),
+    foreign key(class_id) references childminder_class(id),
     foreign key(member_id) references member(id)
 );
 
 CREATE TABLE class_likes(
     class_id integer not null,
     member_id integer not null,
-    foreign key(class_id) references class_program(id),
+    foreign key(class_id) references childminder_class(id),
     foreign key(member_id) references member(id)
 );
 
@@ -116,7 +117,7 @@ CREATE TABLE comment(
     id integer primary key,
     class_id integer not null,
     member_id integer not null,
-    foreign key(class_id) references class_program(id),
+    foreign key(class_id) references childminder_class(id),
     foreign key(member_id) references member(id)
 );
 
@@ -127,5 +128,17 @@ CREATE TABLE image(
     image_path varchar not null,
     image_uri varchar not null,
     class_id integer,
-    foreign key(class_id) references class_program(id)
+    foreign key(class_id) references childminder_class(id)
+);
+
+CREATE TABLE childminder_urgent(
+    id integer primary key,
+    contents CLOB not null,
+    is_recruit boolean default false,
+    created_at date,
+    modified_at date,
+    start_time timestamp not null,
+    end_time timestamp not null,
+    member_id integer not null,
+    foreign key(member_id) references member(id)
 );

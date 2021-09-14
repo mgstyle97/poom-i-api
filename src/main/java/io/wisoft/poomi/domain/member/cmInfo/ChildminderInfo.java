@@ -1,6 +1,6 @@
 package io.wisoft.poomi.domain.member.cmInfo;
 
-import io.wisoft.poomi.bind.request.CMInfoRegisterRequest;
+import io.wisoft.poomi.bind.request.member.CMInfoRegisterRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

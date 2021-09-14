@@ -2,10 +2,10 @@ package io.wisoft.poomi.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.wisoft.poomi.bind.ApiResponse;
-import io.wisoft.poomi.bind.dto.SmsResultDto;
-import io.wisoft.poomi.bind.dto.SmsVerifyDto;
-import io.wisoft.poomi.bind.request.SmsSendRequest;
-import io.wisoft.poomi.bind.request.SmsVerifyRequest;
+import io.wisoft.poomi.bind.dto.member.sms.SmsResultDto;
+import io.wisoft.poomi.bind.dto.member.sms.SmsVerifyDto;
+import io.wisoft.poomi.bind.request.member.sms.SmsSendRequest;
+import io.wisoft.poomi.bind.request.member.sms.SmsVerifyRequest;
 import io.wisoft.poomi.service.SmsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

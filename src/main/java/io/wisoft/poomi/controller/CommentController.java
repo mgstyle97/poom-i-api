@@ -1,11 +1,11 @@
 package io.wisoft.poomi.controller;
 
 import io.wisoft.poomi.bind.ApiResponse;
-import io.wisoft.poomi.bind.dto.CommentDeleteDto;
-import io.wisoft.poomi.bind.dto.CommentModifiedDto;
-import io.wisoft.poomi.bind.dto.CommentRegistDto;
-import io.wisoft.poomi.bind.request.CommentModifiedRequest;
-import io.wisoft.poomi.bind.request.CommentRegistRequest;
+import io.wisoft.poomi.bind.dto.childminder.classes.comment.CommentDeleteDto;
+import io.wisoft.poomi.bind.dto.childminder.classes.comment.CommentModifiedDto;
+import io.wisoft.poomi.bind.dto.childminder.classes.comment.CommentRegistDto;
+import io.wisoft.poomi.bind.request.childminder.classes.CommentModifiedRequest;
+import io.wisoft.poomi.bind.request.childminder.classes.CommentRegisterRequest;
 import io.wisoft.poomi.configures.web.SignInMember;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.service.CommentService;
@@ -25,11 +25,11 @@ public class CommentController {
     @PostMapping("/class/{class_id}/comment")
     public ApiResponse<CommentRegistDto> registComment(
             @PathVariable("class_id") @Valid final Long classId,
-            @RequestBody @Valid final CommentRegistRequest commentRegistRequest,
+            @RequestBody @Valid final CommentRegisterRequest commentRegisterRequest,
             @SignInMember final Member member) {
         return ApiResponse.succeed(
                 HttpStatus.CREATED,
-                commentService.registComment(classId, commentRegistRequest, member)
+                commentService.registComment(classId, commentRegisterRequest, member)
         );
     }
 

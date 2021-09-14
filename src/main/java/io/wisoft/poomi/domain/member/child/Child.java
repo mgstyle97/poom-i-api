@@ -1,14 +1,12 @@
 package io.wisoft.poomi.domain.member.child;
 
-import io.wisoft.poomi.bind.request.ChildAddRequest;
+import io.wisoft.poomi.bind.request.member.ChildAddRequest;
 import io.wisoft.poomi.domain.member.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Getter
