@@ -1,7 +1,10 @@
 package io.wisoft.poomi.service;
 
+import io.wisoft.poomi.bind.dto.childminder.urgent.ChildminderUrgentModifiedDto;
 import io.wisoft.poomi.bind.dto.childminder.urgent.ChildminderUrgentRegisterDto;
+import io.wisoft.poomi.bind.request.childminder.urgent.ChildminderUrgentModifiedRequest;
 import io.wisoft.poomi.bind.request.childminder.urgent.ChildminderUrgentRegisterRequest;
+import io.wisoft.poomi.bind.utils.LocalDateTimeUtils;
 import io.wisoft.poomi.domain.childminder.urgent.ChildminderUrgent;
 import io.wisoft.poomi.domain.childminder.urgent.ChildminderUrgentRepository;
 import io.wisoft.poomi.domain.member.Member;
@@ -9,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,6 +26,10 @@ public class ChildminderUrgentService {
     public ChildminderUrgentRegisterDto registerChildminderUrgent(
             final ChildminderUrgentRegisterRequest childminderUrgentRegisterRequest,
             final Member member) {
+        checkChildminderActivityTime(
+                childminderUrgentRegisterRequest.getStartTime(), childminderUrgentRegisterRequest.getEndTime()
+        );
+
         ChildminderUrgent childminderUrgent = ChildminderUrgent.of(childminderUrgentRegisterRequest, member);
         log.info("Generate childminder urgent entity");
 
@@ -29,6 +38,53 @@ public class ChildminderUrgentService {
 
 
         return ChildminderUrgentRegisterDto.of(childminderUrgent);
+    }
+
+    @Transactional
+    public ChildminderUrgentModifiedDto modifiedChildminderUrgent(
+            final Long urgentId,
+            final ChildminderUrgentModifiedRequest childminderUrgentModifiedRequest,
+            final Member member) {
+
+        checkChildminderActivityTime(
+                childminderUrgentModifiedRequest.getStartTime(), childminderUrgentModifiedRequest.getEndTime()
+        );
+
+        ChildminderUrgent childminderUrgent = generateChildminderUrgentById(urgentId);
+
+        verifyPermission(childminderUrgent, member);
+
+        modifyChildminderUrgent(childminderUrgent, childminderUrgentModifiedRequest);
+
+        return ChildminderUrgentModifiedDto.of(childminderUrgent);
+    }
+
+    private ChildminderUrgent generateChildminderUrgentById(final Long urgentId) {
+        ChildminderUrgent childminderUrgent = childminderUrgentRepository.getById(urgentId);
+        log.info("Generate childminder urgent id: {}", urgentId);
+
+        return childminderUrgent;
+    }
+
+    private void checkChildminderActivityTime(final LocalDateTime startTime, final LocalDateTime endTime) {
+        LocalDateTimeUtils
+                .checkChildminderActivityTime(
+                        startTime,
+                        endTime
+                );
+        log.info("Check childminder activity time through request");
+    }
+
+    private void verifyPermission(final ChildminderUrgent childminderUrgent, final Member member) {
+        childminderUrgent.verifyPermission(member);
+        log.info("Verify permission of childminder urgent id: {}", childminderUrgent.getId());
+    }
+
+    private void modifyChildminderUrgent(final ChildminderUrgent childminderUrgent,
+                                         final ChildminderUrgentModifiedRequest childminderUrgentModifiedRequest) {
+        childminderUrgent.modifiedFor(childminderUrgentModifiedRequest);
+        childminderUrgentRepository.save(childminderUrgent);
+        log.info("Update childminder urgent entity id: {}", childminderUrgent.getId());
     }
 
 }

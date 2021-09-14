@@ -5,12 +5,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 public class ChildminderUrgentRegisterRequest {
 
+    @NotBlank(message = "내용을 입력해주세요.")
     private String contents;
 
     @JsonProperty("is_recruit")

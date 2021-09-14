@@ -1,10 +1,7 @@
 package io.wisoft.poomi.controller;
 
 import io.wisoft.poomi.bind.ApiResponse;
-import io.wisoft.poomi.bind.dto.member.CMInfoRegisterDto;
-import io.wisoft.poomi.bind.dto.member.MyPageDto;
-import io.wisoft.poomi.bind.dto.member.SigninDto;
-import io.wisoft.poomi.bind.dto.member.SignupDto;
+import io.wisoft.poomi.bind.dto.member.*;
 import io.wisoft.poomi.bind.dto.oauth.OAuthUserProperties;
 import io.wisoft.poomi.bind.request.member.SigninRequest;
 import io.wisoft.poomi.bind.request.member.CMInfoRegisterRequest;
@@ -38,9 +35,9 @@ public class MemberController {
 
     @PostMapping("/signup")
     public ApiResponse<SignupDto> signup(
-            @RequestPart("data") @Valid final SignupRequest signupRequest,
-            @RequestPart(value = "images", required = false) @Valid final List<MultipartFile> images) {
-        return ApiResponse.succeed(HttpStatus.CREATED, memberService.signup(signupRequest, images));
+            @ModelAttribute final Dto dto) {
+        return ApiResponse
+                .succeed(HttpStatus.CREATED, memberService.signup(dto.getSignupRequest(), dto.getMultipartFiles()));
     }
 
     @GetMapping("/member/me")

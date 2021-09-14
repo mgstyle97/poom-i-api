@@ -2,6 +2,8 @@ package io.wisoft.poomi.bind.dto.childminder.urgent;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.wisoft.poomi.domain.childminder.urgent.ChildminderUrgent;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,5 +33,28 @@ public class ChildminderUrgentModifiedDto {
     @JsonProperty("registered_at")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date registeredAt;
+
+    @Builder
+    private ChildminderUrgentModifiedDto(final Long childminderUrgentId,
+                                         final String contents,
+                                          final Boolean isRecruit,
+                                          final LocalDateTime startTime, final LocalDateTime endTime) {
+        this.childminderUrgentId = childminderUrgentId;
+        this.contents = contents;
+        this.isRecruit = isRecruit;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.registeredAt = new Date();
+    }
+
+    public static ChildminderUrgentModifiedDto of(final ChildminderUrgent childminderUrgent) {
+        return ChildminderUrgentModifiedDto.builder()
+                .childminderUrgentId(childminderUrgent.getId())
+                .contents(childminderUrgent.getContents())
+                .isRecruit(childminderUrgent.getIsRecruit())
+                .startTime(childminderUrgent.getStartTime())
+                .endTime(childminderUrgent.getEndTime())
+                .build();
+    }
 
 }
