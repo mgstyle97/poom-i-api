@@ -18,7 +18,7 @@ public class SigninRequest {
     @NotBlank(message = "로그인할 이메일을 입력해주세요.")
     private String email;
 
-    @NotBlank(message = "로그인할 이메일을 입력해주세요.")
+    @NotBlank(message = "로그인할 비밀번호를 입력해주세요.")
     private String password;
 
     public Authentication toAuthentication(final String authority) {
