@@ -5,6 +5,7 @@ import io.wisoft.poomi.bind.utils.ErrorNotificationUtils;
 import io.wisoft.poomi.common.error.exceptions.DuplicateMemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -91,15 +92,15 @@ public class RestExceptionHandler {
                 .build());
     }
 
-//    @ExceptionHandler(HttpMessageNotReadableException.class)
-//    public ApiResponse<ErrorResponse> invalidJSONFormatExp() {
-//        errorNotificationUtils.sendErrorInfo2Slack("Invalid JSON Format Request");
-//
-//        return ApiResponse
-//                .failure(HttpStatus.BAD_REQUEST, ErrorResponse.builder()
-//                .message("Invalid JSON Format Request")
-//                .build());
-//    }
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ApiResponse<ErrorResponse> invalidJSONFormatExp() {
+        errorNotificationUtils.sendErrorInfo2Slack("Invalid JSON Format Request");
+
+        return ApiResponse
+                .failure(HttpStatus.BAD_REQUEST, ErrorResponse.builder()
+                .message("Invalid JSON Format Request")
+                .build());
+    }
 
     @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
     public ApiResponse<ErrorResponse> handleBindData(BindException ex) {
@@ -114,6 +115,16 @@ public class RestExceptionHandler {
                 .failure(HttpStatus.BAD_REQUEST, ErrorResponse.builder()
                 .message(errorMessage)
                 .build());
+    }
+
+    @ExceptionHandler(FileUploadException.class)
+    public ApiResponse<ErrorResponse> fileUpload(final FileUploadException ex) {
+        errorNotificationUtils.sendErrorInfo2Slack("파일을 첨부해야 합니다.");
+
+        return ApiResponse
+                .failure(HttpStatus.BAD_REQUEST, ErrorResponse.builder()
+                        .message("파일을 첨부해야 합니다.")
+                        .build());
     }
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
