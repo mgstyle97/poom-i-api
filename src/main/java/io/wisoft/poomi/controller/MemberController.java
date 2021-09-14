@@ -35,9 +35,10 @@ public class MemberController {
 
     @PostMapping("/signup")
     public ApiResponse<SignupDto> signup(
-            @ModelAttribute final Dto dto) {
+            @RequestPart("data") @Valid final SignupRequest signupRequest,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images) {
         return ApiResponse
-                .succeed(HttpStatus.CREATED, memberService.signup(dto.getSignupRequest(), dto.getMultipartFiles()));
+                .succeed(HttpStatus.CREATED, memberService.signup(signupRequest, images));
     }
 
     @GetMapping("/member/me")

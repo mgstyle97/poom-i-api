@@ -159,16 +159,16 @@ public class RestExceptionHandler {
         );
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiResponse<ErrorResponse> runtime(final RuntimeException ex) {
-        errorNotificationUtils.sendErrorInfo2Slack(ex.getMessage());
-
-        return ApiResponse.failure(
-                HttpStatus.BAD_REQUEST,
-                ErrorResponse.builder()
-                        .message(ex.getMessage())
-                        .build()
-        );
-    }
+//    @ExceptionHandler(RuntimeException.class)
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    public ApiResponse<ErrorResponse> runtime(final RuntimeException ex) {
+//        errorNotificationUtils.sendErrorInfo2Slack(ex.getMessage());
+//
+//        return ApiResponse.failure(
+//                HttpStatus.BAD_REQUEST,
+//                ErrorResponse.builder()
+//                        .message(ex.getMessage())
+//                        .build()
+//        );
+//    }
 }

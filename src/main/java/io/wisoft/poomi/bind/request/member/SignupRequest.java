@@ -30,7 +30,7 @@ public class SignupRequest {
     @NotBlank(message = "성별을 선택해야 합니다.")
     private String gender;
 
-    @JsonProperty("address")
+    @JsonProperty("address_info")
     private AddressRegisterRequest address;
 
     @JsonProperty("children")
