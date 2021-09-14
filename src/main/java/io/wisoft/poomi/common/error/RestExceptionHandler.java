@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.SocketException;
 import java.util.stream.Collectors;
 
@@ -62,6 +63,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<ErrorResponse> illegalArgument(IllegalArgumentException e) {
         errorNotificationUtils.sendErrorInfo2Slack(e.getMessage());
 
@@ -83,6 +85,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(TypeMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<ErrorResponse> typeMismatch() {
         errorNotificationUtils.sendErrorInfo2Slack("Type mismatch");
 
@@ -93,6 +96,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<ErrorResponse> invalidJSONFormatExp() {
         errorNotificationUtils.sendErrorInfo2Slack("Invalid JSON Format Request");
 
@@ -103,7 +107,8 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
-    public ApiResponse<ErrorResponse> handleBindData(BindException ex) {
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiResponse<ErrorResponse> handleBindData(BindException ex, HttpServletRequest request) {
         String errorMessage = ex.getBindingResult().getAllErrors()
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
@@ -118,6 +123,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(FileUploadException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<ErrorResponse> fileUpload(final FileUploadException ex) {
         errorNotificationUtils.sendErrorInfo2Slack("파일을 첨부해야 합니다.");
 
