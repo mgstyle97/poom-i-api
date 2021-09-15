@@ -2,6 +2,9 @@ db: h2
 spring:
   mvc:
     throw-exception-if-no-handler-found: true
+  servlet:
+    multipart:
+      location: C:\Users\user\IdeaProjects\Capstone-Project-Poom-I
 
   h2:
     console:

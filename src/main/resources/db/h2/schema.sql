@@ -140,7 +140,5 @@ CREATE TABLE childminder_urgent(
     start_time timestamp not null,
     end_time timestamp not null,
     member_id integer not null,
-    address_tag_id integer not null,
-    foreign key(member_id) references member(id),
-    foreign key(address_tag_id) references address_tag(id)
+    foreign key(member_id) references member(id)
 );
