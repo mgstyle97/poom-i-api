@@ -1,7 +1,7 @@
 package io.wisoft.poomi.domain.member;
 
-import io.wisoft.poomi.bind.request.member.ChildAddRequest;
-import io.wisoft.poomi.bind.request.member.SignupRequest;
+import io.wisoft.poomi.global.dto.request.member.ChildAddRequest;
+import io.wisoft.poomi.global.dto.request.member.SignupRequest;
 import io.wisoft.poomi.domain.childminder.urgent.ChildminderUrgent;
 import io.wisoft.poomi.domain.member.address.Address;
 import io.wisoft.poomi.domain.member.address.AddressTag;
@@ -112,6 +112,11 @@ public class Member {
         this.children = new HashSet<>();
         this.childminderClassProperties = new ChildminderClassProperties();
         this.writtenUrgents = new HashSet<>();
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getId().intValue();
     }
 
     public static Member of(final SignupRequest signupRequest,

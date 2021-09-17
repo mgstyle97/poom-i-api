@@ -1,17 +1,18 @@
 package io.wisoft.poomi;
 
-import io.wisoft.poomi.common.property.NCSProperty;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+
+import javax.annotation.PostConstruct;
+import java.util.TimeZone;
 
 @SpringBootApplication
-@EnableJpaAuditing
-@EnableConfigurationProperties(
-        NCSProperty.class
-)
 public class PoomIApplication {
+
+    @PostConstruct
+    public void init() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(PoomIApplication.class, args);

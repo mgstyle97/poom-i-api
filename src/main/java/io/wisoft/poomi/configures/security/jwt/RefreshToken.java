@@ -27,14 +27,14 @@ public class RefreshToken {
     private Long id;
 
     @Column(name = "member_email")
-    private String email;
+    private String memberEmail;
 
     @Column(name = "refresh_token")
     private String refreshToken;
 
     @Builder
-    public RefreshToken(final String email, final String refreshToken) {
-        this.email = email;
+    public RefreshToken(final String memberEmail, final String refreshToken) {
+        this.memberEmail = memberEmail;
         this.refreshToken = refreshToken;
     }
 

@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS address CASCADE;
 DROP TABLE IF EXISTS member_authority CASCADE;
 DROP TABLE IF EXISTS child CASCADE;
 DROP TABLE IF EXISTS sms_certification CASCADE;
+DROP TABLE IF EXISTS email_certification CASCADE;
 DROP TABLE IF EXISTS refresh_token CASCADE;
 DROP TABLE IF EXISTS childminder_class CASCADE;
 DROP TABLE IF EXISTS class_applier CASCADE;
@@ -18,6 +19,12 @@ DROP TABLE IF EXISTS childminder_urgent CASCADE;
 CREATE TABLE sms_certification(
     id integer primary key,
     phone_number varchar not null,
+    certification_number varchar not null
+);
+
+CREATE TABLE email_certification(
+    id integer primary key,
+    email varchar not null,
     certification_number varchar not null
 );
 
@@ -140,5 +147,7 @@ CREATE TABLE childminder_urgent(
     start_time timestamp not null,
     end_time timestamp not null,
     member_id integer not null,
-    foreign key(member_id) references member(id)
+    address_tag_id integer not null,
+    foreign key(member_id) references member(id),
+    foreign key(address_tag_id) references address_tag(id)
 );

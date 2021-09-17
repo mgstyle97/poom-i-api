@@ -1,31 +1,61 @@
 {
   "groups": [
     {
+      "name": "kakao",
+      "type": "io.wisoft.poomi.configures.property.properties.oauth2.KakaoProperty",
+      "sourceType": "io.wisoft.poomi.configures.property.properties.oauth2.KakaoProperty"
+    },
+    {
       "name": "ncs",
-      "type": "io.wisoft.poomi.common.property.NCSProperty",
-      "sourceType": "io.wisoft.poomi.common.property.NCSProperty"
+      "type": "io.wisoft.poomi.configures.property.properties.sms.NCSProperty",
+      "sourceType": "io.wisoft.poomi.configures.property.properties.sms.NCSProperty"
     }
   ],
   "properties": [
     {
+      "name": "kakao.client-id",
+      "type": "java.lang.String",
+      "sourceType": "io.wisoft.poomi.configures.property.properties.oauth2.KakaoProperty"
+    },
+    {
+      "name": "kakao.client-secret",
+      "type": "java.lang.String",
+      "sourceType": "io.wisoft.poomi.configures.property.properties.oauth2.KakaoProperty"
+    },
+    {
+      "name": "kakao.redirection-u-r-i",
+      "type": "java.lang.String",
+      "sourceType": "io.wisoft.poomi.configures.property.properties.oauth2.KakaoProperty"
+    },
+    {
+      "name": "kakao.token-u-r-i",
+      "type": "java.lang.String",
+      "sourceType": "io.wisoft.poomi.configures.property.properties.oauth2.KakaoProperty"
+    },
+    {
+      "name": "kakao.userinfo-u-r-i",
+      "type": "java.lang.String",
+      "sourceType": "io.wisoft.poomi.configures.property.properties.oauth2.KakaoProperty"
+    },
+    {
       "name": "ncs.access-key",
       "type": "java.lang.String",
-      "sourceType": "io.wisoft.poomi.common.property.NCSProperty"
+      "sourceType": "io.wisoft.poomi.configures.property.properties.sms.NCSProperty"
     },
     {
       "name": "ncs.from",
       "type": "java.lang.String",
-      "sourceType": "io.wisoft.poomi.common.property.NCSProperty"
+      "sourceType": "io.wisoft.poomi.configures.property.properties.sms.NCSProperty"
     },
     {
       "name": "ncs.secret-key",
       "type": "java.lang.String",
-      "sourceType": "io.wisoft.poomi.common.property.NCSProperty"
+      "sourceType": "io.wisoft.poomi.configures.property.properties.sms.NCSProperty"
     },
     {
       "name": "ncs.service-id",
       "type": "java.lang.String",
-      "sourceType": "io.wisoft.poomi.common.property.NCSProperty"
+      "sourceType": "io.wisoft.poomi.configures.property.properties.sms.NCSProperty"
     }
   ],
   "hints": []

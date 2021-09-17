@@ -1,6 +1,7 @@
 package io.wisoft.poomi.domain.childminder.classes;
 
 import io.wisoft.poomi.domain.member.address.AddressTag;
+import io.wisoft.poomi.global.exception.exceptions.NotFoundEntityDataException;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -9,12 +10,10 @@ public interface ChildminderClassRepository extends JpaRepository<ChildminderCla
 
     List<ChildminderClass> findByAddressTag(final AddressTag addressTag);
 
-    default ChildminderClass findChildminderClassById(final Long id) {
-        ChildminderClass childminderClass = this.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("No class program data id= " + id)
+    default ChildminderClass getById(final Long classId) {
+        return this.findById(classId).orElseThrow(
+                () -> new NotFoundEntityDataException("class id: " + classId + "에 관한 데이터를 찾지 못했습니다.")
         );
-
-        return childminderClass;
     }
 
 }

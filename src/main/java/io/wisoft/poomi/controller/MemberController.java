@@ -1,15 +1,15 @@
 package io.wisoft.poomi.controller;
 
-import io.wisoft.poomi.bind.ApiResponse;
-import io.wisoft.poomi.bind.dto.member.*;
-import io.wisoft.poomi.bind.dto.oauth.OAuthUserProperties;
-import io.wisoft.poomi.bind.request.member.SigninRequest;
-import io.wisoft.poomi.bind.request.member.CMInfoRegisterRequest;
-import io.wisoft.poomi.bind.request.member.SignupRequest;
-import io.wisoft.poomi.configures.web.SignInMember;
+import io.wisoft.poomi.global.dto.response.ApiResponse;
+import io.wisoft.poomi.global.dto.response.member.*;
+import io.wisoft.poomi.global.dto.response.oauth.OAuthUserPropertiesDto;
+import io.wisoft.poomi.global.dto.request.member.SigninRequest;
+import io.wisoft.poomi.global.dto.request.member.CMInfoRegisterRequest;
+import io.wisoft.poomi.global.dto.request.member.SignupRequest;
+import io.wisoft.poomi.configures.web.resolver.SignInMember;
 import io.wisoft.poomi.domain.member.Member;
-import io.wisoft.poomi.service.MemberService;
-import io.wisoft.poomi.service.OAuthService;
+import io.wisoft.poomi.service.member.MemberService;
+import io.wisoft.poomi.service.oauth2.OAuth2Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +25,7 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
-    private final OAuthService oAuthService;
+    private final OAuth2Service oAuth2Service;
 
     @PostMapping("/signin")
     public ApiResponse<SigninDto> signin(
@@ -61,10 +61,10 @@ public class MemberController {
     }
 
     @GetMapping("/oauth2")
-    public ApiResponse<OAuthUserProperties> oauthCodeToUserInfo(@RequestParam("code") String code) {
+    public ApiResponse<OAuthUserPropertiesDto> oauthCodeToUserInfo(@RequestParam("code") String code) {
         return ApiResponse.succeed(
                 HttpStatus.OK,
-                oAuthService.getUserProperties(code)
+                oAuth2Service.getUserProperties(code)
         );
     }
 

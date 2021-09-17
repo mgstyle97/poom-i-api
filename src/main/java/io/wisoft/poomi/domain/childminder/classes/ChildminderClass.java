@@ -1,8 +1,7 @@
 package io.wisoft.poomi.domain.childminder.classes;
 
-import io.wisoft.poomi.bind.request.childminder.classes.ChildminderClassModifiedRequest;
-import io.wisoft.poomi.bind.request.childminder.classes.ChildminderClassRegisterRequest;
-import io.wisoft.poomi.common.error.exceptions.NoPermissionOfClass;
+import io.wisoft.poomi.global.dto.request.childminder.classes.ChildminderClassModifiedRequest;
+import io.wisoft.poomi.global.dto.request.childminder.classes.ChildminderClassRegisterRequest;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.childminder.BaseTimeEntity;
@@ -136,12 +135,6 @@ public class ChildminderClass extends BaseTimeEntity {
         if (!this.likes.contains(member)) {
             this.likes.add(member);
             member.addLikedClass(this);
-        }
-    }
-
-    public void verifyPermission(final Member member) {
-        if (!this.writer.getId().equals(member.getId())) {
-            throw new NoPermissionOfClass("No have permission to modify class program: " + this.id);
         }
     }
 

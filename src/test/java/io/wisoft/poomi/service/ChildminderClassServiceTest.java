@@ -1,7 +1,7 @@
 package io.wisoft.poomi.service;
 
-import io.wisoft.poomi.bind.dto.childminder.classes.ChildminderClassLookupDto;
-import io.wisoft.poomi.bind.request.childminder.classes.ChildminderClassRegisterRequest;
+import io.wisoft.poomi.global.dto.response.childminder.classes.ChildminderClassLookupDto;
+import io.wisoft.poomi.global.dto.request.childminder.classes.ChildminderClassRegisterRequest;
 import io.wisoft.poomi.domain.member.Gender;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.MemberRepository;
@@ -12,6 +12,7 @@ import io.wisoft.poomi.domain.member.address.AddressTagRepository;
 import io.wisoft.poomi.domain.member.authority.AuthorityRepository;
 import io.wisoft.poomi.domain.childminder.classes.ChildminderClass;
 import io.wisoft.poomi.domain.childminder.classes.ChildminderClassRepository;
+import io.wisoft.poomi.service.childminder.classes.ChildminderClassService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -131,7 +132,7 @@ class ChildminderClassServiceTest {
     void apply_class_program() {
         childminderClassService.applyChildminderClass(1L, member);
 
-        ChildminderClass childminderClass = childminderClassRepository.findChildminderClassById(1L);
+        ChildminderClass childminderClass = childminderClassRepository.getById(1L);
         Set<ChildminderClass> appliedClasses = member.getChildminderClassProperties().getAppliedClasses();
 
         ChildminderClass childminderClass1 = appliedClasses.stream()
@@ -149,7 +150,7 @@ class ChildminderClassServiceTest {
     void like_class_program() {
         childminderClassService.likeChildminderClass(1L, member);
 
-        ChildminderClass childminderClass = childminderClassRepository.findChildminderClassById(1L);
+        ChildminderClass childminderClass = childminderClassRepository.getById(1L);
         Set<ChildminderClass> likedClasses = member.getChildminderClassProperties().getLikedClasses();
 
         ChildminderClass childminderClass1 = likedClasses.stream()
