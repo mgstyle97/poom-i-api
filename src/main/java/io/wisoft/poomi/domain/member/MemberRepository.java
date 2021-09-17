@@ -1,5 +1,6 @@
 package io.wisoft.poomi.domain.member;
 
+import io.wisoft.poomi.global.exception.exceptions.NotFoundEntityDataException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -12,11 +13,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByNick(final String nick);
 
     default Member getMemberByEmail(final String email) {
-        Member member = this.findByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException("No member data about email")
+        return this.findByEmail(email).orElseThrow(
+                () -> new NotFoundEntityDataException("email: " + email + "에 관한 데이터를 찾지 못했습니다.")
         );
-
-        return member;
     }
 
 }

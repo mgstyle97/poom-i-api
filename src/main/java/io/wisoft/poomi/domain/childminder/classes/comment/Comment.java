@@ -1,6 +1,6 @@
 package io.wisoft.poomi.domain.childminder.classes.comment;
 
-import io.wisoft.poomi.bind.request.childminder.classes.CommentRegisterRequest;
+import io.wisoft.poomi.global.dto.request.childminder.classes.CommentRegisterRequest;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.childminder.BaseTimeEntity;
 import io.wisoft.poomi.domain.childminder.classes.ChildminderClass;

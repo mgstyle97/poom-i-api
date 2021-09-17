@@ -1,11 +1,11 @@
 package io.wisoft.poomi.configures.security;
 
-import io.wisoft.poomi.configures.security.oauth.CustomOAuth2Service;
+import io.wisoft.poomi.configures.security.oauth2.CustomOAuth2Service;
 import io.wisoft.poomi.configures.security.jwt.JwtSecurityConfig;
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.configures.security.jwt.JwtAccessDeniedHandler;
 import io.wisoft.poomi.configures.security.jwt.JwtAuthenticationEntryPoint;
-import io.wisoft.poomi.service.MemberDetailsService;
+import io.wisoft.poomi.service.member.MemberDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -34,7 +34,7 @@ import java.util.Collections;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomOAuth2Service customOAuth2Service;
-    private final OAuthAuthenticationSuccessHandler successHandler;
+    private final OAuth2AuthenticationSuccessHandler successHandler;
 
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
@@ -118,7 +118,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private String[] permitAllPatterns() {
         return new String[] {
                 "/", "/api/signup", "/api/signin/**", "/favicon.ico/**",
-                "/api/sms-certification/**", "/api/oauth2/**", "/api/image/**", "/error-log"
+                "/api/sms-certification/**", "/api/mail-certification/**",
+                "/api/oauth2/**", "/api/image/**", "/hello"
         };
     }
 

@@ -1,6 +1,6 @@
 package io.wisoft.poomi.domain.member.address;
 
-import io.wisoft.poomi.bind.request.member.AddressRegisterRequest;
+import io.wisoft.poomi.global.dto.request.member.AddressRegisterRequest;
 import lombok.*;
 
 import javax.persistence.*;

@@ -1,10 +1,12 @@
 package io.wisoft.poomi.configures.web;
 
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
+import io.wisoft.poomi.configures.web.resolver.SignInMemberHandlerMethodArgumentResolver;
 import io.wisoft.poomi.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
@@ -17,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Configuration
 @EnableWebMvc
+@EnableJpaAuditing
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final long MAX_AGE_SECS = 3600;

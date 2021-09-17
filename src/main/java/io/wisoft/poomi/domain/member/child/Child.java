@@ -1,6 +1,6 @@
 package io.wisoft.poomi.domain.member.child;
 
-import io.wisoft.poomi.bind.request.member.ChildAddRequest;
+import io.wisoft.poomi.global.dto.request.member.ChildAddRequest;
 import io.wisoft.poomi.domain.member.Member;
 import lombok.Builder;
 import lombok.Getter;
