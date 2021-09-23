@@ -1,6 +1,6 @@
 package io.wisoft.poomi.configures.security;
 
-import io.wisoft.poomi.global.dto.response.member.SigninDto;
+import io.wisoft.poomi.global.dto.response.member.SigninResponse;
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,7 +33,7 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
         Authentication usernamePasswordToken = toUsernamePasswordToken(oAuth2User);
         String jwtToken = jwtTokenProvider.generateToken(usernamePasswordToken);
 
-        request.setAttribute("signin-dto", SigninDto.of(usernamePasswordToken.getName(), jwtToken));
+        request.setAttribute("signin-dto", SigninResponse.of(usernamePasswordToken.getName(), jwtToken));
         RequestDispatcher dispatcher = request.getRequestDispatcher("/api/oauth2/success");
         dispatcher.forward(request, response);
     }

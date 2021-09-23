@@ -1,9 +1,9 @@
 package io.wisoft.poomi.controller;
 
 import io.wisoft.poomi.global.dto.response.ApiResponse;
-import io.wisoft.poomi.global.dto.response.childminder.classes.comment.CommentDeleteDto;
-import io.wisoft.poomi.global.dto.response.childminder.classes.comment.CommentModifiedDto;
-import io.wisoft.poomi.global.dto.response.childminder.classes.comment.CommentRegistDto;
+import io.wisoft.poomi.global.dto.response.childminder.classes.comment.CommentDeleteResponse;
+import io.wisoft.poomi.global.dto.response.childminder.classes.comment.CommentModifiedResponse;
+import io.wisoft.poomi.global.dto.response.childminder.classes.comment.CommentRegistResponse;
 import io.wisoft.poomi.global.dto.request.childminder.classes.CommentModifiedRequest;
 import io.wisoft.poomi.global.dto.request.childminder.classes.CommentRegisterRequest;
 import io.wisoft.poomi.configures.web.resolver.SignInMember;
@@ -23,7 +23,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/class/{class_id}/comment")
-    public ApiResponse<CommentRegistDto> registComment(
+    public ApiResponse<CommentRegistResponse> registComment(
             @PathVariable("class_id") @Valid final Long classId,
             @RequestBody @Valid final CommentRegisterRequest commentRegisterRequest,
             @SignInMember final Member member) {
@@ -34,7 +34,7 @@ public class CommentController {
     }
 
     @PatchMapping("/comment/{comment_id}")
-    public ApiResponse<CommentModifiedDto> modifiedComment(
+    public ApiResponse<CommentModifiedResponse> modifiedComment(
             @PathVariable("comment_id") @Valid final Long commentId,
             @RequestBody @Valid final CommentModifiedRequest commentModifiedRequest,
             @SignInMember final Member member) {
@@ -45,7 +45,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/comment/{comment_id}")
-    public ApiResponse<CommentDeleteDto> removeComment(
+    public ApiResponse<CommentDeleteResponse> removeComment(
             @PathVariable("comment_id") @Valid final Long commentId,
             @SignInMember final Member member) {
         return ApiResponse.succeed(

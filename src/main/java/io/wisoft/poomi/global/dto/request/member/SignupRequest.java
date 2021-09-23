@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class SignupRequest {
     @JsonProperty("phone_number")
     private String phoneNumber;
 
+    @Email(message = "이메일 형식이 부적절합니다.")
     @NotBlank(message = "이메일을 입력해야 합니다.")
     private String email;
 

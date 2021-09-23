@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class AddressDto {
+public class AddressResponse {
 
     private String email;
 
@@ -20,13 +20,13 @@ public class AddressDto {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date registeredAt;
 
-    public static AddressDto from(String email, String tagName) {
-        AddressDto addressDto = new AddressDto();
-        addressDto.setEmail(email);
-        addressDto.setTagName(tagName);
-        addressDto.setRegisteredAt(new Date());
+    public static AddressResponse from(String email, String tagName) {
+        AddressResponse addressResponse = new AddressResponse();
+        addressResponse.setEmail(email);
+        addressResponse.setTagName(tagName);
+        addressResponse.setRegisteredAt(new Date());
 
-        return addressDto;
+        return addressResponse;
     }
 
 }

@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class ChildminderClassModifiedDto {
+public class ChildminderClassModifiedResponse {
 
     private Long id;
 
@@ -17,14 +17,14 @@ public class ChildminderClassModifiedDto {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date requestedAt;
 
-    private ChildminderClassModifiedDto(final Long id) {
+    private ChildminderClassModifiedResponse(final Long id) {
         this.id = id;
         this.requestedAt = new Date();
     }
 
-    public static ChildminderClassModifiedDto of(final Long id) {
+    public static ChildminderClassModifiedResponse of(final Long id) {
 
-        return new ChildminderClassModifiedDto(id);
+        return new ChildminderClassModifiedResponse(id);
     }
 
 }

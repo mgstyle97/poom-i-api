@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class ChildminderClassDeleteDto {
+public class ChildminderClassDeleteResponse {
 
     private Long id;
 
@@ -17,13 +17,13 @@ public class ChildminderClassDeleteDto {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date requestedAt;
 
-    private ChildminderClassDeleteDto(final Long id) {
+    private ChildminderClassDeleteResponse(final Long id) {
         this.id = id;
         this.requestedAt = new Date();
     }
 
-    public static ChildminderClassDeleteDto of(final Long id) {
-        return new ChildminderClassDeleteDto(id);
+    public static ChildminderClassDeleteResponse of(final Long id) {
+        return new ChildminderClassDeleteResponse(id);
     }
 
 }

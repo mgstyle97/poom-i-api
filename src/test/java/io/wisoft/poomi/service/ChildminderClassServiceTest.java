@@ -1,6 +1,6 @@
 package io.wisoft.poomi.service;
 
-import io.wisoft.poomi.global.dto.response.childminder.classes.ChildminderClassLookupDto;
+import io.wisoft.poomi.global.dto.response.childminder.classes.ChildminderClassLookupResponse;
 import io.wisoft.poomi.global.dto.request.childminder.classes.ChildminderClassRegisterRequest;
 import io.wisoft.poomi.domain.member.Gender;
 import io.wisoft.poomi.domain.member.Member;
@@ -104,9 +104,9 @@ class ChildminderClassServiceTest {
     @Test
     @DisplayName("테스트: 주소 태그를 통한 조회")
     void select_through_address_tag() {
-        List<ChildminderClassLookupDto> result = childminderClassService.findByAddressTag(member.getAddressTag());
+        List<ChildminderClassLookupResponse> result = childminderClassService.findByAddressTag(member.getAddressTag());
         result
-                .forEach(childminderClassLookupDto -> System.out.println(childminderClassLookupDto.getTitle()));
+                .forEach(childminderClassLookupResponse -> System.out.println(childminderClassLookupResponse.getTitle()));
     }
 
     @Test
@@ -121,9 +121,9 @@ class ChildminderClassServiceTest {
 
 //        classProgramService.registerClassProgram(member, classProgramRegisterRequest);
 
-        List<ChildminderClassLookupDto> result = childminderClassService.findByAddressTag(member.getAddressTag());
+        List<ChildminderClassLookupResponse> result = childminderClassService.findByAddressTag(member.getAddressTag());
         result
-                .forEach(childminderClassLookupDto -> System.out.println(childminderClassLookupDto.getTitle()));
+                .forEach(childminderClassLookupResponse -> System.out.println(childminderClassLookupResponse.getTitle()));
     }
 
     @Test

@@ -24,7 +24,7 @@ public class ChildminderClassController {
     private final ChildminderClassService childminderClassService;
 
     @GetMapping
-    public ApiResponse<List<ChildminderClassLookupDto>> allChildminderClass(@SignInMember final Member member) {
+    public ApiResponse<List<ChildminderClassLookupResponse>> allChildminderClass(@SignInMember final Member member) {
         return ApiResponse
                 .succeed(
                         HttpStatus.OK,
@@ -33,7 +33,7 @@ public class ChildminderClassController {
     }
 
     @PostMapping
-    public ApiResponse<ChildminderClassRegisterDto> registerChildminderClass(
+    public ApiResponse<ChildminderClassRegisterResponse> registerChildminderClass(
             @RequestPart("data") @Valid final ChildminderClassRegisterRequest childminderClassRegisterRequest,
             @RequestPart(value = "images", required = false) List<MultipartFile> images,
             @SignInMember final Member member,
@@ -47,7 +47,7 @@ public class ChildminderClassController {
                 );
     }
     @PatchMapping("/{id}")
-    public ApiResponse<ChildminderClassModifiedDto> modifiedChildminderClass(
+    public ApiResponse<ChildminderClassModifiedResponse> modifiedChildminderClass(
             @PathVariable("id") @Valid final Long id,
             @RequestBody @Valid final ChildminderClassModifiedRequest childminderClassModifiedRequest,
             @SignInMember final Member member) {
@@ -58,7 +58,7 @@ public class ChildminderClassController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<ChildminderClassSinglePageDto> callChildminderClassSinglePage(
+    public ApiResponse<ChildminderClassSinglePageResponse> callChildminderClassSinglePage(
             @PathVariable("id") @Valid final Long classId,
             final HttpServletRequest request) {
         return ApiResponse.succeed(
@@ -68,7 +68,7 @@ public class ChildminderClassController {
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<ChildminderClassDeleteDto> removeChildminderClass(
+    public ApiResponse<ChildminderClassDeleteResponse> removeChildminderClass(
             @PathVariable("id") @Valid final Long id,
             @SignInMember final Member member) {
         return ApiResponse.succeed(

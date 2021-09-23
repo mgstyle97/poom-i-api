@@ -1,4 +1,4 @@
-package io.wisoft.poomi.configures.property.properties.sms;
+package io.wisoft.poomi.global.properties.sms;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

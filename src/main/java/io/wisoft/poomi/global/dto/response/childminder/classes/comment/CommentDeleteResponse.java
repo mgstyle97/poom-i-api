@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class CommentDeleteDto {
+public class CommentDeleteResponse {
 
     @JsonProperty("comment_id")
     private Long commentId;
@@ -19,13 +19,13 @@ public class CommentDeleteDto {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date requestedAt;
 
-    public CommentDeleteDto(final Long commentId) {
+    public CommentDeleteResponse(final Long commentId) {
         this.commentId = commentId;
         this.requestedAt = new Date();
     }
 
-    public static CommentDeleteDto of(final Comment comment) {
-        return new CommentDeleteDto(comment.getId());
+    public static CommentDeleteResponse of(final Comment comment) {
+        return new CommentDeleteResponse(comment.getId());
     }
 
 }

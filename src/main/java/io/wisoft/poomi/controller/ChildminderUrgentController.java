@@ -1,9 +1,9 @@
 package io.wisoft.poomi.controller;
 
 import io.wisoft.poomi.global.dto.response.ApiResponse;
-import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentLookupDto;
-import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentModifiedDto;
-import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentRegisterDto;
+import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentLookupResponse;
+import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentModifiedResponse;
+import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentRegisterResponse;
 import io.wisoft.poomi.global.dto.request.childminder.urgent.ChildminderUrgentModifiedRequest;
 import io.wisoft.poomi.global.dto.request.childminder.urgent.ChildminderUrgentRegisterRequest;
 import io.wisoft.poomi.configures.web.resolver.SignInMember;
@@ -24,7 +24,7 @@ public class ChildminderUrgentController {
     private final ChildminderUrgentService childminderUrgentService;
 
     @GetMapping
-    public ApiResponse<List<ChildminderUrgentLookupDto>> lookupAllChildminderUrgent(
+    public ApiResponse<List<ChildminderUrgentLookupResponse>> lookupAllChildminderUrgent(
             @SignInMember final Member member) {
         return ApiResponse.succeed(
                 HttpStatus.OK,
@@ -33,7 +33,7 @@ public class ChildminderUrgentController {
     }
 
     @PostMapping
-    public ApiResponse<ChildminderUrgentRegisterDto> registerChildminderUrgent(
+    public ApiResponse<ChildminderUrgentRegisterResponse> registerChildminderUrgent(
             @RequestBody @Valid final ChildminderUrgentRegisterRequest childminderUrgentRegisterRequest,
             @SignInMember final Member member) {
         return ApiResponse.succeed(
@@ -43,7 +43,7 @@ public class ChildminderUrgentController {
     }
 
     @PatchMapping("/{urgent-id}")
-    public ApiResponse<ChildminderUrgentModifiedDto> modifiedChildminderUrgent(
+    public ApiResponse<ChildminderUrgentModifiedResponse> modifiedChildminderUrgent(
             @PathVariable("urgent-id") @Valid final Long urgentId,
             @RequestBody @Valid final ChildminderUrgentModifiedRequest childminderUrgentModifiedRequest,
             @SignInMember final Member member) {

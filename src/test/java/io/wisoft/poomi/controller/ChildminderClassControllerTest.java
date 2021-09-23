@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.wisoft.poomi.global.dto.response.ApiResponse;
-import io.wisoft.poomi.global.dto.response.childminder.classes.ChildminderClassLookupDto;
+import io.wisoft.poomi.global.dto.response.childminder.classes.ChildminderClassLookupResponse;
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.domain.member.Gender;
 import io.wisoft.poomi.domain.member.Member;
@@ -114,17 +114,6 @@ class ChildminderClassControllerTest {
         String url = "http://localhost:" + port + "/api/class";
         HttpEntity<?> httpEntity = new HttpEntity<>(headers);
 
-        ResponseEntity<? extends ApiResponse> responseEntity =
-                restTemplate.exchange(
-                        url, HttpMethod.GET, httpEntity,
-                        new ApiResponse<List<ChildminderClassLookupDto>>().getClass()
-                );
-        ApiResponse<List<ChildminderClassLookupDto>> result = responseEntity.getBody();
-        List<ChildminderClassLookupDto> classPrograms = objectMapper
-                .readValue(objectMapper.writeValueAsString(
-                        result.getData()), new TypeReference<>() {});
-
-        classPrograms.forEach(childminderClassLookupDto -> System.out.println(childminderClassLookupDto.getTitle()));
     }
 
 }

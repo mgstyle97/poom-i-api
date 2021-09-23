@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class SigninDto {
+public class SigninResponse {
 
     @JsonProperty("email")
     private String email;
@@ -21,13 +21,13 @@ public class SigninDto {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime loginAt;
 
-    public static SigninDto of(String email, String accessToken) {
-        SigninDto signinDto = new SigninDto();
-        signinDto.setEmail(email);
-        signinDto.setAccessToken(accessToken);
-        signinDto.setLoginAt(LocalDateTime.now());
+    public static SigninResponse of(String email, String accessToken) {
+        SigninResponse signinResponse = new SigninResponse();
+        signinResponse.setEmail(email);
+        signinResponse.setAccessToken(accessToken);
+        signinResponse.setLoginAt(LocalDateTime.now());
 
-        return signinDto;
+        return signinResponse;
     }
 
 }

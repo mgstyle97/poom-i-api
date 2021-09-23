@@ -1,61 +1,116 @@
 {
   "groups": [
     {
+      "name": "google",
+      "type": "io.wisoft.poomi.global.properties.oauth2.GoogleProperty",
+      "sourceType": "io.wisoft.poomi.global.properties.oauth2.GoogleProperty"
+    },
+    {
       "name": "kakao",
-      "type": "io.wisoft.poomi.configures.property.properties.oauth2.KakaoProperty",
-      "sourceType": "io.wisoft.poomi.configures.property.properties.oauth2.KakaoProperty"
+      "type": "io.wisoft.poomi.global.properties.oauth2.KakaoProperty",
+      "sourceType": "io.wisoft.poomi.global.properties.oauth2.KakaoProperty"
+    },
+    {
+      "name": "naver",
+      "type": "io.wisoft.poomi.global.properties.oauth2.NaverProperty",
+      "sourceType": "io.wisoft.poomi.global.properties.oauth2.NaverProperty"
     },
     {
       "name": "ncs",
-      "type": "io.wisoft.poomi.configures.property.properties.sms.NCSProperty",
-      "sourceType": "io.wisoft.poomi.configures.property.properties.sms.NCSProperty"
+      "type": "io.wisoft.poomi.global.properties.sms.NCSProperty",
+      "sourceType": "io.wisoft.poomi.global.properties.sms.NCSProperty"
     }
   ],
   "properties": [
     {
+      "name": "google.client-id",
+      "type": "java.lang.String",
+      "sourceType": "io.wisoft.poomi.global.properties.oauth2.GoogleProperty"
+    },
+    {
+      "name": "google.client-secret",
+      "type": "java.lang.String",
+      "sourceType": "io.wisoft.poomi.global.properties.oauth2.GoogleProperty"
+    },
+    {
+      "name": "google.redirection-u-r-i",
+      "type": "java.lang.String",
+      "sourceType": "io.wisoft.poomi.global.properties.oauth2.GoogleProperty"
+    },
+    {
+      "name": "google.token-u-r-i",
+      "type": "java.lang.String",
+      "sourceType": "io.wisoft.poomi.global.properties.oauth2.GoogleProperty"
+    },
+    {
+      "name": "google.userinfo-u-r-i",
+      "type": "java.lang.String",
+      "sourceType": "io.wisoft.poomi.global.properties.oauth2.GoogleProperty"
+    },
+    {
       "name": "kakao.client-id",
       "type": "java.lang.String",
-      "sourceType": "io.wisoft.poomi.configures.property.properties.oauth2.KakaoProperty"
+      "sourceType": "io.wisoft.poomi.global.properties.oauth2.KakaoProperty"
     },
     {
       "name": "kakao.client-secret",
       "type": "java.lang.String",
-      "sourceType": "io.wisoft.poomi.configures.property.properties.oauth2.KakaoProperty"
+      "sourceType": "io.wisoft.poomi.global.properties.oauth2.KakaoProperty"
     },
     {
       "name": "kakao.redirection-u-r-i",
       "type": "java.lang.String",
-      "sourceType": "io.wisoft.poomi.configures.property.properties.oauth2.KakaoProperty"
+      "sourceType": "io.wisoft.poomi.global.properties.oauth2.KakaoProperty"
     },
     {
       "name": "kakao.token-u-r-i",
       "type": "java.lang.String",
-      "sourceType": "io.wisoft.poomi.configures.property.properties.oauth2.KakaoProperty"
+      "sourceType": "io.wisoft.poomi.global.properties.oauth2.KakaoProperty"
     },
     {
       "name": "kakao.userinfo-u-r-i",
       "type": "java.lang.String",
-      "sourceType": "io.wisoft.poomi.configures.property.properties.oauth2.KakaoProperty"
+      "sourceType": "io.wisoft.poomi.global.properties.oauth2.KakaoProperty"
+    },
+    {
+      "name": "naver.client-id",
+      "type": "java.lang.String",
+      "sourceType": "io.wisoft.poomi.global.properties.oauth2.NaverProperty"
+    },
+    {
+      "name": "naver.client-secret",
+      "type": "java.lang.String",
+      "sourceType": "io.wisoft.poomi.global.properties.oauth2.NaverProperty"
+    },
+    {
+      "name": "naver.token-u-r-i",
+      "type": "java.lang.String",
+      "sourceType": "io.wisoft.poomi.global.properties.oauth2.NaverProperty"
+    },
+    {
+      "name": "naver.userinfo-u-r-i",
+      "type": "java.lang.String",
+      "sourceType": "io.wisoft.poomi.global.properties.oauth2.NaverProperty"
     },
     {
       "name": "ncs.access-key",
       "type": "java.lang.String",
-      "sourceType": "io.wisoft.poomi.configures.property.properties.sms.NCSProperty"
+      "sourceType": "io.wisoft.poomi.global.properties.sms.NCSProperty"
     },
     {
       "name": "ncs.from",
       "type": "java.lang.String",
-      "sourceType": "io.wisoft.poomi.configures.property.properties.sms.NCSProperty"
+      "sourceType": "io.wisoft.poomi.global.properties.sms.NCSProperty"
     },
     {
       "name": "ncs.secret-key",
       "type": "java.lang.String",
-      "sourceType": "io.wisoft.poomi.configures.property.properties.sms.NCSProperty"
+      "sourceType": "io.wisoft.poomi.global.properties.sms.NCSProperty"
     },
     {
       "name": "ncs.service-id",
       "type": "java.lang.String",
-      "sourceType": "io.wisoft.poomi.configures.property.properties.sms.NCSProperty"
+      "sourceType": "io.wisoft.poomi.global.properties.sms.NCSProperty"
     }
   ],
   "hints": []

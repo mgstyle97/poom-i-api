@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class ChildminderClassLookupDto {
+public class ChildminderClassLookupResponse {
 
     private Long id;
 
@@ -23,7 +23,7 @@ public class ChildminderClassLookupDto {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date requestedAt;
 
-    public ChildminderClassLookupDto(final ChildminderClass childminderClass) {
+    public ChildminderClassLookupResponse(final ChildminderClass childminderClass) {
         this.id = childminderClass.getId();
         this.title = childminderClass.getTitle();
         this.writer = childminderClass.getWriter().getName();
@@ -38,9 +38,9 @@ public class ChildminderClassLookupDto {
      * @param requestedAt
      */
     @ConstructorProperties({"id", "title", "writer", "requested_at"})
-    public ChildminderClassLookupDto(final Long id,
-                                     final String title, final String writer,
-                                     final Date requestedAt) {
+    public ChildminderClassLookupResponse(final Long id,
+                                          final String title, final String writer,
+                                          final Date requestedAt) {
         this.id = id;
         this.title = title;
         this.writer = writer;

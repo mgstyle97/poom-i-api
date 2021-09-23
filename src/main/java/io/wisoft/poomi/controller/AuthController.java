@@ -1,9 +1,8 @@
 package io.wisoft.poomi.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.wisoft.poomi.global.dto.response.ApiResponse;
-import io.wisoft.poomi.global.dto.response.auth.SmsResultDto;
-import io.wisoft.poomi.global.dto.response.auth.SmsVerifyDto;
+import io.wisoft.poomi.global.dto.response.auth.SmsResultResponse;
+import io.wisoft.poomi.global.dto.response.auth.SmsVerifyResponse;
 import io.wisoft.poomi.global.dto.request.auth.MailSendRequest;
 import io.wisoft.poomi.global.dto.request.auth.MailVerifyRequest;
 import io.wisoft.poomi.global.dto.request.auth.SmsSendRequest;
@@ -14,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URISyntaxException;
 
 @RestController
 @RequestMapping("/api")
@@ -24,13 +22,13 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/sms-certification/send")
-    public ApiResponse<SmsResultDto> sendCertificationNumberToPhone(
+    public ApiResponse<SmsResultResponse> sendCertificationNumberToPhone(
             @RequestBody @Valid final SmsSendRequest smsSendRequest) {
         return ApiResponse.succeed(HttpStatus.CREATED, authService.sendSmsToPhoneNumber(smsSendRequest));
     }
 
     @PostMapping("/sms-certification/verify")
-    public ApiResponse<SmsVerifyDto> verifyCertificationNumberToPhone(
+    public ApiResponse<SmsVerifyResponse> verifyCertificationNumberToPhone(
             @RequestBody @Valid final SmsVerifyRequest smsVerifyRequest) {
         return ApiResponse.succeed(HttpStatus.OK, authService.verifyToPhoneNumber(smsVerifyRequest));
     }

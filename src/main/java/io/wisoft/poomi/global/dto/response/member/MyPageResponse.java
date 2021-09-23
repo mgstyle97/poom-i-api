@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MyPageDto {
+public class MyPageResponse {
 
     private String email;
 
@@ -27,10 +27,10 @@ public class MyPageDto {
     private Integer childCount;
 
     @Builder
-    public MyPageDto(final String email, final String password,
-                     final String name, final String gender,
-                     final String phoneNumber, final String address,
-                     final Integer childCount) {
+    public MyPageResponse(final String email, final String password,
+                          final String name, final String gender,
+                          final String phoneNumber, final String address,
+                          final Integer childCount) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -40,8 +40,8 @@ public class MyPageDto {
         this.childCount = childCount;
     }
 
-    public static MyPageDto of(final Member member) {
-        MyPageDto myPageDto = MyPageDto.builder()
+    public static MyPageResponse of(final Member member) {
+        MyPageResponse myPageResponse = MyPageResponse.builder()
             .email(member.getEmail())
             .password(member.getPassword())
             .name(member.getName())
@@ -51,7 +51,7 @@ public class MyPageDto {
             .childCount(member.getChildren().size())
             .build();
 
-        return myPageDto;
+        return myPageResponse;
     }
 
 }

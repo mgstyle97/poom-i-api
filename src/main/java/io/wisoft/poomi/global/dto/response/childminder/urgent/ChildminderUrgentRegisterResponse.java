@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class ChildminderUrgentRegisterDto {
+public class ChildminderUrgentRegisterResponse {
 
     @JsonProperty("childminder_urgent_id")
     private Long childminderUrgentId;
@@ -23,15 +23,15 @@ public class ChildminderUrgentRegisterDto {
     private Date registeredAt;
 
     @Builder
-    private ChildminderUrgentRegisterDto(final Long childminderUrgentId,
-                                         final String writer) {
+    private ChildminderUrgentRegisterResponse(final Long childminderUrgentId,
+                                              final String writer) {
         this.childminderUrgentId = childminderUrgentId;
         this.writer = writer;
         this.registeredAt = new Date();
     }
 
-    public static ChildminderUrgentRegisterDto of(final ChildminderUrgent childminderUrgent) {
-        return ChildminderUrgentRegisterDto.builder()
+    public static ChildminderUrgentRegisterResponse of(final ChildminderUrgent childminderUrgent) {
+        return ChildminderUrgentRegisterResponse.builder()
                 .childminderUrgentId(childminderUrgent.getId())
                 .writer(childminderUrgent.getWriter().getNick())
                 .build();

@@ -2,10 +2,10 @@ package io.wisoft.poomi.service.oauth2;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.wisoft.poomi.global.dto.response.oauth.KakaoTokenResponseDto;
-import io.wisoft.poomi.global.dto.response.oauth.KakaoUserInfoDto;
-import io.wisoft.poomi.global.dto.response.oauth.OAuthUserPropertiesDto;
-import io.wisoft.poomi.configures.property.properties.oauth2.KakaoProperty;
+import io.wisoft.poomi.global.dto.response.oauth.KakaoTokenResponse;
+import io.wisoft.poomi.global.dto.response.oauth.KakaoUserInfo;
+import io.wisoft.poomi.global.dto.response.oauth.OAuthUserPropertiesResponse;
+import io.wisoft.poomi.global.properties.oauth2.KakaoProperty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class OAuth2Service {
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public OAuthUserPropertiesDto getUserProperties(final String code) {
+    public OAuthUserPropertiesResponse getUserProperties(final String code) {
 
         try {
             MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -43,8 +43,8 @@ public class OAuth2Service {
                     kakaoTokenRequest,
                     String.class
             );
-            KakaoTokenResponseDto kakaoTokenResponse = objectMapper
-                    .readValue(response.getBody(), KakaoTokenResponseDto.class);
+            KakaoTokenResponse kakaoTokenResponse = objectMapper
+                    .readValue(response.getBody(), KakaoTokenResponse.class);
 
             headers.clear();
             headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + kakaoTokenResponse.getAccessToken());
@@ -57,9 +57,9 @@ public class OAuth2Service {
                     kakaoProfileRequest,
                     String.class
             );
-            KakaoUserInfoDto kakaoUserInfoDto = objectMapper.readValue(userInfoResponse.getBody(), KakaoUserInfoDto.class);
+            KakaoUserInfo kakaoUserInfo = objectMapper.readValue(userInfoResponse.getBody(), KakaoUserInfo.class);
 
-            return OAuthUserPropertiesDto.of(kakaoUserInfoDto);
+            return OAuthUserPropertiesResponse.of(kakaoUserInfo);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (HttpClientErrorException e) {

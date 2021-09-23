@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class ChildminderClassRegisterDto {
+public class ChildminderClassRegisterResponse {
 
     private Long id;
 
@@ -24,22 +24,22 @@ public class ChildminderClassRegisterDto {
     private Date registeredAt;
 
     @Builder
-    private ChildminderClassRegisterDto(final Long id,
-                                       final String title, final String writer) {
+    private ChildminderClassRegisterResponse(final Long id,
+                                             final String title, final String writer) {
         this.id = id;
         this.title = title;
         this.writer = writer;
         this.registeredAt = new Date();
     }
 
-    public static ChildminderClassRegisterDto from(final ChildminderClass childminderClass) {
-        ChildminderClassRegisterDto childminderClassRegisterDto = ChildminderClassRegisterDto.builder()
+    public static ChildminderClassRegisterResponse from(final ChildminderClass childminderClass) {
+        ChildminderClassRegisterResponse childminderClassRegisterResponse = ChildminderClassRegisterResponse.builder()
                 .id(childminderClass.getId())
                 .title(childminderClass.getTitle())
                 .writer(childminderClass.getWriter().getName())
                 .build();
 
-        return childminderClassRegisterDto;
+        return childminderClassRegisterResponse;
     }
 
 }

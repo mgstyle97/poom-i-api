@@ -15,7 +15,6 @@ import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -28,7 +27,6 @@ import java.util.stream.Collectors;
 public class RestExceptionHandler {
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     public ApiResponse<ErrorResponse> methodNotAllowed(HttpRequestMethodNotSupportedException e) {
 
         return ApiResponse.failure(HttpStatus.METHOD_NOT_ALLOWED,
@@ -38,7 +36,6 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<ErrorResponse> badCredentials() {
 
         return ApiResponse.failure(HttpStatus.BAD_REQUEST,
@@ -48,7 +45,6 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiResponse<ErrorResponse> notFound(NoHandlerFoundException e) {
 
         return ApiResponse.failure(HttpStatus.NOT_FOUND,
@@ -59,7 +55,7 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(NoPermissionOfContentException.class)
     public ApiResponse<ErrorResponse> noPermission() {
-        return ApiResponse.failure(HttpStatus.BAD_REQUEST,
+        return ApiResponse.failure(HttpStatus.FORBIDDEN,
                 ErrorResponse.builder()
                 .errorCode(ErrorCode.NO_PERMISSION)
                 .build()
@@ -76,7 +72,6 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<ErrorResponse> illegalArgument(IllegalArgumentException e) {
 
         ErrorCode errorCode = ErrorCode.illegalArgument(e.getMessage());
@@ -88,7 +83,6 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(TypeMismatchException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<ErrorResponse> typeMismatch() {
 
         return ApiResponse.failure(HttpStatus.BAD_REQUEST,
@@ -98,7 +92,6 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<ErrorResponse> invalidJSONFormatExp() {
 
         return ApiResponse.failure(HttpStatus.BAD_REQUEST,
@@ -108,7 +101,6 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<ErrorResponse> handleBindData(BindException ex) {
         String errorMessage = ex.getBindingResult().getAllErrors()
                 .stream()
@@ -122,7 +114,6 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(FileUploadException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<ErrorResponse> fileUpload(final FileUploadException ex) {
 
         return ApiResponse.failure(HttpStatus.BAD_REQUEST,
@@ -132,7 +123,6 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-    @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
     public ApiResponse<ErrorResponse> unsupportedMediaType(HttpMediaTypeNotSupportedException e) {
 
         return ApiResponse.failure(HttpStatus.UNSUPPORTED_MEDIA_TYPE,
@@ -143,7 +133,6 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(SocketException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiResponse<ErrorResponse> socketException() {
 
         return ApiResponse.failure(HttpStatus.INTERNAL_SERVER_ERROR,
@@ -154,7 +143,6 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(HttpClientErrorException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<ErrorResponse> httpClientError() {
         log.error("소셜 로그인 요청 에러");
 

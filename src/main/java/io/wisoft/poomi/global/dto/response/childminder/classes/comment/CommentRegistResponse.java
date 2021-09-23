@@ -10,22 +10,30 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class CommentModifiedDto {
+public class CommentRegistResponse {
 
     @JsonProperty("comment_id")
     private Long commentId;
+
+    @JsonProperty("class_program_id")
+    private Long classProgramId;
+
+    @JsonProperty("writer_id")
+    private Long writerId;
 
     @JsonProperty("requested_at")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date requestedAt;
 
-    public CommentModifiedDto(final Long commentId) {
-        this.commentId = commentId;
+    public CommentRegistResponse(final Comment comment) {
+        this.commentId = comment.getId();
+        this.classProgramId = comment.getChildminderClass().getId();
+        this.writerId = comment.getWriter().getId();
         this.requestedAt = new Date();
     }
 
-    public static CommentModifiedDto of(final Comment comment) {
-        return new CommentModifiedDto(comment.getId());
+    public static CommentRegistResponse of(final Comment comment) {
+        return new CommentRegistResponse(comment);
     }
 
 }
