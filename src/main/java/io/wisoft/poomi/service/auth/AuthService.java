@@ -1,10 +1,10 @@
 package io.wisoft.poomi.service.auth;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.wisoft.poomi.global.dto.response.auth.SmsResultDto;
-import io.wisoft.poomi.global.dto.response.auth.SmsVerifyDto;
+import io.wisoft.poomi.global.dto.response.auth.SmsResultResponse;
+import io.wisoft.poomi.global.dto.response.auth.SmsVerifyResponse;
 import io.wisoft.poomi.global.dto.request.auth.*;
-import io.wisoft.poomi.configures.property.properties.sms.NCSProperty;
+import io.wisoft.poomi.global.properties.sms.NCSProperty;
 import io.wisoft.poomi.domain.auth.email.EmailCertification;
 import io.wisoft.poomi.domain.auth.email.EmailCertificationRepository;
 import io.wisoft.poomi.domain.auth.sms.SmsCertification;
@@ -24,12 +24,9 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
@@ -47,7 +44,7 @@ public class AuthService {
     private final JavaMailSender javaMailSender;
     private final EmailCertificationRepository emailCertificationRepository;
 
-    public SmsResultDto sendSmsToPhoneNumber(final SmsSendRequest smsSendRequest) {
+    public SmsResultResponse sendSmsToPhoneNumber(final SmsSendRequest smsSendRequest) {
         String phoneNumber = smsSendRequest.getPhoneNumber();
         String certificationNumber = generateCertificationNumber();
         String content = generateContent(certificationNumber);
@@ -57,16 +54,16 @@ public class AuthService {
         log.info("Generate message: {}", messages);
 
         String requestBody = generateRequestBody(messages);
-        SmsResultDto smsResultDto = sendSmsRequest(requestBody);
+        SmsResultResponse smsResultResponse = sendSmsRequest(requestBody);
 
         smsCertificationRepository.save(SmsCertification.of(phoneNumber, certificationNumber));
         log.info("Save phone number and certification number temporarily: {}", phoneNumber);
 
-        return smsResultDto;
+        return smsResultResponse;
     }
 
     @Transactional
-    public SmsVerifyDto verifyToPhoneNumber(SmsVerifyRequest verifyRequest) {
+    public SmsVerifyResponse verifyToPhoneNumber(SmsVerifyRequest verifyRequest) {
         SmsCertification smsCertification = smsCertificationRepository
                 .getByPhoneNumber(verifyRequest.getPhoneNumber());
         log.info("Generate certification data of phone number: {}", verifyRequest.getPhoneNumber());
@@ -77,7 +74,7 @@ public class AuthService {
         smsCertificationRepository.delete(smsCertification);
         log.info("Delete verified phone number: {}", smsCertification.getPhoneNumber());
 
-        return new SmsVerifyDto(verifyRequest.getPhoneNumber());
+        return new SmsVerifyResponse(verifyRequest.getPhoneNumber());
     }
 
     @Transactional
@@ -175,19 +172,19 @@ public class AuthService {
 
     }
 
-    private SmsResultDto sendSmsRequest(final String requestBody) {
+    private SmsResultResponse sendSmsRequest(final String requestBody) {
         HttpHeaders headers = new HttpHeaders();
         setHeaders(headers);
 
         HttpEntity<String> httpEntity = new HttpEntity<>(requestBody, headers);
 
         RestTemplate restTemplate = new RestTemplate();
-        SmsResultDto smsResultDto = restTemplate.postForObject(
+        SmsResultResponse smsResultResponse = restTemplate.postForObject(
                 "https://sens.apigw.ntruss.com/sms/v2/services/" + ncsProperty.getServiceId() + "/messages",
-                httpEntity, SmsResultDto.class
+                httpEntity, SmsResultResponse.class
         );
 
-        return smsResultDto;
+        return smsResultResponse;
     }
 
     private void sendMessageByEmail(final String email, final String content) {

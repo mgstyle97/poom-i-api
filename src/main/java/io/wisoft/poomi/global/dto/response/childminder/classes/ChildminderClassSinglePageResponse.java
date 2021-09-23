@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public class ChildminderClassSinglePageDto {
+public class ChildminderClassSinglePageResponse {
 
     @JsonProperty("class_id")
     private Long classId;
@@ -40,10 +40,10 @@ public class ChildminderClassSinglePageDto {
     private Date requestedAt;
 
     @Builder
-    private ChildminderClassSinglePageDto(final Long classId,
-                                         final String title, final String contents, final String writer,
-                                         final Boolean isRecruit, final List<String> imageUris,
-                                         final List<CommentSinglePageDto> comments) {
+    private ChildminderClassSinglePageResponse(final Long classId,
+                                               final String title, final String contents, final String writer,
+                                               final Boolean isRecruit, final List<String> imageUris,
+                                               final List<CommentSinglePageDto> comments) {
         this.classId = classId;
         this.title = title;
         this.contents = contents;
@@ -54,8 +54,8 @@ public class ChildminderClassSinglePageDto {
         this.requestedAt = new Date();
     }
 
-    public static ChildminderClassSinglePageDto of(final ChildminderClass childminderClass, final String domainInfo) {
-        return ChildminderClassSinglePageDto.builder()
+    public static ChildminderClassSinglePageResponse of(final ChildminderClass childminderClass, final String domainInfo) {
+        return ChildminderClassSinglePageResponse.builder()
                 .classId(childminderClass.getId())
                 .title(childminderClass.getTitle())
                 .contents(childminderClass.getContents())

@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ChildAddDto {
+public class ChildAddResponse {
 
     @JsonProperty("child_id")
     private Long childId;
@@ -16,13 +16,13 @@ public class ChildAddDto {
     private String name;
 
     @Builder
-    private ChildAddDto(final Long childId, final String name) {
+    private ChildAddResponse(final Long childId, final String name) {
         this.childId = childId;
         this.name = name;
     }
 
-    public static ChildAddDto of(final Child child) {
-        return ChildAddDto.builder()
+    public static ChildAddResponse of(final Child child) {
+        return ChildAddResponse.builder()
                 .childId(child.getId())
                 .name(child.getName())
                 .build();

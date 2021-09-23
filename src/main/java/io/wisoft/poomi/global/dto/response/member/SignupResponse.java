@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class SignupDto {
+public class SignupResponse {
 
     private String name;
 
@@ -25,12 +25,12 @@ public class SignupDto {
     @JsonFormat(pattern = "yyyy.MM.dd-HH:mm:ss")
     private LocalDateTime joinedAt;
 
-    public static SignupDto of(Member member) {
-        SignupDto signupDto = new SignupDto();
-        BeanUtils.copyProperties(member, signupDto);
-        signupDto.setJoinedAt(LocalDateTime.now());
+    public static SignupResponse of(Member member) {
+        SignupResponse signupResponse = new SignupResponse();
+        BeanUtils.copyProperties(member, signupResponse);
+        signupResponse.setJoinedAt(LocalDateTime.now());
 
-        return signupDto;
+        return signupResponse;
     }
 
 }

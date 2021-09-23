@@ -1,8 +1,8 @@
 package io.wisoft.poomi.service.member;
 
-import io.wisoft.poomi.global.dto.response.member.SigninDto;
-import io.wisoft.poomi.global.dto.response.member.CMInfoRegisterDto;
-import io.wisoft.poomi.global.dto.response.member.SignupDto;
+import io.wisoft.poomi.global.dto.response.member.SigninResponse;
+import io.wisoft.poomi.global.dto.response.member.CMInfoRegisterResponse;
+import io.wisoft.poomi.global.dto.response.member.SignupResponse;
 import io.wisoft.poomi.global.dto.request.member.SigninRequest;
 import io.wisoft.poomi.global.dto.request.member.CMInfoRegisterRequest;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
@@ -44,34 +44,34 @@ public class MemberService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Transactional
-    public SignupDto signup(final SignupRequest signupRequest, final List<MultipartFile> images) {
+    public SignupResponse signup(final SignupRequest signupRequest, final List<MultipartFile> images) {
         Member member = saveMember(signupRequest);
 
         log.info("Generate member: {}", member.getEmail());
 
         FileUtils.saveImageWithUserEmail(member.getEmail(), images);
 
-        return SignupDto.of(member);
+        return SignupResponse.of(member);
     }
 
     @Transactional(readOnly = true)
-    public SigninDto signin(SigninRequest signinRequest) {
+    public SigninResponse signin(SigninRequest signinRequest) {
         Member member = memberRepository.getMemberByEmail(signinRequest.getEmail());
         Authentication authentication = toAuthentication(signinRequest, member.getAuthority());
 
         String accessToken = jwtTokenProvider.generateToken(authentication);
         log.info("Generate JWT token: {}", accessToken);
 
-        return SigninDto.of(authentication.getName(), accessToken);
+        return SigninResponse.of(authentication.getName(), accessToken);
     }
 
     @Transactional(readOnly = true)
-    public CMInfoRegisterDto cmInfoUpdate(Member member,
-                                          final CMInfoRegisterRequest cmInfoRegisterRequest) {
+    public CMInfoRegisterResponse cmInfoUpdate(Member member,
+                                               final CMInfoRegisterRequest cmInfoRegisterRequest) {
         member.updateChildminderInfo(ChildminderInfo.from(cmInfoRegisterRequest));
         memberRepository.save(member);
 
-        return new CMInfoRegisterDto(member.getChildminderInfo().getId(), member.getEmail());
+        return new CMInfoRegisterResponse(member.getChildminderInfo().getId(), member.getEmail());
     }
 
     private Member saveMember(final SignupRequest signupRequest) {

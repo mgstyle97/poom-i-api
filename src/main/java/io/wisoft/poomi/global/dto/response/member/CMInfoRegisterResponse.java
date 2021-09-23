@@ -7,21 +7,21 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class ChildDeleteDto {
+public class CMInfoRegisterResponse {
+
 
     private Long id;
 
-    @JsonProperty("member_id")
-    private Long memberId;
+    private String email;
 
-    @JsonProperty("deleted_at")
+    @JsonProperty("registered_at")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime deletedAt;
+    private LocalDateTime registeredAt;
 
-    public ChildDeleteDto(final Long id, final Long memberId) {
+    public CMInfoRegisterResponse(final Long id, final String email) {
         this.id = id;
-        this.memberId = memberId;
-        this.deletedAt = LocalDateTime.now();
+        this.email = email;
+        this.registeredAt = LocalDateTime.now();
     }
 
 }

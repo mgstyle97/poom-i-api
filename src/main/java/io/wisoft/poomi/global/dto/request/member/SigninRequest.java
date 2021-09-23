@@ -7,6 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
 public class SigninRequest {
 
     @JsonProperty("email")
+    @Email(message = "로그인할 이메일 형식이 부적절합니다.")
     @NotBlank(message = "로그인할 이메일을 입력해주세요.")
     private String email;
 

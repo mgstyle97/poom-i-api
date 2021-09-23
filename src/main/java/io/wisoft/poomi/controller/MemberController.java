@@ -2,7 +2,7 @@ package io.wisoft.poomi.controller;
 
 import io.wisoft.poomi.global.dto.response.ApiResponse;
 import io.wisoft.poomi.global.dto.response.member.*;
-import io.wisoft.poomi.global.dto.response.oauth.OAuthUserPropertiesDto;
+import io.wisoft.poomi.global.dto.response.oauth.OAuthUserPropertiesResponse;
 import io.wisoft.poomi.global.dto.request.member.SigninRequest;
 import io.wisoft.poomi.global.dto.request.member.CMInfoRegisterRequest;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
@@ -28,13 +28,13 @@ public class MemberController {
     private final OAuth2Service oAuth2Service;
 
     @PostMapping("/signin")
-    public ApiResponse<SigninDto> signin(
+    public ApiResponse<SigninResponse> signin(
             @RequestBody @Valid final SigninRequest signinRequest) {
         return ApiResponse.succeed(HttpStatus.OK, memberService.signin(signinRequest));
     }
 
     @PostMapping("/signup")
-    public ApiResponse<SignupDto> signup(
+    public ApiResponse<SignupResponse> signup(
             @RequestPart("data") @Valid final SignupRequest signupRequest,
             @RequestPart(value = "images", required = false) List<MultipartFile> images) {
         return ApiResponse
@@ -42,26 +42,26 @@ public class MemberController {
     }
 
     @GetMapping("/member/me")
-    public ApiResponse<MyPageDto> myPage(@SignInMember final Member member) {
-        return ApiResponse.succeed(HttpStatus.OK, MyPageDto.of(member));
+    public ApiResponse<MyPageResponse> myPage(@SignInMember final Member member) {
+        return ApiResponse.succeed(HttpStatus.OK, MyPageResponse.of(member));
     }
 
     @PostMapping("/member/childminder-info")
-    public ApiResponse<CMInfoRegisterDto> cmInfoRegist(
+    public ApiResponse<CMInfoRegisterResponse> cmInfoRegist(
             @RequestBody @Valid final CMInfoRegisterRequest cmInfoRegisterRequest,
             @SignInMember final Member member) {
         return ApiResponse.succeed(HttpStatus.CREATED, memberService.cmInfoUpdate(member, cmInfoRegisterRequest));
     }
 
     @GetMapping("/oauth2/success")
-    public ApiResponse<SigninDto> oauthSignin(final HttpServletRequest request) {
-        SigninDto dto = (SigninDto) request.getAttribute("signin-dto");
+    public ApiResponse<SigninResponse> oauthSignin(final HttpServletRequest request) {
+        SigninResponse dto = (SigninResponse) request.getAttribute("signin-dto");
 
         return ApiResponse.succeed(HttpStatus.OK, dto);
     }
 
     @GetMapping("/oauth2")
-    public ApiResponse<OAuthUserPropertiesDto> oauthCodeToUserInfo(@RequestParam("code") String code) {
+    public ApiResponse<OAuthUserPropertiesResponse> oauthCodeToUserInfo(@RequestParam("code") String code) {
         return ApiResponse.succeed(
                 HttpStatus.OK,
                 oAuth2Service.getUserProperties(code)

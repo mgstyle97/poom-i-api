@@ -42,6 +42,19 @@ kakao:
   tokenURI: ${KAKAO_TOKEN_URI}
   userinfoURI: ${KAKAO_USERINFO_URI}
 
+google:
+  clientId: ${GOOGLE_CLIENT_ID}
+  clientSecret: ${GOOGLE_CLIENT-SECRET}
+  redirectionURI: ${GOOGLE_REDIRECTION_URI}
+  tokenURI: ${GOOGLE_TOKEN_URI}
+  userinfoURI: ${GOOGLE_USERINFO_URI}
+
+naver:
+  clientId: ${GOOGLE_CLIENT_ID}
+  clientSecret: ${GOOGLE_CLIENT-SECRET}
+  tokenURI: ${GOOGLE_TOKEN_URI}
+  userinfoURI: ${GOOGLE_USERINFO_URI}
+
 
 
 lombok:

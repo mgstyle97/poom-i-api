@@ -1,6 +1,6 @@
 package io.wisoft.poomi.service.member;
 
-import io.wisoft.poomi.global.dto.response.member.AddressDto;
+import io.wisoft.poomi.global.dto.response.member.AddressResponse;
 import io.wisoft.poomi.global.dto.request.member.AddressRegisterRequest;
 import io.wisoft.poomi.domain.member.address.Address;
 import io.wisoft.poomi.domain.member.address.AddressTag;
@@ -24,7 +24,7 @@ public class AddressService {
     private final AddressTagRepository addressTagRepository;
 
     @Transactional
-    public AddressDto registerAddress(final Member member, final AddressRegisterRequest addressRegisterRequest) {
+    public AddressResponse registerAddress(final Member member, final AddressRegisterRequest addressRegisterRequest) {
         AddressTag addressTag = addressTagRepository
                 .getAddressTagByExtraAddress(addressRegisterRequest.getExtraAddress());
         log.info("Generate address tag: {}", addressTag.getExtraAddress());
@@ -36,7 +36,7 @@ public class AddressService {
         memberRepository.save(member);
         log.info("Modify member address info");
 
-        return AddressDto.from(member.getEmail(), addressTag.getExtraAddress());
+        return AddressResponse.from(member.getEmail(), addressTag.getExtraAddress());
     }
 
     private Address generateAddressAndSave(final AddressRegisterRequest addressRegisterRequest, AddressTag addressTag) {

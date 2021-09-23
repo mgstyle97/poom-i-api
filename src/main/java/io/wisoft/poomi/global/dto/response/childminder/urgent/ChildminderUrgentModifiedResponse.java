@@ -12,7 +12,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class ChildminderUrgentModifiedDto {
+public class ChildminderUrgentModifiedResponse {
 
     @JsonProperty("childminder_urgent_id")
     private Long childminderUrgentId;
@@ -35,10 +35,10 @@ public class ChildminderUrgentModifiedDto {
     private Date registeredAt;
 
     @Builder
-    private ChildminderUrgentModifiedDto(final Long childminderUrgentId,
-                                         final String contents,
-                                          final Boolean isRecruit,
-                                          final LocalDateTime startTime, final LocalDateTime endTime) {
+    private ChildminderUrgentModifiedResponse(final Long childminderUrgentId,
+                                              final String contents,
+                                              final Boolean isRecruit,
+                                              final LocalDateTime startTime, final LocalDateTime endTime) {
         this.childminderUrgentId = childminderUrgentId;
         this.contents = contents;
         this.isRecruit = isRecruit;
@@ -47,8 +47,8 @@ public class ChildminderUrgentModifiedDto {
         this.registeredAt = new Date();
     }
 
-    public static ChildminderUrgentModifiedDto of(final ChildminderUrgent childminderUrgent) {
-        return ChildminderUrgentModifiedDto.builder()
+    public static ChildminderUrgentModifiedResponse of(final ChildminderUrgent childminderUrgent) {
+        return ChildminderUrgentModifiedResponse.builder()
                 .childminderUrgentId(childminderUrgent.getId())
                 .contents(childminderUrgent.getContents())
                 .isRecruit(childminderUrgent.getIsRecruit())

@@ -10,18 +10,32 @@ public class ApiResponse<T> extends ResponseEntity<T> {
     private final T data;
     private final T error;
 
-    public ApiResponse(final HttpStatus httpStatus, final T data, final T error) {
+    private final String accessToken;
+
+    public ApiResponse(final HttpStatus httpStatus, final T data, final T error,
+                       final String accessToken) {
         super((T) Body.of(data, error), httpStatus);
         this.data = data;
         this.error = error;
+        this.accessToken = accessToken;
     }
 
     public static <T> ApiResponse<T> succeed(HttpStatus httpStatus, T data) {
-        return new ApiResponse<>(httpStatus, data, null);
+        return succeedWithAccessToken(httpStatus, data, null);
+    }
+
+    public static <T> ApiResponse<T> succeedWithAccessToken(final HttpStatus httpStatus, final T data,
+                                                            final String accessToken) {
+        return createResponse(httpStatus, data, null, accessToken);
     }
 
     public static <T> ApiResponse<T> failure(HttpStatus httpStatus, T error){
-        return new ApiResponse<>(httpStatus, null, error);
+        return createResponse(httpStatus, null, error, null);
+    }
+
+    private static <T> ApiResponse<T> createResponse(final HttpStatus httpStatus, final T data, final T error,
+                                                     final String accessToken) {
+        return new ApiResponse<>(httpStatus, data, error, accessToken);
     }
 
     @Getter

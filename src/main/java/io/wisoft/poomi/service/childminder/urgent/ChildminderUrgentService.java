@@ -1,8 +1,8 @@
 package io.wisoft.poomi.service.childminder.urgent;
 
-import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentLookupDto;
-import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentModifiedDto;
-import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentRegisterDto;
+import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentLookupResponse;
+import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentModifiedResponse;
+import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentRegisterResponse;
 import io.wisoft.poomi.global.dto.request.childminder.urgent.ChildminderUrgentModifiedRequest;
 import io.wisoft.poomi.global.dto.request.childminder.urgent.ChildminderUrgentRegisterRequest;
 import io.wisoft.poomi.global.utils.LocalDateTimeUtils;
@@ -27,16 +27,16 @@ public class ChildminderUrgentService {
     private final ChildminderUrgentRepository childminderUrgentRepository;
 
     @Transactional(readOnly = true)
-    public List<ChildminderUrgentLookupDto> lookupAllChildminderUrgent(final Member member) {
+    public List<ChildminderUrgentLookupResponse> lookupAllChildminderUrgent(final Member member) {
         List<ChildminderUrgent> childminderUrgentList = childminderUrgentRepository
                 .findAllByAddressTag(member.getAddressTag());
         return childminderUrgentList.stream()
-                .map(ChildminderUrgentLookupDto::of)
+                .map(ChildminderUrgentLookupResponse::of)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public ChildminderUrgentRegisterDto registerChildminderUrgent(
+    public ChildminderUrgentRegisterResponse registerChildminderUrgent(
             final ChildminderUrgentRegisterRequest childminderUrgentRegisterRequest,
             final Member member) {
         checkChildminderActivityTime(
@@ -50,11 +50,11 @@ public class ChildminderUrgentService {
         log.info("Save childminder urgent id: {}", childminderUrgent.getId());
 
 
-        return ChildminderUrgentRegisterDto.of(childminderUrgent);
+        return ChildminderUrgentRegisterResponse.of(childminderUrgent);
     }
 
     @Transactional
-    public ChildminderUrgentModifiedDto modifiedChildminderUrgent(
+    public ChildminderUrgentModifiedResponse modifiedChildminderUrgent(
             final Long urgentId,
             final ChildminderUrgentModifiedRequest childminderUrgentModifiedRequest,
             final Member member) {
@@ -69,7 +69,7 @@ public class ChildminderUrgentService {
 
         modifyChildminderUrgent(childminderUrgent, childminderUrgentModifiedRequest);
 
-        return ChildminderUrgentModifiedDto.of(childminderUrgent);
+        return ChildminderUrgentModifiedResponse.of(childminderUrgent);
     }
 
     private ChildminderUrgent generateChildminderUrgentById(final Long urgentId) {

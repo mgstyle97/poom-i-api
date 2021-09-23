@@ -1,8 +1,8 @@
 package io.wisoft.poomi.service.childminder.comment;
 
-import io.wisoft.poomi.global.dto.response.childminder.classes.comment.CommentDeleteDto;
-import io.wisoft.poomi.global.dto.response.childminder.classes.comment.CommentModifiedDto;
-import io.wisoft.poomi.global.dto.response.childminder.classes.comment.CommentRegistDto;
+import io.wisoft.poomi.global.dto.response.childminder.classes.comment.CommentDeleteResponse;
+import io.wisoft.poomi.global.dto.response.childminder.classes.comment.CommentModifiedResponse;
+import io.wisoft.poomi.global.dto.response.childminder.classes.comment.CommentRegistResponse;
 import io.wisoft.poomi.global.dto.request.childminder.classes.CommentModifiedRequest;
 import io.wisoft.poomi.global.dto.request.childminder.classes.CommentRegisterRequest;
 import io.wisoft.poomi.domain.member.Member;
@@ -27,9 +27,9 @@ public class CommentService {
     private final ChildminderClassRepository childminderClassRepository;
 
     @Transactional
-    public CommentRegistDto registComment(final Long classId,
-                                final CommentRegisterRequest commentRegisterRequest,
-                                final Member member) {
+    public CommentRegistResponse registComment(final Long classId,
+                                               final CommentRegisterRequest commentRegisterRequest,
+                                               final Member member) {
         ChildminderClass childminderClass = childminderClassRepository.getById(classId);
         log.info("Generate class program id: {}", classId);
 
@@ -39,13 +39,13 @@ public class CommentService {
         commentRepository.save(comment);
         log.info("Save comment data id: {}", comment.getId());
 
-        return CommentRegistDto.of(comment);
+        return CommentRegistResponse.of(comment);
     }
 
     @Transactional
-    public CommentModifiedDto modifiedComment(final Long commentId,
-                                  final CommentModifiedRequest commentModifiedRequest,
-                                  final Member member) {
+    public CommentModifiedResponse modifiedComment(final Long commentId,
+                                                   final CommentModifiedRequest commentModifiedRequest,
+                                                   final Member member) {
         Comment comment = generateComment(commentId);
 
         ContentPermissionVerifier.verifyPermission(comment.getWriter(), member);
@@ -53,11 +53,11 @@ public class CommentService {
         comment.updateContents(commentModifiedRequest.getContents());
         log.info("Update comment entity: {}", commentId);
 
-        return CommentModifiedDto.of(comment);
+        return CommentModifiedResponse.of(comment);
     }
 
     @Transactional
-    public CommentDeleteDto removeComment(final Long commentId,
+    public CommentDeleteResponse removeComment(final Long commentId,
                                                final Member member) {
         Comment comment = generateComment(commentId);
 
@@ -66,7 +66,7 @@ public class CommentService {
         commentRepository.delete(comment);
         log.info("Delete comment entity id: {}", commentId);
 
-        return CommentDeleteDto.of(comment);
+        return CommentDeleteResponse.of(comment);
     }
 
     @Transactional

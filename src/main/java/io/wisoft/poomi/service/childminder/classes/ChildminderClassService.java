@@ -36,17 +36,17 @@ public class ChildminderClassService {
     private final CommentService commentService;
 
     @Transactional(readOnly = true)
-    public List<ChildminderClassLookupDto> findByAddressTag(final AddressTag addressTag) {
+    public List<ChildminderClassLookupResponse> findByAddressTag(final AddressTag addressTag) {
         return childminderClassRepository.findByAddressTag(addressTag).stream()
-                .map(ChildminderClassLookupDto::new)
+                .map(ChildminderClassLookupResponse::new)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public ChildminderClassRegisterDto registerChildminderClass(final Member member,
-                                                                final ChildminderClassRegisterRequest childminderClassRegisterRequest,
-                                                                final List<MultipartFile> images,
-                                                                final String domainInfo) {
+    public ChildminderClassRegisterResponse registerChildminderClass(final Member member,
+                                                                     final ChildminderClassRegisterRequest childminderClassRegisterRequest,
+                                                                     final List<MultipartFile> images,
+                                                                     final String domainInfo) {
         ChildminderClass childminderClass = ChildminderClass.of(member, childminderClassRegisterRequest);
         log.info("Generate childminder class title: {}", childminderClass.getTitle());
 
@@ -57,37 +57,37 @@ public class ChildminderClassService {
 
         memberRepository.save(member);
 
-        return ChildminderClassRegisterDto.from(childminderClass);
+        return ChildminderClassRegisterResponse.from(childminderClass);
     }
 
     @Transactional
-    public ChildminderClassModifiedDto modifiedChildminderClass(final Member member, final Long id,
-                                                                final ChildminderClassModifiedRequest childminderClassModifiedRequest) {
+    public ChildminderClassModifiedResponse modifiedChildminderClass(final Member member, final Long id,
+                                                                     final ChildminderClassModifiedRequest childminderClassModifiedRequest) {
         ChildminderClass childminderClass = generateChildminderClassById(id);
 
         ContentPermissionVerifier.verifyPermission(childminderClass.getWriter(), member);
 
         modifyChildminderClass(childminderClass, childminderClassModifiedRequest);
 
-        return ChildminderClassModifiedDto.of(id);
+        return ChildminderClassModifiedResponse.of(id);
     }
 
     @Transactional(readOnly = true)
-    public ChildminderClassSinglePageDto callChildminderClassSinglePage(final Long classId, final String domainInfo) {
+    public ChildminderClassSinglePageResponse callChildminderClassSinglePage(final Long classId, final String domainInfo) {
         ChildminderClass childminderClass = generateChildminderClassById(classId);
 
-        return ChildminderClassSinglePageDto.of(childminderClass, domainInfo);
+        return ChildminderClassSinglePageResponse.of(childminderClass, domainInfo);
     }
 
     @Transactional
-    public ChildminderClassDeleteDto removeChildminderClass(final Member member, final Long id) {
+    public ChildminderClassDeleteResponse removeChildminderClass(final Member member, final Long id) {
         ChildminderClass childminderClass = generateChildminderClassById(id);
 
         ContentPermissionVerifier.verifyPermission(childminderClass.getWriter(), member);
 
         deleteChildminderClass(childminderClass, member);
 
-        return ChildminderClassDeleteDto.of(id);
+        return ChildminderClassDeleteResponse.of(id);
     }
 
     @Transactional
