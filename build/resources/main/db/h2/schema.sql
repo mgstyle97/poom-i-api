@@ -14,6 +14,7 @@ DROP TABLE IF EXISTS class_likes CASCADE;
 DROP TABLE IF EXISTS comment CASCADE;
 DROP TABLE IF EXISTS image CASCADE;
 DROP TABLE IF EXISTS childminder_urgent CASCADE;
+DROP TABLE IF EXISTS childminder_urgent_application CASCADE;
 
 
 CREATE TABLE sms_certification(
@@ -82,16 +83,6 @@ CREATE TABLE member_authority(
     foreign key (authority_id) references authority(id)
 );
 
-CREATE TABLE child(
-    id integer primary key,
-    name varchar not null,
-    birthday date not null,
-    school varchar not null,
-    special_note varchar,
-    member_id integer not null,
-    foreign key(member_id) references member(id)
-);
-
 CREATE TABLE childminder_class(
     id integer primary key,
     title varchar not null,
@@ -150,4 +141,25 @@ CREATE TABLE childminder_urgent(
     address_tag_id integer not null,
     foreign key(member_id) references member(id),
     foreign key(address_tag_id) references address_tag(id)
+);
+
+CREATE TABLE childminder_urgent_application(
+    id integer primary key,
+    contents varchar not null,
+    member_id integer not null,
+    urgent_id integer not null,
+    foreign key(member_id) references member(id),
+    foreign key(urgent_id) references childminder_urgent(id)
+);
+
+CREATE TABLE child(
+    id integer primary key,
+    name varchar not null,
+    birthday date not null,
+    school varchar not null,
+    special_note varchar,
+    member_id integer not null,
+    urgent_id integer,
+    foreign key(member_id) references member(id),
+    foreign key(urgent_id) references childminder_urgent(id)
 );

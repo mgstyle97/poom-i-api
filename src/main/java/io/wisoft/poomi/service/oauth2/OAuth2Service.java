@@ -2,6 +2,7 @@ package io.wisoft.poomi.service.oauth2;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.wisoft.poomi.configures.web.formatter.Social;
 import io.wisoft.poomi.global.dto.response.oauth.KakaoTokenResponse;
 import io.wisoft.poomi.global.dto.response.oauth.KakaoUserInfo;
 import io.wisoft.poomi.global.dto.response.oauth.OAuthUserPropertiesResponse;
@@ -23,7 +24,7 @@ public class OAuth2Service {
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public OAuthUserPropertiesResponse getUserProperties(final String code) {
+    public OAuthUserPropertiesResponse getUserProperties(final Social social, final String code) {
 
         try {
             MultiValueMap<String, String> params = new LinkedMultiValueMap<>();

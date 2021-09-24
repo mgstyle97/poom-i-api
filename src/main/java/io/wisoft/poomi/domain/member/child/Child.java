@@ -1,5 +1,6 @@
 package io.wisoft.poomi.domain.member.child;
 
+import io.wisoft.poomi.domain.childminder.urgent.ChildminderUrgent;
 import io.wisoft.poomi.global.dto.request.member.ChildAddRequest;
 import io.wisoft.poomi.domain.member.Member;
 import lombok.Builder;
@@ -47,6 +48,18 @@ public class Child {
             referencedColumnName = "id"
     )
     private Member parent;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "urgent_id",
+            referencedColumnName = "id"
+    )
+    private ChildminderUrgent childminderUrgent;
+
+    @Override
+    public int hashCode() {
+        return this.id.intValue();
+    }
 
     @Builder
     public Child(final String name, final Date birthday,

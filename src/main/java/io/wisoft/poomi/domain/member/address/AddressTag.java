@@ -2,11 +2,12 @@ package io.wisoft.poomi.domain.member.address;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -35,4 +36,8 @@ public class AddressTag {
         this.extraAddress = extraAddress;
     }
 
+    @Override
+    public int hashCode() {
+        return this.getId().intValue();
+    }
 }

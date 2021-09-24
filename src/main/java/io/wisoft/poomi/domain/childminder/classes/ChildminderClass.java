@@ -4,7 +4,7 @@ import io.wisoft.poomi.global.dto.request.childminder.classes.ChildminderClassMo
 import io.wisoft.poomi.global.dto.request.childminder.classes.ChildminderClassRegisterRequest;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.address.AddressTag;
-import io.wisoft.poomi.domain.childminder.BaseTimeEntity;
+import io.wisoft.poomi.domain.childminder.BaseChildminderEntity;
 import io.wisoft.poomi.domain.childminder.classes.comment.Comment;
 import io.wisoft.poomi.domain.childminder.classes.image.Image;
 import lombok.Builder;
@@ -26,7 +26,7 @@ import java.util.Set;
         allocationSize = 1
 )
 @Table(name = "childminder_class")
-public class ChildminderClass extends BaseTimeEntity {
+public class ChildminderClass extends BaseChildminderEntity {
 
     @Id
     @GeneratedValue(
@@ -53,20 +53,6 @@ public class ChildminderClass extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "childminderClass")
     private Set<Image> images;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(
-            name = "member_id",
-            referencedColumnName = "id"
-    )
-    private Member writer;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(
-            name = "address_tag_id",
-            referencedColumnName = "id"
-    )
-    private AddressTag addressTag;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -99,11 +85,11 @@ public class ChildminderClass extends BaseTimeEntity {
         this.capacity = capacity;
         this.isRecruit = isRecruit;
         this.images = new HashSet<>();
-        this.writer = writer;
-        this.addressTag = writer.getAddressTag();
         this.appliers = new HashSet<>();
         this.likes = new HashSet<>();
         this.comments = new HashSet<>();
+        setWriter(writer);
+        setAddressTag(writer.getAddressTag());
     }
 
     public static ChildminderClass of(final Member member,
@@ -145,7 +131,7 @@ public class ChildminderClass extends BaseTimeEntity {
     }
 
     public void resetAssociated() {
-        this.writer.removeWrittenClassProgram(this);
+        getWriter().removeWrittenClassProgram(this);
         this.appliers.forEach(applier -> applier.removeAppliedClassProgram(this));
         this.likes.forEach(like -> like.removeLikedClassProgram(this));
         this.comments.clear();

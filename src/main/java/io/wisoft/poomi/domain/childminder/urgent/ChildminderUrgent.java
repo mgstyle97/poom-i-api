@@ -1,9 +1,11 @@
 package io.wisoft.poomi.domain.childminder.urgent;
 
+import io.wisoft.poomi.domain.childminder.urgent.application.ChildminderUrgentApplication;
+import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.global.dto.request.childminder.urgent.ChildminderUrgentModifiedRequest;
 import io.wisoft.poomi.global.dto.request.childminder.urgent.ChildminderUrgentRegisterRequest;
 import io.wisoft.poomi.domain.member.Member;
-import io.wisoft.poomi.domain.childminder.BaseTimeEntity;
+import io.wisoft.poomi.domain.childminder.BaseChildminderEntity;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +14,9 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
@@ -22,7 +27,7 @@ import java.time.LocalDateTime;
         initialValue = 1,
         allocationSize = 1
 )
-public class ChildminderUrgent extends BaseTimeEntity {
+public class ChildminderUrgent extends BaseChildminderEntity {
 
     @Id
     @GeneratedValue(
@@ -47,19 +52,11 @@ public class ChildminderUrgent extends BaseTimeEntity {
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(
-            name = "member_id",
-            referencedColumnName = "id"
-    )
-    private Member writer;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "childminderUrgent")
+    private Set<ChildminderUrgentApplication> applications;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(
-            name = "address_tag_id",
-            referencedColumnName = "id"
-    )
-    private AddressTag addressTag;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "childminderUrgent")
+    private Set<Child> childrenToHelp;
 
     @Builder
     public ChildminderUrgent(final String contents, final Boolean isRecruit,
@@ -69,12 +66,14 @@ public class ChildminderUrgent extends BaseTimeEntity {
         this.isRecruit = isRecruit;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.writer = writer;
-        this.addressTag = writer.getAddressTag();
+        this.applications = new HashSet<>();
+        this.childrenToHelp = new HashSet<>();
+        setWriter(writer);
+        setAddressTag(writer.getAddressTag());
     }
 
     public static ChildminderUrgent of(final ChildminderUrgentRegisterRequest childminderUrgentRegisterRequest,
-                                       final Member member) {
+                                       final Member member, final Child child) {
         ChildminderUrgent childminderUrgent = ChildminderUrgent.builder()
                 .contents(childminderUrgentRegisterRequest.getContents())
                 .isRecruit(childminderUrgentRegisterRequest.getIsRecruit())
@@ -82,9 +81,14 @@ public class ChildminderUrgent extends BaseTimeEntity {
                 .endTime(childminderUrgentRegisterRequest.getEndTime())
                 .writer(member)
                 .build();
+        childminderUrgent.addChildToHelp(Optional.ofNullable(child));
         member.addUrgent(childminderUrgent);
 
         return childminderUrgent;
+    }
+
+    public void addChildToHelp(final Optional<Child> optionalChild) {
+        optionalChild.ifPresent(child -> this.childrenToHelp.add(child));
     }
 
     public void modifiedFor(final ChildminderUrgentModifiedRequest childminderUrgentModifiedRequest) {
@@ -92,6 +96,16 @@ public class ChildminderUrgent extends BaseTimeEntity {
         changeIsRecruit(childminderUrgentModifiedRequest.getIsRecruit());
         changeStartTime(childminderUrgentModifiedRequest.getStartTime());
         changeEndTime(childminderUrgentModifiedRequest.getEndTime());
+    }
+
+    public void isWriter(final Member member) {
+        if (getWriter().equals(member)) {
+            throw new IllegalArgumentException("작성자는 지원할 수 없습니다.");
+        }
+    }
+
+    public void addApplication(final ChildminderUrgentApplication childminderUrgentApplication) {
+        this.applications.add(childminderUrgentApplication);
     }
 
     private void changeContents(final String contents) {

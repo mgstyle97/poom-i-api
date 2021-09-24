@@ -13,6 +13,7 @@ public enum ErrorCode {
 
     ILLEGAL_ARGUMENT(400),
     ARGUMENT_NOT_VALID(400),
+    INVALID_FORMAT(400, "파라미터를 읽어들일 수 없습니다."),
     TYPE_MISMATCH(400, "잘못된 타입으로 요청했습니다."),
     INVALID_JSON_FORMAT(400, "읽어들일 수 없는 데이터입니다."),
     FILE_UPLOAD_FAILED(400, "파일을 첨부해야 합니다."),

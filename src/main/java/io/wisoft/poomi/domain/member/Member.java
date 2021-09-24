@@ -128,10 +128,16 @@ public class Member {
                 .email(signupRequest.getEmail())
                 .password(passwordEncoder.encode(signupRequest.getPassword()))
                 .nick(signupRequest.getNick())
-                .gender(Gender.getGender(signupRequest.getGender()))
+                .gender(signupRequest.getGender())
                 .authorities(Collections.singleton(userAuthority))
                 .build();
         return member;
+    }
+
+    public void checkChildInChildren(final Child child) {
+        if (!this.children.contains(child)) {
+            throw new IllegalArgumentException("해당 회원의 자식 정보가 아닙니다.");
+        }
     }
 
     public void updateAddressInfo(final Address address) {

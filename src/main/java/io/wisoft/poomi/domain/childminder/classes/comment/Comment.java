@@ -1,8 +1,8 @@
 package io.wisoft.poomi.domain.childminder.classes.comment;
 
-import io.wisoft.poomi.global.dto.request.childminder.classes.CommentRegisterRequest;
+import io.wisoft.poomi.global.dto.request.childminder.comment.CommentRegisterRequest;
 import io.wisoft.poomi.domain.member.Member;
-import io.wisoft.poomi.domain.childminder.BaseTimeEntity;
+import io.wisoft.poomi.domain.childminder.BaseChildminderEntity;
 import io.wisoft.poomi.domain.childminder.classes.ChildminderClass;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +20,7 @@ import javax.persistence.*;
         initialValue = 1,
         allocationSize = 1
 )
-public class Comment extends BaseTimeEntity {
+public class Comment extends BaseChildminderEntity {
 
     @Id
     @GeneratedValue(

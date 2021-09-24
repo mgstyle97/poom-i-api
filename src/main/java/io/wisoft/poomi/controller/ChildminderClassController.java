@@ -24,7 +24,7 @@ public class ChildminderClassController {
     private final ChildminderClassService childminderClassService;
 
     @GetMapping
-    public ApiResponse<List<ChildminderClassLookupResponse>> allChildminderClass(@SignInMember final Member member) {
+    public ApiResponse<List<ChildminderClassLookupResponse>> lookupAllChildminderClass(@SignInMember final Member member) {
         return ApiResponse
                 .succeed(
                         HttpStatus.OK,
@@ -46,45 +46,46 @@ public class ChildminderClassController {
                                         (member, childminderClassRegisterRequest, images, getDomainInfo(request))
                 );
     }
-    @PatchMapping("/{id}")
+    @PatchMapping("/{class-id}")
     public ApiResponse<ChildminderClassModifiedResponse> modifiedChildminderClass(
-            @PathVariable("id") @Valid final Long id,
+            @PathVariable("class-id") @Valid final Long classId,
             @RequestBody @Valid final ChildminderClassModifiedRequest childminderClassModifiedRequest,
             @SignInMember final Member member) {
         return ApiResponse.succeed(
                         HttpStatus.OK,
-                        childminderClassService.modifiedChildminderClass(member, id, childminderClassModifiedRequest)
+                        childminderClassService.modifiedChildminderClass(classId, member, childminderClassModifiedRequest)
         );
     }
 
-    @GetMapping("/{id}")
-    public ApiResponse<ChildminderClassSinglePageResponse> callChildminderClassSinglePage(
-            @PathVariable("id") @Valid final Long classId,
+    @GetMapping("/{class-id}")
+    public ApiResponse<ChildminderClassSinglePageResponse> lookupChildminderClass(
+            @PathVariable("class-id") @Valid final Long classId,
+            @SignInMember final Member member,
             final HttpServletRequest request) {
         return ApiResponse.succeed(
                 HttpStatus.OK,
-                childminderClassService.callChildminderClassSinglePage(classId, getDomainInfo(request))
+                childminderClassService.lookupChildminderClass(classId, member, getDomainInfo(request))
         );
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{class-id}")
     public ApiResponse<ChildminderClassDeleteResponse> removeChildminderClass(
-            @PathVariable("id") @Valid final Long id,
+            @PathVariable("class-id") @Valid final Long classId,
             @SignInMember final Member member) {
         return ApiResponse.succeed(
                 HttpStatus.OK,
-                childminderClassService.removeChildminderClass(member, id)
+                childminderClassService.removeChildminderClass(classId, member)
         );
     }
 
-    @GetMapping("/{id}/apply")
-    public void applyChildminderClass(@PathVariable("id") final Long id, @SignInMember final Member member) {
-        childminderClassService.applyChildminderClass(id, member);
+    @PostMapping("/{class-id}/apply")
+    public void applyChildminderClass(@PathVariable("class-id") final Long classId, @SignInMember final Member member) {
+        childminderClassService.applyChildminderClass(classId, member);
     }
 
-    @GetMapping("/{id}/like")
-    public void likeChildminderClass(@PathVariable("id") final Long id, @SignInMember final Member member) {
-        childminderClassService.likeChildminderClass(id, member);
+    @PostMapping("/{class-id}/like")
+    public void likeChildminderClass(@PathVariable("class-id") final Long classId, @SignInMember final Member member) {
+        childminderClassService.likeChildminderClass(classId, member);
     }
 
     private String getDomainInfo(final HttpServletRequest request) {

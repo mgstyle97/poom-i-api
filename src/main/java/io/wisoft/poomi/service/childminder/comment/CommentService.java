@@ -3,8 +3,8 @@ package io.wisoft.poomi.service.childminder.comment;
 import io.wisoft.poomi.global.dto.response.childminder.classes.comment.CommentDeleteResponse;
 import io.wisoft.poomi.global.dto.response.childminder.classes.comment.CommentModifiedResponse;
 import io.wisoft.poomi.global.dto.response.childminder.classes.comment.CommentRegistResponse;
-import io.wisoft.poomi.global.dto.request.childminder.classes.CommentModifiedRequest;
-import io.wisoft.poomi.global.dto.request.childminder.classes.CommentRegisterRequest;
+import io.wisoft.poomi.global.dto.request.childminder.comment.CommentModifiedRequest;
+import io.wisoft.poomi.global.dto.request.childminder.comment.CommentRegisterRequest;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.childminder.classes.ChildminderClass;
 import io.wisoft.poomi.domain.childminder.classes.ChildminderClassRepository;
@@ -48,7 +48,7 @@ public class CommentService {
                                                    final Member member) {
         Comment comment = generateComment(commentId);
 
-        ContentPermissionVerifier.verifyPermission(comment.getWriter(), member);
+        ContentPermissionVerifier.verifyModifyPermission(comment.getWriter(), member);
 
         comment.updateContents(commentModifiedRequest.getContents());
         log.info("Update comment entity: {}", commentId);
@@ -61,7 +61,7 @@ public class CommentService {
                                                final Member member) {
         Comment comment = generateComment(commentId);
 
-        ContentPermissionVerifier.verifyPermission(comment.getWriter(), member);
+        ContentPermissionVerifier.verifyModifyPermission(comment.getWriter(), member);
 
         commentRepository.delete(comment);
         log.info("Delete comment entity id: {}", commentId);

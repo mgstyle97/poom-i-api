@@ -1,4 +1,4 @@
-package io.wisoft.poomi.global.dto.request.childminder.classes;
+package io.wisoft.poomi.global.dto.request.childminder.comment;
 
 import lombok.Getter;
 import lombok.Setter;

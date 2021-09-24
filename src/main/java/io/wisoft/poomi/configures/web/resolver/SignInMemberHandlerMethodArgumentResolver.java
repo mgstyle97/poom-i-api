@@ -5,12 +5,14 @@ import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 public class SignInMemberHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
@@ -26,14 +28,17 @@ public class SignInMemberHandlerMethodArgumentResolver implements HandlerMethodA
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        String token = jwtTokenProvider.resolveToken(webRequest.getNativeRequest(HttpServletRequest.class));
+        return resolveHeader(Objects.requireNonNull(webRequest.getNativeRequest(HttpServletRequest.class)));
+    }
+
+    Member resolveHeader(final HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveToken(request);
 
         String email = jwtTokenProvider.getUsernameFromToken(token);
 
-        Member member = memberRepository.getMemberByEmail(email);
-
-        return member;
+        return memberRepository.getMemberByEmail(email);
     }
 }

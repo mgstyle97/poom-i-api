@@ -1,5 +1,6 @@
 package io.wisoft.poomi.controller;
 
+import io.wisoft.poomi.configures.web.formatter.Social;
 import io.wisoft.poomi.global.dto.response.ApiResponse;
 import io.wisoft.poomi.global.dto.response.member.*;
 import io.wisoft.poomi.global.dto.response.oauth.OAuthUserPropertiesResponse;
@@ -60,11 +61,13 @@ public class MemberController {
         return ApiResponse.succeed(HttpStatus.OK, dto);
     }
 
-    @GetMapping("/oauth2")
-    public ApiResponse<OAuthUserPropertiesResponse> oauthCodeToUserInfo(@RequestParam("code") String code) {
+    @GetMapping("/oauth2/{social}")
+    public ApiResponse<OAuthUserPropertiesResponse> oauthCodeToUserInfo(
+            @PathVariable("social")@Valid final Social social,
+            @RequestParam("code") @Valid final String code) {
         return ApiResponse.succeed(
                 HttpStatus.OK,
-                oAuth2Service.getUserProperties(code)
+                oAuth2Service.getUserProperties(social, code)
         );
     }
 

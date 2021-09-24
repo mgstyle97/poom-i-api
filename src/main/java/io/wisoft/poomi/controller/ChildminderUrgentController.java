@@ -1,5 +1,6 @@
 package io.wisoft.poomi.controller;
 
+import io.wisoft.poomi.global.dto.request.childminder.urgent.ChildminderUrgentApplyRequest;
 import io.wisoft.poomi.global.dto.response.ApiResponse;
 import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentLookupResponse;
 import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentModifiedResponse;
@@ -28,7 +29,17 @@ public class ChildminderUrgentController {
             @SignInMember final Member member) {
         return ApiResponse.succeed(
                 HttpStatus.OK,
-                childminderUrgentService.lookupAllChildminderUrgent(member)
+                childminderUrgentService.lookupAllChildminderUrgent(member.getAddressTag())
+        );
+    }
+
+    @GetMapping("/{urgent-id}")
+    public ApiResponse<ChildminderUrgentLookupResponse> lookupChildminderUrgent(
+            @PathVariable("urgent-id") @Valid final Long urgentId,
+            @SignInMember final Member member) {
+        return ApiResponse.succeed(
+                HttpStatus.OK,
+                childminderUrgentService.lookupChildminderUrgent(urgentId, member)
         );
     }
 
@@ -55,5 +66,19 @@ public class ChildminderUrgentController {
         );
     }
 
+    @PostMapping("/{urgent-id}/apply")
+    public void applyChildminderUrgent(
+            @PathVariable("urgent-id") @Valid final Long urgentId,
+            @RequestBody @Valid final ChildminderUrgentApplyRequest childminderUrgentApplyRequest,
+            @SignInMember final Member member) {
+        childminderUrgentService.applyChildminderUrgent(urgentId, member, childminderUrgentApplyRequest);
+    }
+
+    @PostMapping("/{urgent-id}/like")
+    public void likeChildminderUrgent(
+            @PathVariable("urgent-id") @Valid final Long urgentId,
+            @SignInMember final Member member) {
+        childminderUrgentService.likeChildminderUrgent(urgentId, member);
+    }
 
 }
