@@ -26,6 +26,15 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class RestExceptionHandler {
 
+    @ExceptionHandler({NumberFormatException.class})
+    public ApiResponse<ErrorResponse> invalidParameterFormat() {
+        return ApiResponse.failure(HttpStatus.BAD_REQUEST,
+                ErrorResponse.builder()
+                .errorCode(ErrorCode.INVALID_FORMAT)
+                .build()
+        );
+    }
+
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ApiResponse<ErrorResponse> methodNotAllowed(HttpRequestMethodNotSupportedException e) {
 
@@ -71,16 +80,16 @@ public class RestExceptionHandler {
         );
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ApiResponse<ErrorResponse> illegalArgument(IllegalArgumentException e) {
-
-        ErrorCode errorCode = ErrorCode.illegalArgument(e.getMessage());
-
-        return ApiResponse
-                .failure(HttpStatus.BAD_REQUEST, ErrorResponse.builder()
-                .errorCode(errorCode)
-                .build());
-    }
+//    @ExceptionHandler(IllegalArgumentException.class)
+//    public ApiResponse<ErrorResponse> illegalArgument(IllegalArgumentException e) {
+//
+//        ErrorCode errorCode = ErrorCode.illegalArgument(e.getMessage());
+//
+//        return ApiResponse
+//                .failure(HttpStatus.BAD_REQUEST, ErrorResponse.builder()
+//                .errorCode(errorCode)
+//                .build());
+//    }
 
     @ExceptionHandler(TypeMismatchException.class)
     public ApiResponse<ErrorResponse> typeMismatch() {

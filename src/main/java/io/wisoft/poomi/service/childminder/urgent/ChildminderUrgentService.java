@@ -1,5 +1,12 @@
 package io.wisoft.poomi.service.childminder.urgent;
 
+import io.wisoft.poomi.domain.childminder.urgent.application.ChildminderUrgentApplication;
+import io.wisoft.poomi.domain.childminder.urgent.application.ChildminderUrgentApplicationRepository;
+import io.wisoft.poomi.domain.member.address.AddressTag;
+import io.wisoft.poomi.domain.member.child.Child;
+import io.wisoft.poomi.domain.member.child.ChildRepository;
+import io.wisoft.poomi.global.aop.childminder.NoAccessCheck;
+import io.wisoft.poomi.global.dto.request.childminder.urgent.ChildminderUrgentApplyRequest;
 import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentLookupResponse;
 import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentModifiedResponse;
 import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentRegisterResponse;
@@ -25,32 +32,45 @@ import java.util.stream.Collectors;
 public class ChildminderUrgentService {
 
     private final ChildminderUrgentRepository childminderUrgentRepository;
+    private final ChildminderUrgentApplicationRepository childminderUrgentApplicationRepository;
+    private final ChildRepository childRepository;
 
+    @NoAccessCheck
     @Transactional(readOnly = true)
-    public List<ChildminderUrgentLookupResponse> lookupAllChildminderUrgent(final Member member) {
+    public List<ChildminderUrgentLookupResponse> lookupAllChildminderUrgent(final AddressTag addressTag) {
         List<ChildminderUrgent> childminderUrgentList = childminderUrgentRepository
-                .findAllByAddressTag(member.getAddressTag());
+                .findAllByAddressTag(addressTag);
         return childminderUrgentList.stream()
                 .map(ChildminderUrgentLookupResponse::of)
                 .collect(Collectors.toList());
     }
 
+    @NoAccessCheck
     @Transactional
     public ChildminderUrgentRegisterResponse registerChildminderUrgent(
             final ChildminderUrgentRegisterRequest childminderUrgentRegisterRequest,
             final Member member) {
         checkChildminderActivityTime(
-                childminderUrgentRegisterRequest.getStartTime(), childminderUrgentRegisterRequest.getEndTime()
+                childminderUrgentRegisterRequest.getStartTime(),
+                childminderUrgentRegisterRequest.getEndTime()
         );
 
-        ChildminderUrgent childminderUrgent = ChildminderUrgent.of(childminderUrgentRegisterRequest, member);
+        Child child = checkChildId(member, childminderUrgentRegisterRequest);
+
+        ChildminderUrgent childminderUrgent = ChildminderUrgent.of(childminderUrgentRegisterRequest, member, child);
         log.info("Generate childminder urgent entity");
 
         childminderUrgentRepository.save(childminderUrgent);
         log.info("Save childminder urgent id: {}", childminderUrgent.getId());
 
-
         return ChildminderUrgentRegisterResponse.of(childminderUrgent);
+    }
+
+    @Transactional(readOnly = true)
+    public ChildminderUrgentLookupResponse lookupChildminderUrgent(final Long urgentId, final Member member) {
+        ChildminderUrgent childminderUrgent = generateChildminderUrgentById(urgentId);
+
+        return ChildminderUrgentLookupResponse.of(childminderUrgent);
     }
 
     @Transactional
@@ -65,11 +85,47 @@ public class ChildminderUrgentService {
 
         ChildminderUrgent childminderUrgent = generateChildminderUrgentById(urgentId);
 
-        ContentPermissionVerifier.verifyPermission(childminderUrgent.getWriter(), member);
-
         modifyChildminderUrgent(childminderUrgent, childminderUrgentModifiedRequest);
 
         return ChildminderUrgentModifiedResponse.of(childminderUrgent);
+    }
+
+    @Transactional
+    public void applyChildminderUrgent(final Long urgentId,
+                                       final Member member,
+                                       final ChildminderUrgentApplyRequest childminderUrgentApplyRequest) {
+        ChildminderUrgent childminderUrgent = generateChildminderUrgentById(urgentId);
+
+        childminderUrgent.isWriter(member);
+
+        ChildminderUrgentApplication application =
+                ChildminderUrgentApplication.of(childminderUrgentApplyRequest, childminderUrgent, member);
+        log.info("Generate childminder urgent application through request");
+
+        childminderUrgentApplicationRepository.save(application);
+        log.info("Save childminder urgent application id: {}", application.getId());
+
+        childminderUrgent.addApplication(application);
+        childminderUrgentRepository.save(childminderUrgent);
+        log.info("Add application to urgent entity and update childminder urgent");
+    }
+
+    @Transactional
+    public void likeChildminderUrgent(final Long urgentId, final Member member) {
+
+    }
+
+    private Child checkChildId(
+            final Member member,
+            final ChildminderUrgentRegisterRequest childminderUrgentRegisterRequest) {
+        if (!childminderUrgentRegisterRequest.getIsRecruit()) {
+            return null;
+        }
+
+        Child child = childRepository.getById(childminderUrgentRegisterRequest.getChildId());
+        member.checkChildInChildren(child);
+
+        return child;
     }
 
     private ChildminderUrgent generateChildminderUrgentById(final Long urgentId) {

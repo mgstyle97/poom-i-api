@@ -1,9 +1,9 @@
 package io.wisoft.poomi.global.dto.request.childminder.urgent;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
@@ -18,11 +18,14 @@ public class ChildminderUrgentRegisterRequest {
     @JsonProperty("is_recruit")
     private Boolean isRecruit;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonProperty("child_id")
+    private Long childId;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     @JsonProperty("start_time")
     private LocalDateTime startTime;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     @JsonProperty("end_time")
     private LocalDateTime endTime;
 

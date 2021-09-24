@@ -4,8 +4,8 @@ import io.wisoft.poomi.global.dto.response.ApiResponse;
 import io.wisoft.poomi.global.dto.response.childminder.classes.comment.CommentDeleteResponse;
 import io.wisoft.poomi.global.dto.response.childminder.classes.comment.CommentModifiedResponse;
 import io.wisoft.poomi.global.dto.response.childminder.classes.comment.CommentRegistResponse;
-import io.wisoft.poomi.global.dto.request.childminder.classes.CommentModifiedRequest;
-import io.wisoft.poomi.global.dto.request.childminder.classes.CommentRegisterRequest;
+import io.wisoft.poomi.global.dto.request.childminder.comment.CommentModifiedRequest;
+import io.wisoft.poomi.global.dto.request.childminder.comment.CommentRegisterRequest;
 import io.wisoft.poomi.configures.web.resolver.SignInMember;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.service.childminder.comment.CommentService;
@@ -22,9 +22,9 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/class/{class_id}/comment")
+    @PostMapping("/class/{class-id}/comment")
     public ApiResponse<CommentRegistResponse> registComment(
-            @PathVariable("class_id") @Valid final Long classId,
+            @PathVariable("class-id") @Valid final Long classId,
             @RequestBody @Valid final CommentRegisterRequest commentRegisterRequest,
             @SignInMember final Member member) {
         return ApiResponse.succeed(
@@ -33,9 +33,9 @@ public class CommentController {
         );
     }
 
-    @PatchMapping("/comment/{comment_id}")
+    @PatchMapping("/comment/{comment-id}")
     public ApiResponse<CommentModifiedResponse> modifiedComment(
-            @PathVariable("comment_id") @Valid final Long commentId,
+            @PathVariable("comment-id") @Valid final Long commentId,
             @RequestBody @Valid final CommentModifiedRequest commentModifiedRequest,
             @SignInMember final Member member) {
         return ApiResponse.succeed(
@@ -44,9 +44,9 @@ public class CommentController {
         );
     }
 
-    @DeleteMapping("/comment/{comment_id}")
+    @DeleteMapping("/comment/{comment-id}")
     public ApiResponse<CommentDeleteResponse> removeComment(
-            @PathVariable("comment_id") @Valid final Long commentId,
+            @PathVariable("comment-id") @Valid final Long commentId,
             @SignInMember final Member member) {
         return ApiResponse.succeed(
                 HttpStatus.OK,

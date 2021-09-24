@@ -1,6 +1,7 @@
-package io.wisoft.poomi.global.exception;
+package io.wisoft.poomi.global.aop.exception;
 
 import io.wisoft.poomi.global.dto.response.ApiResponse;
+import io.wisoft.poomi.global.exception.ErrorResponse;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -31,7 +32,10 @@ public class SlackNotificationAspect {
     @Value("${slack.channel}")
     private String slackChannel;
 
-    @AfterReturning(value = "execution(* io.wisoft.poomi.global.exception.RestExceptionHandler.*(..))", returning = "errorResponse")
+    @AfterReturning(
+            value = "execution(* io.wisoft.poomi.global.exception.RestExceptionHandler.*(..))",
+            returning = "errorResponse"
+    )
     public ApiResponse<ErrorResponse> notify(final JoinPoint joinPoint, final ApiResponse<ErrorResponse> errorResponse) {
         sendErrorInfo2Slack(errorResponse.getError().getMessage());
 

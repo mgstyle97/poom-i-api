@@ -1,12 +1,14 @@
 package io.wisoft.poomi.configures.web;
 
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
+import io.wisoft.poomi.configures.web.formatter.StringToSocialConverter;
 import io.wisoft.poomi.configures.web.resolver.SignInMemberHandlerMethodArgumentResolver;
 import io.wisoft.poomi.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
@@ -35,6 +37,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Bean
     public SignInMemberHandlerMethodArgumentResolver handlerMethodArgumentResolver() {
         return new SignInMemberHandlerMethodArgumentResolver(jwtTokenProvider, memberRepository);
+    }
+
+    @Bean
+    public StringToSocialConverter converter() {
+        return new StringToSocialConverter();
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(converter());
     }
 
     @Override

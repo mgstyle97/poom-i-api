@@ -1,5 +1,6 @@
 package io.wisoft.poomi.service.childminder.classes;
 
+import io.wisoft.poomi.global.aop.childminder.NoAccessCheck;
 import io.wisoft.poomi.global.dto.response.childminder.classes.*;
 import io.wisoft.poomi.global.dto.request.childminder.classes.ChildminderClassModifiedRequest;
 import io.wisoft.poomi.global.dto.request.childminder.classes.ChildminderClassRegisterRequest;
@@ -35,6 +36,7 @@ public class ChildminderClassService {
 
     private final CommentService commentService;
 
+    @NoAccessCheck
     @Transactional(readOnly = true)
     public List<ChildminderClassLookupResponse> findByAddressTag(final AddressTag addressTag) {
         return childminderClassRepository.findByAddressTag(addressTag).stream()
@@ -42,6 +44,7 @@ public class ChildminderClassService {
                 .collect(Collectors.toList());
     }
 
+    @NoAccessCheck
     @Transactional
     public ChildminderClassRegisterResponse registerChildminderClass(final Member member,
                                                                      final ChildminderClassRegisterRequest childminderClassRegisterRequest,
@@ -61,38 +64,41 @@ public class ChildminderClassService {
     }
 
     @Transactional
-    public ChildminderClassModifiedResponse modifiedChildminderClass(final Member member, final Long id,
+    public ChildminderClassModifiedResponse modifiedChildminderClass(final Long classId,
+                                                                     final Member member,
                                                                      final ChildminderClassModifiedRequest childminderClassModifiedRequest) {
-        ChildminderClass childminderClass = generateChildminderClassById(id);
+        ChildminderClass childminderClass = generateChildminderClassById(classId);
 
-        ContentPermissionVerifier.verifyPermission(childminderClass.getWriter(), member);
+        ContentPermissionVerifier.verifyModifyPermission(childminderClass.getWriter(), member);
 
         modifyChildminderClass(childminderClass, childminderClassModifiedRequest);
 
-        return ChildminderClassModifiedResponse.of(id);
+        return ChildminderClassModifiedResponse.of(classId);
     }
 
     @Transactional(readOnly = true)
-    public ChildminderClassSinglePageResponse callChildminderClassSinglePage(final Long classId, final String domainInfo) {
+    public ChildminderClassSinglePageResponse lookupChildminderClass(final Long classId,
+                                                                     final Member member,
+                                                                     final String domainInfo) {
         ChildminderClass childminderClass = generateChildminderClassById(classId);
 
         return ChildminderClassSinglePageResponse.of(childminderClass, domainInfo);
     }
 
     @Transactional
-    public ChildminderClassDeleteResponse removeChildminderClass(final Member member, final Long id) {
-        ChildminderClass childminderClass = generateChildminderClassById(id);
+    public ChildminderClassDeleteResponse removeChildminderClass(final Long classId, final Member member) {
+        ChildminderClass childminderClass = generateChildminderClassById(classId);
 
-        ContentPermissionVerifier.verifyPermission(childminderClass.getWriter(), member);
+        ContentPermissionVerifier.verifyModifyPermission(childminderClass.getWriter(), member);
 
         deleteChildminderClass(childminderClass, member);
 
-        return ChildminderClassDeleteResponse.of(id);
+        return ChildminderClassDeleteResponse.of(classId);
     }
 
     @Transactional
-    public void applyChildminderClass(final Long id, final Member member) {
-        ChildminderClass childminderClass = generateChildminderClassById(id);
+    public void applyChildminderClass(final Long classId, final Member member) {
+        ChildminderClass childminderClass = generateChildminderClassById(classId);
 
         childminderClass.addApplier(member);
         memberRepository.save(member);

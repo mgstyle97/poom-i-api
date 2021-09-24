@@ -1,6 +1,7 @@
 package io.wisoft.poomi.global.dto.request.member;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.wisoft.poomi.domain.member.Gender;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,13 +30,20 @@ public class SignupRequest {
     @NotBlank(message = "닉네임을 입력해야 합니다.")
     private String nick;
 
-    @NotBlank(message = "성별을 선택해야 합니다.")
-    private String gender;
+    private Gender gender;
 
     @JsonProperty("address")
     private AddressRegisterRequest address;
 
     @JsonProperty("children")
     private List<ChildAddRequest> children;
+
+    public void setGender(final String gender) {
+        this.gender = Gender.valueOf(gender);
+    }
+
+    public Gender getGender() {
+        return this.gender;
+    }
 
 }
