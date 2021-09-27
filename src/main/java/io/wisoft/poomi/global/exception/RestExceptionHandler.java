@@ -80,16 +80,16 @@ public class RestExceptionHandler {
         );
     }
 
-//    @ExceptionHandler(IllegalArgumentException.class)
-//    public ApiResponse<ErrorResponse> illegalArgument(IllegalArgumentException e) {
-//
-//        ErrorCode errorCode = ErrorCode.illegalArgument(e.getMessage());
-//
-//        return ApiResponse
-//                .failure(HttpStatus.BAD_REQUEST, ErrorResponse.builder()
-//                .errorCode(errorCode)
-//                .build());
-//    }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ApiResponse<ErrorResponse> illegalArgument(IllegalArgumentException e) {
+
+        ErrorCode errorCode = ErrorCode.illegalArgument(e.getMessage());
+
+        return ApiResponse
+                .failure(HttpStatus.BAD_REQUEST, ErrorResponse.builder()
+                .errorCode(errorCode)
+                .build());
+    }
 
     @ExceptionHandler(TypeMismatchException.class)
     public ApiResponse<ErrorResponse> typeMismatch() {

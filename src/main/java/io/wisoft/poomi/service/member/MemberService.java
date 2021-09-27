@@ -82,10 +82,10 @@ public class MemberService {
         log.info("Generate member data through request");
 
         AddressTag addressTag = addressTagRepository
-                .saveAddressTagWithExtraAddress(signupRequest.getAddress().getExtraAddress());
+                .saveAddressTagWithExtraAddress(signupRequest.getExtraAddress());
         log.info("Generate address tag data through request");
 
-        Address address = Address.of(signupRequest.getAddress(), addressTag);
+        Address address = Address.of(signupRequest, addressTag);
         addressRepository.save(address);
         log.info("Generate address data through request");
 

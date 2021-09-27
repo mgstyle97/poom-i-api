@@ -1,6 +1,7 @@
 package io.wisoft.poomi.domain.member.address;
 
 import io.wisoft.poomi.global.dto.request.member.AddressRegisterRequest;
+import io.wisoft.poomi.global.dto.request.member.SignupRequest;
 import lombok.*;
 
 import javax.persistence.*;
@@ -51,7 +52,7 @@ public class Address {
         this.addressTag = addressTag;
     }
 
-    public static Address of(final AddressRegisterRequest request,
+    public static Address of(final SignupRequest request,
                              final AddressTag addressTag) {
         Address address = Address.builder()
                 .postCode(request.getPostCode())

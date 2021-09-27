@@ -25,8 +25,11 @@ public class ChildminderAccessCheckAspect {
 
     @Before("execution(public * io.wisoft.poomi.service.childminder.classes.*.*(..)) " +
             "&& !@target(io.wisoft.poomi.global.aop.childminder.NoAccessCheck) " +
-            "&& args(classId, member)")
-    public void childminderClassAccessCheck(final Long classId, final Member member) {
+            "&& !@annotation(io.wisoft.poomi.global.aop.childminder.NoAccessCheck)")
+    public void childminderClassAccessCheck(final JoinPoint joinPoint) {
+        Long classId = setContentId(joinPoint);
+        Member member = setMember(joinPoint);
+
         ChildminderClass childminderClass = childminderClassRepository.getById(classId);
 
         childminderAccessCheck(childminderClass, member.getAddressTag());
