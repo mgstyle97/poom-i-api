@@ -50,10 +50,10 @@ google:
   userinfoURI: ${GOOGLE_USERINFO_URI}
 
 naver:
-  clientId: ${GOOGLE_CLIENT_ID}
-  clientSecret: ${GOOGLE_CLIENT-SECRET}
-  tokenURI: ${GOOGLE_TOKEN_URI}
-  userinfoURI: ${GOOGLE_USERINFO_URI}
+  clientId: ${NAVER_CLIENT_ID}
+  clientSecret: ${NAVER_CLIENT-SECRET}
+  tokenURI: ${NAVER_TOKEN_URI}
+  userinfoURI: ${NAVER_USERINFO_URI}
 
 
 

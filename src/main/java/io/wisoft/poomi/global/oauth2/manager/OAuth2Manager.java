@@ -8,6 +8,7 @@ import lombok.Getter;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
@@ -30,14 +31,14 @@ public abstract class OAuth2Manager {
 
         HttpEntity<MultiValueMap<String, String>> tokenRequestEntity = new HttpEntity<>(params, headers);
 
-        String tokenResponse = restTemplate
-                .postForObject(getOAuth2Property().getTokenURI(), tokenRequestEntity, String.class);
+        ResponseEntity<String> tokenResponse = restTemplate
+                .postForEntity(getOAuth2Property().getTokenURI(), tokenRequestEntity, String.class);
 
-        String accessToken = getAccessToken(tokenResponse);
+        String accessToken = getAccessToken(tokenResponse.getBody());
 
         headers = getAuthorizationHeader(accessToken);
 
-        HttpEntity userPropertiesRequestEntity = new HttpEntity<>(headers);
+        HttpEntity<HttpHeaders> userPropertiesRequestEntity = new HttpEntity<>(headers);
 
         String userInfo = restTemplate
                 .postForObject(getOAuth2Property().getUserinfoURI(), userPropertiesRequestEntity, String.class);
