@@ -10,6 +10,8 @@ import io.wisoft.poomi.global.oauth2.manager.OAuth2ManagerFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 public class OAuth2Service {
@@ -22,6 +24,8 @@ public class OAuth2Service {
 
         OAuth2Manager oAuth2Manager = oAuth2ManagerFactory.getOAuth2Manager(social);
         OAuthUserPropertiesResponse oAuthUserPropertiesResponse = getOAuth2UserProperties(code, oAuth2Manager);
+
+        Optional<Member> optionalMember = memberRepository.findByEmail(oAuthUserPropertiesResponse.getEmail());
 
         return getOAuth2UserProperties(code, oAuth2Manager);
     }

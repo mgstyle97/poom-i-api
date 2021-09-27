@@ -152,8 +152,9 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(HttpClientErrorException.class)
-    public ApiResponse<ErrorResponse> httpClientError() {
+    public ApiResponse<ErrorResponse> httpClientError(final HttpClientErrorException e) {
         log.error("소셜 로그인 요청 에러");
+        log.error(e.getMessage());
 
         return ApiResponse.failure(HttpStatus.BAD_REQUEST,
                 ErrorResponse.builder()
