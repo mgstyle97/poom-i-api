@@ -16,9 +16,9 @@ public class OAuthUserPropertiesResponse {
         this.email = email;
     }
 
-    public static OAuthUserPropertiesResponse of(final KakaoUserInfo kakaoUserInfo) {
-        String username = kakaoUserInfo.getProperties().getNickname();
-        String email = kakaoUserInfo.getKakaoAccount().getEmail();
+    public static OAuthUserPropertiesResponse of(final KakaoUserInfoResponse kakaoUserInfoResponse) {
+        String username = kakaoUserInfoResponse.getProperties().getNickname();
+        String email = kakaoUserInfoResponse.getKakaoAccount().getEmail();
 
         return new OAuthUserPropertiesResponse(username, email);
     }

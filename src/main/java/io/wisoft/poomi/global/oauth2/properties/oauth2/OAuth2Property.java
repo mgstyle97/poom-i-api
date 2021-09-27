@@ -1,4 +1,4 @@
-package io.wisoft.poomi.global.properties.oauth2;
+package io.wisoft.poomi.global.oauth2.properties.oauth2;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

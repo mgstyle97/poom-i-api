@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class KakaoUserInfo {
+public class KakaoUserInfoResponse {
 
     private Long id;
 

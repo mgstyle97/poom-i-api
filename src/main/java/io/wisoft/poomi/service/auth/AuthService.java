@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.wisoft.poomi.global.dto.response.auth.SmsResultResponse;
 import io.wisoft.poomi.global.dto.response.auth.SmsVerifyResponse;
 import io.wisoft.poomi.global.dto.request.auth.*;
-import io.wisoft.poomi.global.properties.sms.NCSProperty;
+import io.wisoft.poomi.global.oauth2.properties.sms.NCSProperty;
 import io.wisoft.poomi.domain.auth.email.EmailCertification;
 import io.wisoft.poomi.domain.auth.email.EmailCertificationRepository;
 import io.wisoft.poomi.domain.auth.sms.SmsCertification;
