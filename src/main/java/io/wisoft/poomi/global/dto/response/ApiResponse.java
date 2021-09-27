@@ -1,5 +1,6 @@
 package io.wisoft.poomi.global.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ public class ApiResponse<T> extends ResponseEntity<T> {
 
     public ApiResponse(final HttpStatus httpStatus, final T data, final T error,
                        final String accessToken) {
-        super((T) Body.of(data, error), httpStatus);
+        super((T) Body.of(data, error, accessToken), httpStatus);
         this.data = data;
         this.error = error;
         this.accessToken = accessToken;
@@ -44,13 +45,17 @@ public class ApiResponse<T> extends ResponseEntity<T> {
         private final T data;
         private final T error;
 
-        private Body(final T data, final T error) {
+        @JsonProperty("access_token")
+        private final String accessToken;
+
+        private Body(final T data, final T error, final String accessToken) {
             this.data = data;
             this.error = error;
+            this.accessToken = accessToken;
         }
 
-        private static <T> Body of(final T data, final T error) {
-            return new Body(data, error);
+        private static <T> Body of(final T data, final T error, final String accessToken) {
+            return new Body(data, error, accessToken);
         }
 
     }

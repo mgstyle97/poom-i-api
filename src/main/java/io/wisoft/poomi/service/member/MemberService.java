@@ -1,6 +1,5 @@
 package io.wisoft.poomi.service.member;
 
-import io.wisoft.poomi.global.dto.response.member.SigninResponse;
 import io.wisoft.poomi.global.dto.response.member.CMInfoRegisterResponse;
 import io.wisoft.poomi.global.dto.response.member.SignupResponse;
 import io.wisoft.poomi.global.dto.request.member.SigninRequest;
@@ -55,14 +54,14 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public SigninResponse signin(SigninRequest signinRequest) {
+    public String signin(SigninRequest signinRequest) {
         Member member = memberRepository.getMemberByEmail(signinRequest.getEmail());
         Authentication authentication = toAuthentication(signinRequest, member.getAuthority());
 
         String accessToken = jwtTokenProvider.generateToken(authentication);
         log.info("Generate JWT token: {}", accessToken);
 
-        return SigninResponse.of(authentication.getName(), accessToken);
+        return accessToken;
     }
 
     @Transactional(readOnly = true)

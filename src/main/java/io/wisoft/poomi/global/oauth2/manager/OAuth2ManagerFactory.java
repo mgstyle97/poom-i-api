@@ -10,13 +10,17 @@ import org.springframework.stereotype.Component;
 public class OAuth2ManagerFactory {
 
     private final KakaoManager kakaoManager;
+    private final GoogleManager googleManager;
+    private final NaverManager naverManager;
 
     public OAuth2Manager getOAuth2Manager(final Social social) {
         switch (social) {
             case KAKAO:
                 return kakaoManager;
             case NAVER:
+                return naverManager;
             case GOOGLE:
+                return googleManager;
             default:
                 throw new IllegalArgumentException("존재하지 않는 소셜 타입입니다.");
         }

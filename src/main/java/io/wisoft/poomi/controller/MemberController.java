@@ -31,7 +31,8 @@ public class MemberController {
     @PostMapping("/signin")
     public ApiResponse<SigninResponse> signin(
             @RequestBody @Valid final SigninRequest signinRequest) {
-        return ApiResponse.succeed(HttpStatus.OK, memberService.signin(signinRequest));
+        return ApiResponse
+                .succeedWithAccessToken(HttpStatus.OK, null, memberService.signin(signinRequest));
     }
 
     @PostMapping("/signup")
