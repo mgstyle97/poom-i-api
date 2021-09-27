@@ -1,5 +1,6 @@
 package io.wisoft.poomi.global.dto.response.oauth;
 
+import io.wisoft.poomi.global.dto.response.oauth.kakao.KakaoUserInfoResponse;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,10 +17,7 @@ public class OAuthUserPropertiesResponse {
         this.email = email;
     }
 
-    public static OAuthUserPropertiesResponse of(final KakaoUserInfoResponse kakaoUserInfoResponse) {
-        String username = kakaoUserInfoResponse.getProperties().getNickname();
-        String email = kakaoUserInfoResponse.getKakaoAccount().getEmail();
-
-        return new OAuthUserPropertiesResponse(username, email);
+    public static OAuthUserPropertiesResponse of(final String name, final String email) {
+        return new OAuthUserPropertiesResponse(name, email);
     }
 }

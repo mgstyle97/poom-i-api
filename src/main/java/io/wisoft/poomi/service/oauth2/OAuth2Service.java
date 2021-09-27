@@ -1,21 +1,12 @@
 package io.wisoft.poomi.service.oauth2;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.wisoft.poomi.configures.web.formatter.Social;
-import io.wisoft.poomi.global.dto.response.oauth.KakaoTokenResponse;
-import io.wisoft.poomi.global.dto.response.oauth.KakaoUserInfoResponse;
 import io.wisoft.poomi.global.dto.response.oauth.OAuthUserPropertiesResponse;
 import io.wisoft.poomi.global.oauth2.manager.OAuth2Manager;
 import io.wisoft.poomi.global.oauth2.manager.OAuth2ManagerFactory;
-import io.wisoft.poomi.global.oauth2.properties.oauth2.KakaoProperty;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
 @RequiredArgsConstructor
 @Service

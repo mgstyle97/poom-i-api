@@ -14,13 +14,10 @@ import org.springframework.web.client.RestTemplate;
 @Getter
 public abstract class OAuth2Manager {
 
-    protected final OAuth2Property oAuth2Property;
-
     protected final ObjectMapper objectMapper;
     private final RestTemplate restTemplate;
 
-    protected OAuth2Manager(final OAuth2Property oAuth2Property) {
-        this.oAuth2Property = oAuth2Property;
+    protected OAuth2Manager() {
         this.objectMapper = new ObjectMapper();
         this.restTemplate = new RestTemplate();
     }
@@ -34,7 +31,7 @@ public abstract class OAuth2Manager {
         HttpEntity<MultiValueMap<String, String>> tokenRequestEntity = new HttpEntity<>(params, headers);
 
         String tokenResponse = restTemplate
-                .postForObject(oAuth2Property.getTokenURI(), tokenRequestEntity, String.class);
+                .postForObject(getOAuth2Property().getTokenURI(), tokenRequestEntity, String.class);
 
         String accessToken = getAccessToken(tokenResponse);
 
@@ -43,7 +40,7 @@ public abstract class OAuth2Manager {
         HttpEntity userPropertiesRequestEntity = new HttpEntity<>(headers);
 
         String userInfo = restTemplate
-                .postForObject(oAuth2Property.getUserinfoURI(), userPropertiesRequestEntity, String.class);
+                .postForObject(getOAuth2Property().getUserinfoURI(), userPropertiesRequestEntity, String.class);
 
         return stringToUserProperties(userInfo);
     }
@@ -63,6 +60,7 @@ public abstract class OAuth2Manager {
     }
 
     protected abstract MultiValueMap<String, String> getParams(final String code);
+    protected abstract OAuth2Property getOAuth2Property();
     protected abstract String getAccessToken(final String tokenResponse)
             throws JsonProcessingException;
     protected abstract OAuthUserPropertiesResponse stringToUserProperties(final String userInfo)

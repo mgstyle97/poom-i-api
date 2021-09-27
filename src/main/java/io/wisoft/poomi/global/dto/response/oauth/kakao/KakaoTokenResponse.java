@@ -1,4 +1,4 @@
-package io.wisoft.poomi.global.dto.response.oauth;
+package io.wisoft.poomi.global.dto.response.oauth.kakao;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
