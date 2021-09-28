@@ -66,6 +66,13 @@ public class ChildminderUrgentController {
         );
     }
 
+    @DeleteMapping("/{urgent-id}")
+    public void removeChildminderUrgent(
+            @PathVariable("urgent-id") @Valid final Long urgentId,
+            @SignInMember final Member member) {
+        childminderUrgentService.removeChildminderUrgent(urgentId, member);
+    }
+
     @PostMapping("/{urgent-id}/apply")
     public void applyChildminderUrgent(
             @PathVariable("urgent-id") @Valid final Long urgentId,

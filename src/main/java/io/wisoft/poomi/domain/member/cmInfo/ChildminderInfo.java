@@ -42,7 +42,10 @@ public class ChildminderInfo {
     private String greeting;
 
     @Column(name = "score")
-    private int score;
+    private Integer score;
+
+    @Column(name = "provider_count")
+    private Integer providerCount;
 
     public static ChildminderInfo from(final CMInfoRegisterRequest request) {
         ChildminderInfo childminderInfo = new ChildminderInfo();

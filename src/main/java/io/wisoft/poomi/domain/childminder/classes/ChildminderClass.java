@@ -3,7 +3,6 @@ package io.wisoft.poomi.domain.childminder.classes;
 import io.wisoft.poomi.global.dto.request.childminder.classes.ChildminderClassModifiedRequest;
 import io.wisoft.poomi.global.dto.request.childminder.classes.ChildminderClassRegisterRequest;
 import io.wisoft.poomi.domain.member.Member;
-import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.childminder.BaseChildminderEntity;
 import io.wisoft.poomi.domain.childminder.classes.comment.Comment;
 import io.wisoft.poomi.domain.childminder.classes.image.Image;
@@ -131,9 +130,9 @@ public class ChildminderClass extends BaseChildminderEntity {
     }
 
     public void resetAssociated() {
-        getWriter().removeWrittenClassProgram(this);
-        this.appliers.forEach(applier -> applier.removeAppliedClassProgram(this));
-        this.likes.forEach(like -> like.removeLikedClassProgram(this));
+        getWriter().removeWrittenClass(this);
+        this.appliers.forEach(applier -> applier.removeAppliedClass(this));
+        this.likes.forEach(like -> like.removeLikedClass(this));
         this.comments.clear();
     }
 

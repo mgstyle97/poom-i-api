@@ -1,5 +1,6 @@
 package io.wisoft.poomi.domain.member;
 
+import io.wisoft.poomi.domain.childminder.urgent.application.ChildminderUrgentApplication;
 import io.wisoft.poomi.global.dto.request.member.ChildAddRequest;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
 import io.wisoft.poomi.domain.childminder.urgent.ChildminderUrgent;
@@ -95,6 +96,23 @@ public class Member {
     )
     private Set<ChildminderUrgent> writtenUrgents;
 
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "writer"
+    )
+    private Set<ChildminderUrgentApplication> urgentApplications;
+
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "likes"
+    )
+    private Set<ChildminderUrgent> likedUrgents;
+
+    @Override
+    public int hashCode() {
+        return this.getId().intValue();
+    }
+
     @Builder
     public Member(final String name, final String phoneNumber,
                   final String email, final String password,
@@ -112,11 +130,8 @@ public class Member {
         this.children = new HashSet<>();
         this.childminderClassProperties = new ChildminderClassProperties();
         this.writtenUrgents = new HashSet<>();
-    }
-
-    @Override
-    public int hashCode() {
-        return this.getId().intValue();
+        this.urgentApplications = new HashSet<>();
+        this.likedUrgents = new HashSet<>();
     }
 
     public static Member of(final SignupRequest signupRequest,
@@ -195,15 +210,15 @@ public class Member {
         writtenClasses.add(childminderClass);
     }
 
-    public void removeWrittenClassProgram(final ChildminderClass childminderClass) {
+    public void removeWrittenClass(final ChildminderClass childminderClass) {
         this.childminderClassProperties.getWrittenClasses().remove(childminderClass);
     }
 
-    public void removeLikedClassProgram(final ChildminderClass childminderClass) {
+    public void removeLikedClass(final ChildminderClass childminderClass) {
         this.childminderClassProperties.getLikedClasses().remove(childminderClass);
     }
 
-    public void removeAppliedClassProgram(final ChildminderClass childminderClass) {
+    public void removeAppliedClass(final ChildminderClass childminderClass) {
         this.childminderClassProperties.getAppliedClasses().remove(childminderClass);
     }
 
@@ -221,4 +236,23 @@ public class Member {
         this.writtenUrgents.add(childminderUrgent);
     }
 
+    public void addApplication(final ChildminderUrgentApplication application) {
+        this.urgentApplications.add(application);
+    }
+
+    public void addLikedUrgent(final ChildminderUrgent childminderUrgent) {
+        this.likedUrgents.add(childminderUrgent);
+    }
+
+    public void removeLikedUrgent(final ChildminderUrgent childminderUrgent) {
+        this.likedUrgents.remove(childminderUrgent);
+    }
+
+    public void removeApplication(final ChildminderUrgentApplication application) {
+        this.urgentApplications.remove(application);
+    }
+
+    public void removeWrittenUrgent(final ChildminderUrgent childminderUrgent) {
+        this.writtenUrgents.remove(childminderUrgent);
+    }
 }

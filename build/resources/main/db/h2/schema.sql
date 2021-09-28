@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS comment CASCADE;
 DROP TABLE IF EXISTS image CASCADE;
 DROP TABLE IF EXISTS childminder_urgent CASCADE;
 DROP TABLE IF EXISTS childminder_urgent_application CASCADE;
+DROP TABLE IF EXISTS urgent_likes CASCADE;
 
 
 CREATE TABLE sms_certification(
@@ -59,7 +60,8 @@ CREATE TABLE childminder_info(
     date date,
     experience varchar,
     greeting varchar,
-    score integer
+    score integer default 0,
+    provider_count integer default 0
 );
 
 CREATE TABLE member(
@@ -146,6 +148,13 @@ CREATE TABLE childminder_urgent(
 CREATE TABLE childminder_urgent_application(
     id integer primary key,
     contents varchar not null,
+    member_id integer not null,
+    urgent_id integer not null,
+    foreign key(member_id) references member(id),
+    foreign key(urgent_id) references childminder_urgent(id)
+);
+
+CREATE TABLE urgent_likes(
     member_id integer not null,
     urgent_id integer not null,
     foreign key(member_id) references member(id),

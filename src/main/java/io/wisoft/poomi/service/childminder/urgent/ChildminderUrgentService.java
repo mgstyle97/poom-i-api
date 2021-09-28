@@ -2,6 +2,7 @@ package io.wisoft.poomi.service.childminder.urgent;
 
 import io.wisoft.poomi.domain.childminder.urgent.application.ChildminderUrgentApplication;
 import io.wisoft.poomi.domain.childminder.urgent.application.ChildminderUrgentApplicationRepository;
+import io.wisoft.poomi.domain.member.MemberRepository;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.domain.member.child.ChildRepository;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 @Service
 public class ChildminderUrgentService {
 
+    private final MemberRepository memberRepository;
     private final ChildminderUrgentRepository childminderUrgentRepository;
     private final ChildminderUrgentApplicationRepository childminderUrgentApplicationRepository;
     private final ChildRepository childRepository;
@@ -90,6 +92,14 @@ public class ChildminderUrgentService {
         return ChildminderUrgentModifiedResponse.of(childminderUrgent);
     }
 
+    public void removeChildminderUrgent(final Long urgentId, final Member member) {
+        ChildminderUrgent childminderUrgent = generateChildminderUrgentById(urgentId);
+
+        ContentPermissionVerifier.verifyModifyPermission(childminderUrgent.getWriter(), member);
+
+        deleteChildminderUrgent(childminderUrgent, member);
+    }
+
     @Transactional
     public void applyChildminderUrgent(final Long urgentId,
                                        final Member member,
@@ -97,6 +107,8 @@ public class ChildminderUrgentService {
         ChildminderUrgent childminderUrgent = generateChildminderUrgentById(urgentId);
 
         childminderUrgent.isWriter(member);
+        childminderUrgent.isAlreadyApplier(member);
+        log.info("Check member to make a request id: {}", member.getId());
 
         ChildminderUrgentApplication application =
                 ChildminderUrgentApplication.of(childminderUrgentApplyRequest, childminderUrgent, member);
@@ -105,6 +117,10 @@ public class ChildminderUrgentService {
         childminderUrgentApplicationRepository.save(application);
         log.info("Save childminder urgent application id: {}", application.getId());
 
+        member.addApplication(application);
+        memberRepository.save(member);
+        log.info("Add application to member entity and update member");
+
         childminderUrgent.addApplication(application);
         childminderUrgentRepository.save(childminderUrgent);
         log.info("Add application to urgent entity and update childminder urgent");
@@ -112,7 +128,10 @@ public class ChildminderUrgentService {
 
     @Transactional
     public void likeChildminderUrgent(final Long urgentId, final Member member) {
+        ChildminderUrgent childminderUrgent = generateChildminderUrgentById(urgentId);
 
+        childminderUrgent.addLikes(member);
+        memberRepository.save(member);
     }
 
     private Child checkChildId(
@@ -149,6 +168,14 @@ public class ChildminderUrgentService {
         childminderUrgent.modifiedFor(childminderUrgentModifiedRequest);
         childminderUrgentRepository.save(childminderUrgent);
         log.info("Update childminder urgent entity id: {}", childminderUrgent.getId());
+    }
+
+    private void deleteChildminderUrgent(final ChildminderUrgent childminderUrgent,
+                                         final Member member) {
+        childminderUrgent.resetAssociated();
+        member.removeWrittenUrgent(childminderUrgent);
+        childminderUrgentApplicationRepository.deleteAll(childminderUrgent.getApplications());
+        childminderUrgentRepository.delete(childminderUrgent);
     }
 
 }

@@ -7,6 +7,7 @@ import io.wisoft.poomi.global.dto.request.childminder.urgent.ChildminderUrgentRe
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.childminder.BaseChildminderEntity;
 import io.wisoft.poomi.domain.member.address.AddressTag;
+import io.wisoft.poomi.global.exception.exceptions.AlreadyRequestException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,6 +59,16 @@ public class ChildminderUrgent extends BaseChildminderEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "childminderUrgent")
     private Set<Child> childrenToHelp;
 
+    @ManyToMany(
+            fetch = FetchType.LAZY
+    )
+    @JoinTable(
+            name = "urgent_likes",
+            joinColumns = {@JoinColumn(name = "urgent_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "member_id", referencedColumnName = "id")}
+    )
+    private Set<Member> likes;
+
     @Builder
     public ChildminderUrgent(final String contents, final Boolean isRecruit,
                              final LocalDateTime startTime, final LocalDateTime endTime,
@@ -68,6 +79,7 @@ public class ChildminderUrgent extends BaseChildminderEntity {
         this.endTime = endTime;
         this.applications = new HashSet<>();
         this.childrenToHelp = new HashSet<>();
+        this.likes = new HashSet<>();
         setWriter(writer);
         setAddressTag(writer.getAddressTag());
     }
@@ -104,8 +116,28 @@ public class ChildminderUrgent extends BaseChildminderEntity {
         }
     }
 
+    public void isAlreadyApplier(final Member member) {
+        boolean isNoneMatchMember = this.applications.stream()
+                .map(ChildminderUrgentApplication::getWriter)
+                .noneMatch(applier -> applier.equals(member));
+        if (!isNoneMatchMember) {
+            throw new AlreadyRequestException();
+        }
+    }
+
     public void addApplication(final ChildminderUrgentApplication childminderUrgentApplication) {
         this.applications.add(childminderUrgentApplication);
+    }
+
+    public void addLikes(final Member member) {
+        this.likes.add(member);
+        member.addLikedUrgent(this);
+    }
+
+    public void resetAssociated() {
+        this.likes.forEach(like -> like.removeLikedUrgent(this));
+        this.applications.forEach(ChildminderUrgentApplication::reset);
+
     }
 
     private void changeContents(final String contents) {

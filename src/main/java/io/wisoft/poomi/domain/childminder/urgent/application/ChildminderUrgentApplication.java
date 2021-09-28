@@ -70,4 +70,8 @@ public class ChildminderUrgentApplication {
         return application;
     }
 
+    public void reset() {
+        this.writer.removeApplication(this);
+    }
+
 }
