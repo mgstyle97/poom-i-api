@@ -59,6 +59,15 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @Column(name = "age")
+    private Integer age;
+
+    @Column(name = "score")
+    private Integer score;
+
+    @Column(name = "score_provider_count")
+    private Integer scoreProviderCount;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "member_authority",
@@ -116,7 +125,7 @@ public class Member {
     @Builder
     public Member(final String name, final String phoneNumber,
                   final String email, final String password,
-                  final String nick, final Gender gender,
+                  final String nick, final Integer age, final Gender gender,
                   final Set<Authority> authorities,
                   final Address address) {
         this.name = name;
@@ -124,6 +133,9 @@ public class Member {
         this.email = email;
         this.password = password;
         this.nick = nick;
+        this.age = age;
+        this.score = 0;
+        this.scoreProviderCount = 0;
         this.gender = gender;
         this.authorities = authorities;
         this.address = address;
@@ -143,6 +155,7 @@ public class Member {
                 .email(signupRequest.getEmail())
                 .password(passwordEncoder.encode(signupRequest.getPassword()))
                 .nick(signupRequest.getNick())
+                .age(signupRequest.getAge())
                 .gender(signupRequest.getGender())
                 .authorities(Collections.singleton(userAuthority))
                 .build();

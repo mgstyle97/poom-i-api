@@ -2,6 +2,7 @@ package io.wisoft.poomi.controller;
 
 import io.wisoft.poomi.global.dto.request.childminder.urgent.ChildminderUrgentApplyRequest;
 import io.wisoft.poomi.global.dto.response.ApiResponse;
+import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentApplicationLookupResponse;
 import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentLookupResponse;
 import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentModifiedResponse;
 import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentRegisterResponse;
@@ -79,6 +80,16 @@ public class ChildminderUrgentController {
             @RequestBody @Valid final ChildminderUrgentApplyRequest childminderUrgentApplyRequest,
             @SignInMember final Member member) {
         childminderUrgentService.applyChildminderUrgent(urgentId, member, childminderUrgentApplyRequest);
+    }
+
+    @GetMapping("/{urgent-id}/apply")
+    public ApiResponse<List<ChildminderUrgentApplicationLookupResponse>> lookupAllApplications(
+            @PathVariable("urgent-id") @Valid final Long urgentId,
+            @SignInMember final Member member) {
+        return ApiResponse.succeed(
+                HttpStatus.OK,
+                childminderUrgentService.lookupAllApplicationChildminderUrgent(urgentId, member)
+        );
     }
 
     @PostMapping("/{urgent-id}/like")
