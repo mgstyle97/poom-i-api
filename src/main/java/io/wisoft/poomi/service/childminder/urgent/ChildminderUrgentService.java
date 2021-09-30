@@ -8,6 +8,7 @@ import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.domain.member.child.ChildRepository;
 import io.wisoft.poomi.global.aop.childminder.NoAccessCheck;
 import io.wisoft.poomi.global.dto.request.childminder.urgent.ChildminderUrgentApplyRequest;
+import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentApplicationLookupResponse;
 import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentLookupResponse;
 import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentModifiedResponse;
 import io.wisoft.poomi.global.dto.response.childminder.urgent.ChildminderUrgentRegisterResponse;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -124,6 +126,18 @@ public class ChildminderUrgentService {
         childminderUrgent.addApplication(application);
         childminderUrgentRepository.save(childminderUrgent);
         log.info("Add application to urgent entity and update childminder urgent");
+    }
+
+    @Transactional(readOnly = true)
+    public List<ChildminderUrgentApplicationLookupResponse> lookupAllApplicationChildminderUrgent(
+            final Long urgentId, final Member member) {
+        ChildminderUrgent childminderUrgent = generateChildminderUrgentById(urgentId);
+
+        Set<ChildminderUrgentApplication> applications = childminderUrgent.getApplications();
+
+        return applications.stream()
+                .map(ChildminderUrgentApplicationLookupResponse::of)
+                .collect(Collectors.toList());
     }
 
     @Transactional

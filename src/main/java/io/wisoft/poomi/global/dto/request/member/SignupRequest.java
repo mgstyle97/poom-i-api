@@ -3,11 +3,10 @@ package io.wisoft.poomi.global.dto.request.member;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.poomi.domain.member.Gender;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.List;
 
 @Getter
@@ -32,6 +31,10 @@ public class SignupRequest {
     private String nick;
 
     private Gender gender;
+
+    @Min(value = 20, message = "19세 이하는 가입할 수 없습니다.")
+    @NotNull(message = "나이를 입력해주세요.")
+    private Integer age;
 
     @JsonProperty("post_code")
     @Size(min = 5, max = 6, message = "우편번호 양식에 맞지 않습니다.")

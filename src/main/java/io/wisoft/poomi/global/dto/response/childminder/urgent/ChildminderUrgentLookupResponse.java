@@ -18,6 +18,15 @@ public class ChildminderUrgentLookupResponse {
 
     private String writer;
 
+    @JsonProperty("childminder_score")
+    private Integer childminderScore;
+
+    @JsonProperty("liked_count")
+    private Integer likedCount;
+
+    @JsonProperty("applied_count")
+    private Integer appliedCount;
+
     private String contents;
 
     @JsonProperty("registered_at")
@@ -25,19 +34,19 @@ public class ChildminderUrgentLookupResponse {
     private Date registeredAt;
 
     @Builder
-    private ChildminderUrgentLookupResponse(final Long childminderUrgentId,
-                                            final String writer, final String contents) {
-        this.childminderUrgentId = childminderUrgentId;
-        this.writer = writer;
-        this.contents = contents;
+    private ChildminderUrgentLookupResponse(final ChildminderUrgent childminderUrgent) {
+        this.childminderUrgentId = childminderUrgent.getId();
+        this.writer = childminderUrgent.getWriter().getNick();
+        this.childminderScore = childminderUrgent.getWriter().getScore();
+        this.likedCount = childminderUrgent.getLikes().size();
+        this.appliedCount = childminderUrgent.getApplications().size();
+        this.contents = childminderUrgent.getContents();
         this.registeredAt = new Date();
     }
 
     public static ChildminderUrgentLookupResponse of(final ChildminderUrgent childminderUrgent) {
         return ChildminderUrgentLookupResponse.builder()
-                .childminderUrgentId(childminderUrgent.getId())
-                .writer(childminderUrgent.getWriter().getNick())
-                .contents(childminderUrgent.getContents())
+                .childminderUrgent(childminderUrgent)
                 .build();
     }
 
