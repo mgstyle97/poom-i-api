@@ -48,6 +48,8 @@ public class ChildminderUrgentController {
     public ApiResponse<ChildminderUrgentRegisterResponse> registerChildminderUrgent(
             @RequestBody @Valid final ChildminderUrgentRegisterRequest childminderUrgentRegisterRequest,
             @SignInMember final Member member) {
+        System.out.println(childminderUrgentRegisterRequest);
+
         return ApiResponse.succeed(
                 HttpStatus.CREATED,
                 childminderUrgentService.registerChildminderUrgent(childminderUrgentRegisterRequest, member)

@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -29,6 +31,18 @@ public class ChildminderUrgentLookupResponse {
 
     private String contents;
 
+    @JsonProperty("created_at")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date createdAt;
+
+    @JsonProperty("start_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+    private LocalDateTime startTime;
+
+    @JsonProperty("end_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+    private LocalDateTime endTime;
+
     @JsonProperty("registered_at")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date registeredAt;
@@ -41,6 +55,9 @@ public class ChildminderUrgentLookupResponse {
         this.likedCount = childminderUrgent.getLikes().size();
         this.appliedCount = childminderUrgent.getApplications().size();
         this.contents = childminderUrgent.getContents();
+        this.createdAt = Timestamp.valueOf(childminderUrgent.getCreatedAt());
+        this.startTime = childminderUrgent.getStartTime();
+        this.endTime = childminderUrgent.getEndTime();
         this.registeredAt = new Date();
     }
 

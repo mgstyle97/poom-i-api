@@ -176,13 +176,11 @@ public class Member {
         this.childminderInfo = childminderInfo;
     }
 
-    public void setChildren(final List<ChildAddRequest> children) {
+    public void setChildren(final List<Child> children) {
         if (children == null) {
             return;
         }
-        children.stream()
-                .map(childAddRequest -> Child.of(childAddRequest, this))
-                .forEach(this.children::add);
+        this.children.addAll(children);
     }
 
     public Authentication toAuthentication() {
