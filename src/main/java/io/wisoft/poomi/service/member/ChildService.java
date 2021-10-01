@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -24,8 +25,11 @@ public class ChildService {
     @Transactional
     public List<ChildAddResponse> updateChildren(final Member member, final List<ChildAddRequest> childAddRequests) {
 
-        member.setChildren(childAddRequests);
-        childRepository.saveAll(member.getChildren());
+        List<Child> children = childAddRequests.stream()
+                        .map(childAddRequest -> Child.of(childAddRequest, member))
+                                .collect(Collectors.toList());
+        childRepository.saveAll(children);
+        member.setChildren(children);
         log.info("Generate child through request data and set");
 
         return member.getChildren().stream()

@@ -1,5 +1,6 @@
 package io.wisoft.poomi.service.member;
 
+import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.global.dto.response.member.CMInfoRegisterResponse;
 import io.wisoft.poomi.global.dto.response.member.SignupResponse;
 import io.wisoft.poomi.global.dto.request.member.SigninRequest;
@@ -27,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -89,11 +92,14 @@ public class MemberService {
         log.info("Generate address data through request");
 
         member.updateAddressInfo(address);
-        member.setChildren(signupRequest.getChildren());
+        memberRepository.save(member);
         log.info("Set request data to member properties");
 
-        memberRepository.save(member);
-        childRepository.saveAll(member.getChildren());
+        List<Child> children = signupRequest.getChildren().stream()
+                        .map(childAddRequest -> Child.of(childAddRequest, member))
+                                .collect(Collectors.toList());
+        childRepository.saveAll(children);
+        member.setChildren(children);
         log.info("Save member data through member repository");
 
         return member;
