@@ -1,15 +1,13 @@
 package io.wisoft.poomi.domain.member;
 
-import io.wisoft.poomi.domain.childminder.urgent.application.ChildminderUrgentApplication;
-import io.wisoft.poomi.global.dto.request.member.ChildAddRequest;
+import io.wisoft.poomi.domain.child_care.expert.apply.ChildCareExpertApply;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
-import io.wisoft.poomi.domain.childminder.urgent.ChildminderUrgent;
+import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
 import io.wisoft.poomi.domain.member.address.Address;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.member.child.Child;
-import io.wisoft.poomi.domain.member.cmInfo.ChildminderInfo;
 import io.wisoft.poomi.domain.member.authority.Authority;
-import io.wisoft.poomi.domain.childminder.classes.ChildminderClass;
+import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
 import lombok.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,7 +25,7 @@ import java.util.stream.Collectors;
 @SequenceGenerator(
         name = "member_sequence_generator",
         sequenceName = "member_sequence",
-        initialValue = 2,
+        initialValue = 4,
         allocationSize = 1
 )
 @Table(name = "MEMBER")
@@ -89,33 +87,26 @@ public class Member {
     )
     private Set<Child> children;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(
-            name = "cm_info_id",
-            referencedColumnName = "id"
-    )
-    private ChildminderInfo childminderInfo;
-
     @Embedded
-    private ChildminderClassProperties childminderClassProperties;
+    private ChildCareGroupProperties childCareGroupProperties;
 
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy = "writer"
     )
-    private Set<ChildminderUrgent> writtenUrgents;
+    private Set<ChildCareExpert> writtenExperts;
 
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy = "writer"
     )
-    private Set<ChildminderUrgentApplication> urgentApplications;
+    private Set<ChildCareExpertApply> expertApplies;
 
     @ManyToMany(
             fetch = FetchType.LAZY,
             mappedBy = "likes"
     )
-    private Set<ChildminderUrgent> likedUrgents;
+    private Set<ChildCareExpert> likedExpert;
 
     @Override
     public int hashCode() {
@@ -140,10 +131,10 @@ public class Member {
         this.authorities = authorities;
         this.address = address;
         this.children = new HashSet<>();
-        this.childminderClassProperties = new ChildminderClassProperties();
-        this.writtenUrgents = new HashSet<>();
-        this.urgentApplications = new HashSet<>();
-        this.likedUrgents = new HashSet<>();
+        this.childCareGroupProperties = new ChildCareGroupProperties();
+        this.writtenExperts = new HashSet<>();
+        this.expertApplies = new HashSet<>();
+        this.likedExpert = new HashSet<>();
     }
 
     public static Member of(final SignupRequest signupRequest,
@@ -170,10 +161,6 @@ public class Member {
 
     public void updateAddressInfo(final Address address) {
         this.address = address;
-    }
-
-    public void updateChildminderInfo(final ChildminderInfo childminderInfo) {
-        this.childminderInfo = childminderInfo;
     }
 
     public void setChildren(final List<Child> children) {
@@ -216,54 +203,54 @@ public class Member {
         return this.address.getAddressTag();
     }
 
-    public void addClass(final ChildminderClass childminderClass) {
-        Set<ChildminderClass> writtenClasses = this.childminderClassProperties.getWrittenClasses();
-        writtenClasses.add(childminderClass);
+    public void addGroup(final ChildCareGroup childCareGroup) {
+        Set<ChildCareGroup> writtenGroup = this.childCareGroupProperties.getWrittenGroup();
+        writtenGroup.add(childCareGroup);
     }
 
-    public void removeWrittenClass(final ChildminderClass childminderClass) {
-        this.childminderClassProperties.getWrittenClasses().remove(childminderClass);
+    public void removeWrittenGroup(final ChildCareGroup childCareGroup) {
+        this.childCareGroupProperties.getWrittenGroup().remove(childCareGroup);
     }
 
-    public void removeLikedClass(final ChildminderClass childminderClass) {
-        this.childminderClassProperties.getLikedClasses().remove(childminderClass);
+    public void removeLikedGroup(final ChildCareGroup childCareGroup) {
+        this.childCareGroupProperties.getLikedGroup().remove(childCareGroup);
     }
 
-    public void removeAppliedClass(final ChildminderClass childminderClass) {
-        this.childminderClassProperties.getAppliedClasses().remove(childminderClass);
+    public void removeAppliedGroup(final ChildCareGroup childCareGroup) {
+        this.childCareGroupProperties.getAppliedGroup().remove(childCareGroup);
     }
 
-    public void addAppliedClass(final ChildminderClass childminderClass) {
-        Set<ChildminderClass> appliedClasses = this.childminderClassProperties.getAppliedClasses();
-        appliedClasses.add(childminderClass);
+    public void addAppliedGroup(final ChildCareGroup childCareGroup) {
+        Set<ChildCareGroup> appliedGroup = this.childCareGroupProperties.getAppliedGroup();
+        appliedGroup.add(childCareGroup);
     }
 
-    public void addLikedClass(final ChildminderClass childminderClass) {
-        Set<ChildminderClass> likedClasses = this.childminderClassProperties.getLikedClasses();
-        likedClasses.add(childminderClass);
+    public void addLikedGroup(final ChildCareGroup childCareGroup) {
+        Set<ChildCareGroup> likedGroup = this.childCareGroupProperties.getLikedGroup();
+        likedGroup.add(childCareGroup);
     }
 
-    public void addUrgent(final ChildminderUrgent childminderUrgent) {
-        this.writtenUrgents.add(childminderUrgent);
+    public void addExpert(final ChildCareExpert childCareExpert) {
+        this.writtenExperts.add(childCareExpert);
     }
 
-    public void addApplication(final ChildminderUrgentApplication application) {
-        this.urgentApplications.add(application);
+    public void addApplication(final ChildCareExpertApply application) {
+        this.expertApplies.add(application);
     }
 
-    public void addLikedUrgent(final ChildminderUrgent childminderUrgent) {
-        this.likedUrgents.add(childminderUrgent);
+    public void addLikedExpert(final ChildCareExpert childCareExpert) {
+        this.likedExpert.add(childCareExpert);
     }
 
-    public void removeLikedUrgent(final ChildminderUrgent childminderUrgent) {
-        this.likedUrgents.remove(childminderUrgent);
+    public void removeLikedExpert(final ChildCareExpert childCareExpert) {
+        this.likedExpert.remove(childCareExpert);
     }
 
-    public void removeApplication(final ChildminderUrgentApplication application) {
-        this.urgentApplications.remove(application);
+    public void removeApplication(final ChildCareExpertApply application) {
+        this.expertApplies.remove(application);
     }
 
-    public void removeWrittenUrgent(final ChildminderUrgent childminderUrgent) {
-        this.writtenUrgents.remove(childminderUrgent);
+    public void removeWrittenExpert(final ChildCareExpert childCareExpert) {
+        this.writtenExperts.remove(childCareExpert);
     }
 }

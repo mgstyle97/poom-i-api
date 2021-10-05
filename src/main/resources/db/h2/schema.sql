@@ -1,6 +1,5 @@
 DROP TABLE IF EXISTS member CASCADE;
 DROP TABLE IF EXISTS authority CASCADE;
-DROP TABLE IF EXISTS childminder_info CASCADE;
 DROP TABLE IF EXISTS address_tag CASCADE;
 DROP TABLE IF EXISTS address CASCADE;
 DROP TABLE IF EXISTS member_authority CASCADE;
@@ -8,14 +7,14 @@ DROP TABLE IF EXISTS child CASCADE;
 DROP TABLE IF EXISTS sms_certification CASCADE;
 DROP TABLE IF EXISTS email_certification CASCADE;
 DROP TABLE IF EXISTS refresh_token CASCADE;
-DROP TABLE IF EXISTS childminder_class CASCADE;
-DROP TABLE IF EXISTS class_applier CASCADE;
-DROP TABLE IF EXISTS class_likes CASCADE;
+DROP TABLE IF EXISTS child_care_group CASCADE;
+DROP TABLE IF EXISTS group_apply CASCADE;
+DROP TABLE IF EXISTS group_likes CASCADE;
 DROP TABLE IF EXISTS comment CASCADE;
 DROP TABLE IF EXISTS image CASCADE;
-DROP TABLE IF EXISTS childminder_urgent CASCADE;
-DROP TABLE IF EXISTS childminder_urgent_application CASCADE;
-DROP TABLE IF EXISTS urgent_likes CASCADE;
+DROP TABLE IF EXISTS child_care_expert CASCADE;
+DROP TABLE IF EXISTS expert_apply CASCADE;
+DROP TABLE IF EXISTS expert_likes CASCADE;
 
 
 CREATE TABLE sms_certification(
@@ -55,15 +54,6 @@ CREATE TABLE authority (
     authority varchar unique
 );
 
-CREATE TABLE childminder_info(
-    id integer primary key,
-    date date,
-    experience varchar,
-    greeting varchar,
-    score integer default 0,
-    provider_count integer default 0
-);
-
 CREATE TABLE member(
     id integer primary key,
     name varchar not null,
@@ -75,9 +65,7 @@ CREATE TABLE member(
     age integer not null,
     score integer not null default 0,
     score_provider_count integer not null default 0,
-    cm_info_id integer,
     address_id integer,
-    foreign key (cm_info_id) references childminder_info(id),
     foreign key (address_id) references address(id)
 );
 
@@ -88,7 +76,7 @@ CREATE TABLE member_authority(
     foreign key (authority_id) references authority(id)
 );
 
-CREATE TABLE childminder_class(
+CREATE TABLE child_care_group(
     id integer primary key,
     title varchar not null,
     contents CLOB not null,
@@ -102,25 +90,25 @@ CREATE TABLE childminder_class(
     foreign key (address_tag_id) references address_tag(id)
 );
 
-CREATE TABLE class_applier(
-    class_id integer not null,
+CREATE TABLE group_apply(
+    group_id integer not null,
     member_id integer not null,
-    foreign key(class_id) references childminder_class(id),
+    foreign key(group_id) references child_care_group(id),
     foreign key(member_id) references member(id)
 );
 
-CREATE TABLE class_likes(
-    class_id integer not null,
+CREATE TABLE group_likes(
+    group_id integer not null,
     member_id integer not null,
-    foreign key(class_id) references childminder_class(id),
+    foreign key(group_id) references child_care_group(id),
     foreign key(member_id) references member(id)
 );
 
 CREATE TABLE comment(
     id integer primary key,
-    class_id integer not null,
+    group_id integer not null,
     member_id integer not null,
-    foreign key(class_id) references childminder_class(id),
+    foreign key(group_id) references child_care_group(id),
     foreign key(member_id) references member(id)
 );
 
@@ -130,14 +118,14 @@ CREATE TABLE image(
     image_original_name varchar not null,
     image_path varchar not null,
     image_uri varchar not null,
-    class_id integer,
-    foreign key(class_id) references childminder_class(id)
+    group_id integer,
+    foreign key(group_id) references child_care_group(id)
 );
 
-CREATE TABLE childminder_urgent(
+CREATE TABLE child_care_expert(
     id integer primary key,
     contents CLOB not null,
-    is_recruit boolean default false,
+    recruit_type varchar not null,
     created_at date,
     modified_at date,
     start_time timestamp not null,
@@ -148,20 +136,20 @@ CREATE TABLE childminder_urgent(
     foreign key(address_tag_id) references address_tag(id)
 );
 
-CREATE TABLE childminder_urgent_application(
+CREATE TABLE expert_apply(
     id integer primary key,
     contents varchar not null,
     member_id integer not null,
-    urgent_id integer not null,
+    expert_id integer not null,
     foreign key(member_id) references member(id),
-    foreign key(urgent_id) references childminder_urgent(id)
+    foreign key(expert_id) references child_care_expert(id)
 );
 
-CREATE TABLE urgent_likes(
+CREATE TABLE expert_likes(
     member_id integer not null,
-    urgent_id integer not null,
+    expert_id integer not null,
     foreign key(member_id) references member(id),
-    foreign key(urgent_id) references childminder_urgent(id)
+    foreign key(expert_id) references child_care_expert(id)
 );
 
 CREATE TABLE child(
@@ -171,7 +159,7 @@ CREATE TABLE child(
     school varchar not null,
     special_note varchar,
     member_id integer not null,
-    urgent_id integer,
+    expert_id integer,
     foreign key(member_id) references member(id),
-    foreign key(urgent_id) references childminder_urgent(id)
+    foreign key(expert_id) references child_care_expert(id)
 );

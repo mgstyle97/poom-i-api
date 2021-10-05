@@ -1,10 +1,8 @@
 package io.wisoft.poomi.service.member;
 
 import io.wisoft.poomi.domain.member.child.Child;
-import io.wisoft.poomi.global.dto.response.member.CMInfoRegisterResponse;
 import io.wisoft.poomi.global.dto.response.member.SignupResponse;
 import io.wisoft.poomi.global.dto.request.member.SigninRequest;
-import io.wisoft.poomi.global.dto.request.member.CMInfoRegisterRequest;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
 import io.wisoft.poomi.global.utils.FileUtils;
 import io.wisoft.poomi.global.exception.exceptions.DuplicateMemberException;
@@ -13,7 +11,6 @@ import io.wisoft.poomi.domain.member.address.Address;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.member.authority.AuthorityRepository;
 import io.wisoft.poomi.domain.member.child.ChildRepository;
-import io.wisoft.poomi.domain.member.cmInfo.ChildminderInfo;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.address.AddressRepository;
 import io.wisoft.poomi.domain.member.address.AddressTagRepository;
@@ -65,15 +62,6 @@ public class MemberService {
         log.info("Generate JWT token: {}", accessToken);
 
         return accessToken;
-    }
-
-    @Transactional(readOnly = true)
-    public CMInfoRegisterResponse cmInfoUpdate(Member member,
-                                               final CMInfoRegisterRequest cmInfoRegisterRequest) {
-        member.updateChildminderInfo(ChildminderInfo.from(cmInfoRegisterRequest));
-        memberRepository.save(member);
-
-        return new CMInfoRegisterResponse(member.getChildminderInfo().getId(), member.getEmail());
     }
 
     private Member saveMember(final SignupRequest signupRequest) {

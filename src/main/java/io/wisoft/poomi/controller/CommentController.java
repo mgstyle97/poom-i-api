@@ -1,14 +1,14 @@
 package io.wisoft.poomi.controller;
 
 import io.wisoft.poomi.global.dto.response.ApiResponse;
-import io.wisoft.poomi.global.dto.response.childminder.classes.comment.CommentDeleteResponse;
-import io.wisoft.poomi.global.dto.response.childminder.classes.comment.CommentModifiedResponse;
-import io.wisoft.poomi.global.dto.response.childminder.classes.comment.CommentRegistResponse;
-import io.wisoft.poomi.global.dto.request.childminder.comment.CommentModifiedRequest;
-import io.wisoft.poomi.global.dto.request.childminder.comment.CommentRegisterRequest;
+import io.wisoft.poomi.global.dto.response.child_care.group.comment.CommentDeleteResponse;
+import io.wisoft.poomi.global.dto.response.child_care.group.comment.CommentModifiedResponse;
+import io.wisoft.poomi.global.dto.response.child_care.group.comment.CommentRegistResponse;
+import io.wisoft.poomi.global.dto.request.child_care.group.comment.CommentModifiedRequest;
+import io.wisoft.poomi.global.dto.request.child_care.group.comment.CommentRegisterRequest;
 import io.wisoft.poomi.configures.web.resolver.SignInMember;
 import io.wisoft.poomi.domain.member.Member;
-import io.wisoft.poomi.service.childminder.comment.CommentService;
+import io.wisoft.poomi.service.child_care.comment.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
