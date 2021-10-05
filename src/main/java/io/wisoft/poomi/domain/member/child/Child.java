@@ -1,6 +1,6 @@
 package io.wisoft.poomi.domain.member.child;
 
-import io.wisoft.poomi.domain.childminder.urgent.ChildminderUrgent;
+import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
 import io.wisoft.poomi.global.dto.request.member.ChildAddRequest;
 import io.wisoft.poomi.domain.member.Member;
 import lombok.Builder;
@@ -16,7 +16,7 @@ import java.util.Date;
 @SequenceGenerator(
         name = "child_sequence_generator",
         sequenceName = "child_sequence",
-        initialValue = 1,
+        initialValue = 4,
         allocationSize = 1
 )
 public class Child {
@@ -51,10 +51,10 @@ public class Child {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
-            name = "urgent_id",
+            name = "expert_id",
             referencedColumnName = "id"
     )
-    private ChildminderUrgent childminderUrgent;
+    private ChildCareExpert childCareExpert;
 
     @Override
     public int hashCode() {

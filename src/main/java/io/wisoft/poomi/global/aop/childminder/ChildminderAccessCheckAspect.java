@@ -1,10 +1,10 @@
 package io.wisoft.poomi.global.aop.childminder;
 
-import io.wisoft.poomi.domain.childminder.BaseChildminderEntity;
-import io.wisoft.poomi.domain.childminder.classes.ChildminderClass;
-import io.wisoft.poomi.domain.childminder.classes.ChildminderClassRepository;
-import io.wisoft.poomi.domain.childminder.urgent.ChildminderUrgent;
-import io.wisoft.poomi.domain.childminder.urgent.ChildminderUrgentRepository;
+import io.wisoft.poomi.domain.child_care.BaseChildCareEntity;
+import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
+import io.wisoft.poomi.domain.child_care.group.ChildCareGroupRepository;
+import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
+import io.wisoft.poomi.domain.child_care.expert.ChildCareExpertRepository;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import lombok.RequiredArgsConstructor;
@@ -20,31 +20,31 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class ChildminderAccessCheckAspect {
 
-    private final ChildminderClassRepository childminderClassRepository;
-    private final ChildminderUrgentRepository childminderUrgentRepository;
+    private final ChildCareGroupRepository childCareGroupRepository;
+    private final ChildCareExpertRepository childCareExpertRepository;
 
-    @Before("execution(public * io.wisoft.poomi.service.childminder.classes.*.*(..)) " +
+    @Before("execution(public * io.wisoft.poomi.service.child_care.group.*.*(..)) " +
             "&& !@target(io.wisoft.poomi.global.aop.childminder.NoAccessCheck) " +
             "&& !@annotation(io.wisoft.poomi.global.aop.childminder.NoAccessCheck)")
     public void childminderClassAccessCheck(final JoinPoint joinPoint) {
         Long classId = setContentId(joinPoint);
         Member member = setMember(joinPoint);
 
-        ChildminderClass childminderClass = childminderClassRepository.getById(classId);
+        ChildCareGroup childCareGroup = childCareGroupRepository.getById(classId);
 
-        childminderAccessCheck(childminderClass, member.getAddressTag());
+        childminderAccessCheck(childCareGroup, member.getAddressTag());
     }
 
-    @Before("execution(public * io.wisoft.poomi.service.childminder.urgent.*.*(..)) " +
+    @Before("execution(public * io.wisoft.poomi.service.child_care.expert.*.*(..)) " +
             "&& !@target(io.wisoft.poomi.global.aop.childminder.NoAccessCheck) " +
             "&& !@annotation(io.wisoft.poomi.global.aop.childminder.NoAccessCheck)")
     public void childminderUrgentAccessCheck(final JoinPoint joinPoint) {
         Long urgentId = setContentId(joinPoint);
         Member member = setMember(joinPoint);
 
-        ChildminderUrgent childminderUrgent = childminderUrgentRepository.getById(urgentId);
+        ChildCareExpert childCareExpert = childCareExpertRepository.getById(urgentId);
 
-        childminderAccessCheck(childminderUrgent, member.getAddressTag());
+        childminderAccessCheck(childCareExpert, member.getAddressTag());
     }
     private Long setContentId(final JoinPoint joinPoint) {
         for (Object arg : joinPoint.getArgs()) {
@@ -66,7 +66,7 @@ public class ChildminderAccessCheckAspect {
         return null;
     }
 
-    private void childminderAccessCheck(final BaseChildminderEntity childminderEntity, final AddressTag addressTag) {
+    private void childminderAccessCheck(final BaseChildCareEntity childminderEntity, final AddressTag addressTag) {
         childminderEntity.checkAccessPermission(addressTag);
         log.info("Check access permission of childminder content");
     }

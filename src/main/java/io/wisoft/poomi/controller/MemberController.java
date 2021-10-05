@@ -5,7 +5,6 @@ import io.wisoft.poomi.global.dto.response.ApiResponse;
 import io.wisoft.poomi.global.dto.response.member.*;
 import io.wisoft.poomi.global.dto.response.oauth.OAuthUserPropertiesResponse;
 import io.wisoft.poomi.global.dto.request.member.SigninRequest;
-import io.wisoft.poomi.global.dto.request.member.CMInfoRegisterRequest;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
 import io.wisoft.poomi.configures.web.resolver.SignInMember;
 import io.wisoft.poomi.domain.member.Member;
@@ -46,13 +45,6 @@ public class MemberController {
     @GetMapping("/member/me")
     public ApiResponse<MyPageResponse> myPage(@SignInMember final Member member) {
         return ApiResponse.succeed(HttpStatus.OK, MyPageResponse.of(member));
-    }
-
-    @PostMapping("/member/childminder-info")
-    public ApiResponse<CMInfoRegisterResponse> cmInfoRegist(
-            @RequestBody @Valid final CMInfoRegisterRequest cmInfoRegisterRequest,
-            @SignInMember final Member member) {
-        return ApiResponse.succeed(HttpStatus.CREATED, memberService.cmInfoUpdate(member, cmInfoRegisterRequest));
     }
 
     @GetMapping("/oauth2/success")

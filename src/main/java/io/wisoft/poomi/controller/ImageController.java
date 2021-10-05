@@ -1,7 +1,7 @@
 package io.wisoft.poomi.controller;
 
-import io.wisoft.poomi.domain.childminder.classes.image.Image;
-import io.wisoft.poomi.domain.childminder.classes.image.ImageRepository;
+import io.wisoft.poomi.domain.child_care.group.image.Image;
+import io.wisoft.poomi.domain.child_care.group.image.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpHeaders;
