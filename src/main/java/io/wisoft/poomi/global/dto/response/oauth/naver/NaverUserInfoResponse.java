@@ -20,8 +20,13 @@ public class NaverUserInfoResponse {
     public static class Response {
 
         private String id;
+
         private String name;
+
         private String email;
+
+        @JsonProperty("profile_image")
+        private String profileImage;
 
     }
 

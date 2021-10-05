@@ -1,4 +1,4 @@
-package io.wisoft.poomi.global.aop.childminder;
+package io.wisoft.poomi.global.aop.child_care;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

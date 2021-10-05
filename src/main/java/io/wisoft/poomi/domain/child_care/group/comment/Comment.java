@@ -1,5 +1,6 @@
 package io.wisoft.poomi.domain.child_care.group.comment;
 
+import io.wisoft.poomi.domain.child_care.BaseTimeEntity;
 import io.wisoft.poomi.global.dto.request.child_care.group.comment.CommentRegisterRequest;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.child_care.BaseChildCareEntity;
@@ -20,7 +21,7 @@ import javax.persistence.*;
         initialValue = 1,
         allocationSize = 1
 )
-public class Comment extends BaseChildCareEntity {
+public class Comment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(
@@ -45,7 +46,7 @@ public class Comment extends BaseChildCareEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(
-            name = "member_id",
+            name = "writer_id",
             referencedColumnName = "id"
     )
     private Member writer;

@@ -1,5 +1,6 @@
 package io.wisoft.poomi.controller;
 
+import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertApplyModifiedRequest;
 import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertApplyRequest;
 import io.wisoft.poomi.global.dto.response.ApiResponse;
 import io.wisoft.poomi.global.dto.response.child_care.expert.ChildCareExpertApplyLookupResponse;
@@ -48,7 +49,6 @@ public class ChildCareExpertController {
     public ApiResponse<ChildCareExpertRegisterResponse> registerChildCareExpert(
             @RequestBody @Valid final ChildCareExpertRegisterRequest childCareExpertRegisterRequest,
             @SignInMember final Member member) {
-        System.out.println(childCareExpertRegisterRequest);
 
         return ApiResponse.succeed(
                 HttpStatus.CREATED,
@@ -94,11 +94,37 @@ public class ChildCareExpertController {
         );
     }
 
+    @PatchMapping("/{expert-id}/apply/{apply-id}")
+    public void modifiedChildCareExpertApply(
+            @PathVariable("expert-id") @Valid final Long expertId,
+            @PathVariable("apply-id") @Valid final Long applyId,
+            @RequestBody @Valid ChildCareExpertApplyModifiedRequest applyModifiedRequest,
+            @SignInMember final Member member) {
+        childCareExpertService
+                .modifiedChildCareExpertApply(expertId, applyId, member, applyModifiedRequest);
+    }
+
+    @DeleteMapping("/{expert-id}/apply/{apply-id}")
+    public void removeChildCareExpertApply(
+            @PathVariable("expert-id") @Valid final Long expertId,
+            @PathVariable("apply-id") @Valid final Long applyId,
+            @SignInMember Member member) {
+        childCareExpertService.removeChildCareExpertApply(expertId, applyId, member);
+    }
+
     @PostMapping("/{expert-id}/like")
     public void likeChildCareExpert(
             @PathVariable("expert-id") @Valid final Long expertId,
             @SignInMember final Member member) {
         childCareExpertService.likeChildCareExpert(expertId, member);
+    }
+
+    @PostMapping("/{expert-id}/approve/{apply-id}")
+    public void approveExpertApply(
+            @PathVariable("expert-id") @Valid final Long expertId,
+            @PathVariable("apply-id") @Valid final Long applyId,
+            @SignInMember Member member) {
+        childCareExpertService.approveExpertApply(expertId, applyId, member);
     }
 
 }

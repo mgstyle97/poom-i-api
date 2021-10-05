@@ -1,6 +1,6 @@
 package io.wisoft.poomi.service.child_care.group;
 
-import io.wisoft.poomi.global.aop.childminder.NoAccessCheck;
+import io.wisoft.poomi.global.aop.child_care.NoAccessCheck;
 import io.wisoft.poomi.global.dto.response.child_care.group.*;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupModifiedRequest;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupRegisterRequest;

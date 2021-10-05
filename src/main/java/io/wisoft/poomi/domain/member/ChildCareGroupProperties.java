@@ -15,24 +15,24 @@ public class ChildCareGroupProperties {
             mappedBy = "writer",
             fetch = FetchType.LAZY
     )
-    private Set<ChildCareGroup> writtenGroup;
+    private Set<ChildCareGroup> writtenGroups;
 
     @ManyToMany(
             mappedBy = "appliers",
             fetch = FetchType.LAZY
     )
-    private Set<ChildCareGroup> appliedGroup;
+    private Set<ChildCareGroup> appliedGroups;
 
     @ManyToMany(
             mappedBy = "likes",
             fetch = FetchType.LAZY
     )
-    private Set<ChildCareGroup> likedGroup;
+    private Set<ChildCareGroup> likedGroups;
 
     public ChildCareGroupProperties() {
-        this.writtenGroup = new HashSet<>();
-        this.appliedGroup = new HashSet<>();
-        this.likedGroup = new HashSet<>();
+        this.writtenGroups = new HashSet<>();
+        this.appliedGroups = new HashSet<>();
+        this.likedGroups = new HashSet<>();
     }
 
 }

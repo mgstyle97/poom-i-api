@@ -116,7 +116,7 @@ class ChildCareGroupServiceTest {
         ChildCareGroupRegisterRequest childCareGroupRegisterRequest = new ChildCareGroupRegisterRequest();
         childCareGroupRegisterRequest.setTitle("테스트3");
         childCareGroupRegisterRequest.setContents("테스트3입니다.");
-        childCareGroupRegisterRequest.setIsRecruit(false);
+        childCareGroupRegisterRequest.setRecruitmentStatus(null);
         childCareGroupRegisterRequest.setCapacity(12L);
 
 //        classProgramService.registerClassProgram(member, classProgramRegisterRequest);
@@ -133,7 +133,7 @@ class ChildCareGroupServiceTest {
         childCareGroupService.applyChildCareGroup(1L, member);
 
         ChildCareGroup childCareGroup = childCareGroupRepository.getById(1L);
-        Set<ChildCareGroup> appliedClasses = member.getChildCareGroupProperties().getAppliedGroup();
+        Set<ChildCareGroup> appliedClasses = member.getChildCareGroupProperties().getAppliedGroups();
 
         ChildCareGroup childCareGroup1 = appliedClasses.stream()
                 .filter(appliedClass -> childCareGroup.getTitle().equals(appliedClass.getTitle()))
@@ -151,7 +151,7 @@ class ChildCareGroupServiceTest {
         childCareGroupService.likeChildCareGroup(1L, member);
 
         ChildCareGroup childCareGroup = childCareGroupRepository.getById(1L);
-        Set<ChildCareGroup> likedClasses = member.getChildCareGroupProperties().getLikedGroup();
+        Set<ChildCareGroup> likedClasses = member.getChildCareGroupProperties().getLikedGroups();
 
         ChildCareGroup childCareGroup1 = likedClasses.stream()
                         .filter(likedClass -> childCareGroup.getTitle().equals(likedClass.getTitle()))

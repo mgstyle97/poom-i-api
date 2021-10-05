@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ChildCareExpertApplyRequest {
+public class ChildCareExpertApplyModifiedRequest {
 
     private String contents;
 

@@ -54,7 +54,7 @@ public class Child {
             name = "expert_id",
             referencedColumnName = "id"
     )
-    private ChildCareExpert childCareExpert;
+    private ChildCareExpert caredExpertContent;
 
     @Override
     public int hashCode() {
@@ -80,6 +80,14 @@ public class Child {
                 .specialNote(childAddRequest.getSpecialNote())
                 .parent(parent)
                 .build();
+    }
+
+    public void designateExpertContent(final ChildCareExpert childCareExpert) {
+        this.caredExpertContent = childCareExpert;
+    }
+
+    public void removeExpertContent(final ChildCareExpert childCareExpert) {
+        this.caredExpertContent = null;
     }
 
 }
