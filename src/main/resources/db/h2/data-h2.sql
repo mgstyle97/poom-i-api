@@ -35,8 +35,6 @@ VALUES (2, '지수', '2002-09-03', '월평초등학교', null, 3);
 INSERT INTO child(id, name, birthday, school, special_note, member_id)
 VALUES (3, '민정', '2005-05-10', '갈마초등학교', null, 1);
 
-
-
 -- INSERT INTO address_tag
 -- VALUES (1, '한밭아파트'),
 --        (2, '오투 그란데'),

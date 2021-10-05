@@ -1,13 +1,13 @@
 package io.wisoft.poomi.service.child_care.expert;
 
-import io.wisoft.poomi.domain.child_care.expert.RecruitType;
 import io.wisoft.poomi.domain.child_care.expert.apply.ChildCareExpertApply;
 import io.wisoft.poomi.domain.child_care.expert.apply.ChildCareExpertApplyRepository;
 import io.wisoft.poomi.domain.member.MemberRepository;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.domain.member.child.ChildRepository;
-import io.wisoft.poomi.global.aop.childminder.NoAccessCheck;
+import io.wisoft.poomi.global.aop.child_care.NoAccessCheck;
+import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertApplyModifiedRequest;
 import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertApplyRequest;
 import io.wisoft.poomi.global.dto.response.child_care.expert.ChildCareExpertApplyLookupResponse;
 import io.wisoft.poomi.global.dto.response.child_care.expert.ChildCareExpertLookupResponse;
@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -60,7 +61,7 @@ public class ChildCareExpertService {
                 childCareExpertRegisterRequest.getEndTime()
         );
 
-        Child child = checkChildId(member, childCareExpertRegisterRequest);
+        Child child = checkChildId(member, Optional.ofNullable(childCareExpertRegisterRequest.getChildId()));
 
         ChildCareExpert childCareExpert = ChildCareExpert.of(childCareExpertRegisterRequest, member, child);
         log.info("Generate child care expert entity");
@@ -85,7 +86,8 @@ public class ChildCareExpertService {
             final Member member) {
 
         checkExpertActivityTime(
-                childCareExpertModifiedRequest.getStartTime(), childCareExpertModifiedRequest.getEndTime()
+                childCareExpertModifiedRequest.getStartTime(),
+                childCareExpertModifiedRequest.getEndTime()
         );
 
         ChildCareExpert childCareExpert = generateChildCareExpertById(expertId);
@@ -113,20 +115,22 @@ public class ChildCareExpertService {
         childCareExpert.isAlreadyApplier(member);
         log.info("Check member to make a request id: {}", member.getId());
 
-        ChildCareExpertApply application =
-                ChildCareExpertApply.of(childCareExpertApplyRequest, childCareExpert, member);
-        log.info("Generate child care expert application through request");
+        Child child = checkChildId(member, Optional.ofNullable(childCareExpertApplyRequest.getChildId()));
 
-        childCareExpertApplyRepository.save(application);
-        log.info("Save child care expert application id: {}", application.getId());
+        ChildCareExpertApply expertApply =
+                ChildCareExpertApply.of(childCareExpertApplyRequest, childCareExpert, member, child);
+        log.info("Generate child care expert apply through request");
 
-        member.addApplication(application);
+        childCareExpertApplyRepository.save(expertApply);
+        log.info("Save child care expert apply id: {}", expertApply.getId());
+
+        member.addExpertApply(expertApply);
         memberRepository.save(member);
-        log.info("Add application to member entity and update member");
+        log.info("Add apply to member entity and update member");
 
-        childCareExpert.addApplication(application);
+        childCareExpert.addApplication(expertApply);
         childCareExpertRepository.save(childCareExpert);
-        log.info("Add application to urgent entity and update child care expert");
+        log.info("Add application to expert entity and update child care expert");
     }
 
     @Transactional(readOnly = true)
@@ -142,6 +146,31 @@ public class ChildCareExpertService {
     }
 
     @Transactional
+    public void modifiedChildCareExpertApply(final Long expertId, final Long applyId,
+                                             final Member member,
+                                             final ChildCareExpertApplyModifiedRequest applyModifiedRequest) {
+        ChildCareExpert childCareExpert = generateChildCareExpertById(expertId);
+        ChildCareExpertApply expertApply = checkApplyIncludedInExpert(childCareExpert, applyId);
+
+        validateWriterOfApply(expertApply, member);
+
+        Child child = checkChildId(member, Optional.ofNullable(applyModifiedRequest.getChildId()));
+        expertApply.modifiedByRequest(applyModifiedRequest.getContents(), child);
+        childCareExpertApplyRepository.save(expertApply);
+    }
+
+    @Transactional
+    public void removeChildCareExpertApply(final Long expertId, final Long applyId,
+                                           final Member member) {
+        ChildCareExpert childCareExpert = generateChildCareExpertById(expertId);
+        ChildCareExpertApply expertApply = checkApplyIncludedInExpert(childCareExpert, applyId);
+
+        validateWriterOfApply(expertApply, member);
+
+        deleteChildCareExpertApply(childCareExpert, expertApply);
+    }
+
+    @Transactional
     public void likeChildCareExpert(final Long expertId, final Member member) {
         ChildCareExpert childCareExpert = generateChildCareExpertById(expertId);
 
@@ -149,17 +178,29 @@ public class ChildCareExpertService {
         memberRepository.save(member);
     }
 
+    @Transactional
+    public void approveExpertApply(final Long expertId, final Long applyId, final Member member) {
+        ChildCareExpert childCareExpert = generateChildCareExpertById(expertId);
+        childCareExpert.validateWriter(member);
+        log.info("Check expert writer");
+
+        ChildCareExpertApply expertApply = childCareExpertApplyRepository.getById(applyId);
+        childCareExpert.checkApplyIncluded(expertApply);
+
+        childCareExpert.approveApply(expertApply);
+    }
+
     private Child checkChildId(
             final Member member,
-            final ChildCareExpertRegisterRequest childCareExpertRegisterRequest) {
-        if (childCareExpertRegisterRequest.getRecruitType().equals(RecruitType.VOLUNTEER)) {
-            return null;
+            final Optional<Long> optionalChildId) {
+        if (optionalChildId.isPresent()) {
+            Child child = childRepository.getById(optionalChildId.get());
+            member.checkChildInChildren(child);
+
+            return child;
         }
 
-        Child child = childRepository.getById(childCareExpertRegisterRequest.getChildId());
-        member.checkChildInChildren(child);
-
-        return child;
+        return null;
     }
 
     private ChildCareExpert generateChildCareExpertById(final Long expertId) {
@@ -188,9 +229,32 @@ public class ChildCareExpertService {
     private void deleteChildCareExpert(final ChildCareExpert childCareExpert,
                                        final Member member) {
         childCareExpert.resetAssociated();
-        member.removeWrittenExpert(childCareExpert);
+        member.removeWrittenExpertContent(childCareExpert);
         childCareExpertApplyRepository.deleteAll(childCareExpert.getApplications());
         childCareExpertRepository.delete(childCareExpert);
+        log.info("Delete child care expert content id: {}", childCareExpert.getId());
+    }
+
+    private ChildCareExpertApply checkApplyIncludedInExpert(final ChildCareExpert childCareExpert, final Long applyId) {
+        ChildCareExpertApply expertApply = childCareExpertApplyRepository.getById(applyId);
+        childCareExpert.checkApplyIncluded(expertApply);
+        log.info("Check apply is included in expert");
+
+        return expertApply;
+    }
+
+    private void validateWriterOfApply(final ChildCareExpertApply expertApply, final Member member) {
+        expertApply.checkWriter(member);
+        log.info("Check apply writer");
+    }
+
+
+    private void deleteChildCareExpertApply(final ChildCareExpert childCareExpert,
+                                            final ChildCareExpertApply expertApply) {
+        childCareExpert.removeApply(expertApply);
+        expertApply.reset();
+        childCareExpertApplyRepository.delete(expertApply);
+        log.info("Delete child care expert apply id: {}", expertApply.getId());
     }
 
 }

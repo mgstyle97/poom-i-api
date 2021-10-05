@@ -60,6 +60,9 @@ public class Member {
     @Column(name = "age")
     private Integer age;
 
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+
     @Column(name = "score")
     private Integer score;
 
@@ -94,7 +97,7 @@ public class Member {
             fetch = FetchType.LAZY,
             mappedBy = "writer"
     )
-    private Set<ChildCareExpert> writtenExperts;
+    private Set<ChildCareExpert> writtenExpertContents;
 
     @OneToMany(
             fetch = FetchType.LAZY,
@@ -106,7 +109,10 @@ public class Member {
             fetch = FetchType.LAZY,
             mappedBy = "likes"
     )
-    private Set<ChildCareExpert> likedExpert;
+    private Set<ChildCareExpert> likedExpertContents;
+
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "manager")
+    private ChildCareExpert managedExpertContent;
 
     @Override
     public int hashCode() {
@@ -116,7 +122,8 @@ public class Member {
     @Builder
     public Member(final String name, final String phoneNumber,
                   final String email, final String password,
-                  final String nick, final Integer age, final Gender gender,
+                  final String nick, final Integer age, final String profileImageUrl,
+                  final Gender gender,
                   final Set<Authority> authorities,
                   final Address address) {
         this.name = name;
@@ -125,6 +132,7 @@ public class Member {
         this.password = password;
         this.nick = nick;
         this.age = age;
+        this.profileImageUrl = profileImageUrl;
         this.score = 0;
         this.scoreProviderCount = 0;
         this.gender = gender;
@@ -132,9 +140,9 @@ public class Member {
         this.address = address;
         this.children = new HashSet<>();
         this.childCareGroupProperties = new ChildCareGroupProperties();
-        this.writtenExperts = new HashSet<>();
+        this.writtenExpertContents = new HashSet<>();
         this.expertApplies = new HashSet<>();
-        this.likedExpert = new HashSet<>();
+        this.likedExpertContents = new HashSet<>();
     }
 
     public static Member of(final SignupRequest signupRequest,
@@ -204,53 +212,57 @@ public class Member {
     }
 
     public void addGroup(final ChildCareGroup childCareGroup) {
-        Set<ChildCareGroup> writtenGroup = this.childCareGroupProperties.getWrittenGroup();
+        Set<ChildCareGroup> writtenGroup = this.childCareGroupProperties.getWrittenGroups();
         writtenGroup.add(childCareGroup);
     }
 
     public void removeWrittenGroup(final ChildCareGroup childCareGroup) {
-        this.childCareGroupProperties.getWrittenGroup().remove(childCareGroup);
+        this.childCareGroupProperties.getWrittenGroups().remove(childCareGroup);
     }
 
     public void removeLikedGroup(final ChildCareGroup childCareGroup) {
-        this.childCareGroupProperties.getLikedGroup().remove(childCareGroup);
+        this.childCareGroupProperties.getLikedGroups().remove(childCareGroup);
     }
 
     public void removeAppliedGroup(final ChildCareGroup childCareGroup) {
-        this.childCareGroupProperties.getAppliedGroup().remove(childCareGroup);
+        this.childCareGroupProperties.getAppliedGroups().remove(childCareGroup);
     }
 
     public void addAppliedGroup(final ChildCareGroup childCareGroup) {
-        Set<ChildCareGroup> appliedGroup = this.childCareGroupProperties.getAppliedGroup();
+        Set<ChildCareGroup> appliedGroup = this.childCareGroupProperties.getAppliedGroups();
         appliedGroup.add(childCareGroup);
     }
 
     public void addLikedGroup(final ChildCareGroup childCareGroup) {
-        Set<ChildCareGroup> likedGroup = this.childCareGroupProperties.getLikedGroup();
+        Set<ChildCareGroup> likedGroup = this.childCareGroupProperties.getLikedGroups();
         likedGroup.add(childCareGroup);
     }
 
-    public void addExpert(final ChildCareExpert childCareExpert) {
-        this.writtenExperts.add(childCareExpert);
+    public void addWrittenExpertContent(final ChildCareExpert expertContent) {
+        this.writtenExpertContents.add(expertContent);
     }
 
-    public void addApplication(final ChildCareExpertApply application) {
-        this.expertApplies.add(application);
+    public void manageOfExpertContent(final ChildCareExpert expertContent) {
+        this.managedExpertContent = expertContent;
     }
 
-    public void addLikedExpert(final ChildCareExpert childCareExpert) {
-        this.likedExpert.add(childCareExpert);
+    public void addExpertApply(final ChildCareExpertApply expertApply) {
+        this.expertApplies.add(expertApply);
     }
 
-    public void removeLikedExpert(final ChildCareExpert childCareExpert) {
-        this.likedExpert.remove(childCareExpert);
+    public void addLikedExpertContent(final ChildCareExpert expertContent) {
+        this.likedExpertContents.add(expertContent);
     }
 
-    public void removeApplication(final ChildCareExpertApply application) {
-        this.expertApplies.remove(application);
+    public void removeLikedExpertContent(final ChildCareExpert expertContent) {
+        this.likedExpertContents.remove(expertContent);
     }
 
-    public void removeWrittenExpert(final ChildCareExpert childCareExpert) {
-        this.writtenExperts.remove(childCareExpert);
+    public void removeExpertApply(final ChildCareExpertApply expertApply) {
+        this.expertApplies.remove(expertApply);
+    }
+
+    public void removeWrittenExpertContent(final ChildCareExpert expertContent) {
+        this.writtenExpertContents.remove(expertContent);
     }
 }

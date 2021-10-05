@@ -2,6 +2,7 @@ package io.wisoft.poomi.global.dto.response.child_care.group;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.wisoft.poomi.domain.child_care.RecruitmentStatus;
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
 import io.wisoft.poomi.domain.child_care.group.comment.Comment;
 import lombok.Builder;
@@ -27,8 +28,8 @@ public class ChildCareGroupSinglePageResponse {
 
     private String writer;
 
-    @JsonProperty("is_recruit")
-    private Boolean isRecruit;
+    @JsonProperty("recruitment_status")
+    private RecruitmentStatus recruitmentStatus;
 
     @JsonProperty("image_uris")
     private List<String> imageUris;
@@ -42,13 +43,13 @@ public class ChildCareGroupSinglePageResponse {
     @Builder
     private ChildCareGroupSinglePageResponse(final Long classId,
                                              final String title, final String contents, final String writer,
-                                             final Boolean isRecruit, final List<String> imageUris,
+                                             final RecruitmentStatus recruitmentStatus, final List<String> imageUris,
                                              final List<CommentSinglePageDto> comments) {
         this.classId = classId;
         this.title = title;
         this.contents = contents;
         this.writer = writer;
-        this.isRecruit = isRecruit;
+        this.recruitmentStatus = recruitmentStatus;
         this.imageUris = imageUris;
         this.comments = comments;
         this.requestedAt = new Date();
@@ -60,7 +61,7 @@ public class ChildCareGroupSinglePageResponse {
                 .title(childCareGroup.getTitle())
                 .contents(childCareGroup.getContents())
                 .writer(childCareGroup.getWriter().getName())
-                .isRecruit(childCareGroup.getIsRecruit())
+                .recruitmentStatus(childCareGroup.getRecruitmentStatus())
                 .imageUris(childCareGroup.getImages()
                         .stream()
                         .map(image -> domainInfo + "/api/image/" + image.getImageName())

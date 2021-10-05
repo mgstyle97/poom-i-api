@@ -63,6 +63,7 @@ CREATE TABLE member(
     nick varchar unique,
     gender varchar not null,
     age integer not null,
+    profile_image_url varchar,
     score integer not null default 0,
     score_provider_count integer not null default 0,
     address_id integer,
@@ -83,10 +84,10 @@ CREATE TABLE child_care_group(
     capacity bigint,
     created_at date,
     modified_at date,
-    is_recruit boolean default false,
-    member_id integer not null,
+    recruitment_status varchar,
+    writer_id integer not null,
     address_tag_id integer not null,
-    foreign key (member_id) references member(id),
+    foreign key (writer_id) references member(id),
     foreign key (address_tag_id) references address_tag(id)
 );
 
@@ -106,10 +107,13 @@ CREATE TABLE group_likes(
 
 CREATE TABLE comment(
     id integer primary key,
+    contents CLOB not null,
+    created_at date,
+    modified_at date,
     group_id integer not null,
-    member_id integer not null,
+    writer_id integer not null,
     foreign key(group_id) references child_care_group(id),
-    foreign key(member_id) references member(id)
+    foreign key(writer_id) references member(id)
 );
 
 CREATE TABLE image(
@@ -128,28 +132,15 @@ CREATE TABLE child_care_expert(
     recruit_type varchar not null,
     created_at date,
     modified_at date,
+    recruitment_status varchar,
     start_time timestamp not null,
     end_time timestamp not null,
-    member_id integer not null,
+    writer_id integer not null,
+    manager_id integer,
     address_tag_id integer not null,
-    foreign key(member_id) references member(id),
+    foreign key(writer_id) references member(id),
+    foreign key(manager_id) references member(id),
     foreign key(address_tag_id) references address_tag(id)
-);
-
-CREATE TABLE expert_apply(
-    id integer primary key,
-    contents varchar not null,
-    member_id integer not null,
-    expert_id integer not null,
-    foreign key(member_id) references member(id),
-    foreign key(expert_id) references child_care_expert(id)
-);
-
-CREATE TABLE expert_likes(
-    member_id integer not null,
-    expert_id integer not null,
-    foreign key(member_id) references member(id),
-    foreign key(expert_id) references child_care_expert(id)
 );
 
 CREATE TABLE child(
@@ -160,6 +151,24 @@ CREATE TABLE child(
     special_note varchar,
     member_id integer not null,
     expert_id integer,
+    foreign key(member_id) references member(id),
+    foreign key(expert_id) references child_care_expert(id)
+);
+
+CREATE TABLE expert_apply(
+    id integer primary key,
+    contents varchar not null,
+    member_id integer not null,
+    child_id integer,
+    expert_id integer not null,
+    foreign key(member_id) references member(id),
+    foreign key(child_id) references child(id),
+    foreign key(expert_id) references child_care_expert(id)
+);
+
+CREATE TABLE expert_likes(
+    member_id integer not null,
+    expert_id integer not null,
     foreign key(member_id) references member(id),
     foreign key(expert_id) references child_care_expert(id)
 );

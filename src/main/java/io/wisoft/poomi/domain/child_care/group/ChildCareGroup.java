@@ -1,5 +1,6 @@
 package io.wisoft.poomi.domain.child_care.group;
 
+import io.wisoft.poomi.domain.child_care.RecruitmentStatus;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupModifiedRequest;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupRegisterRequest;
 import io.wisoft.poomi.domain.member.Member;
@@ -47,9 +48,6 @@ public class ChildCareGroup extends BaseChildCareEntity {
     @Column(name = "capacity")
     private Long capacity;
 
-    @Column(name = "is_recruit")
-    private Boolean isRecruit;
-
     @OneToMany(mappedBy = "childCareGroup")
     private Set<Image> images;
 
@@ -78,17 +76,16 @@ public class ChildCareGroup extends BaseChildCareEntity {
     @Builder
     public ChildCareGroup(final String title, final String contents,
                           final Long capacity,
-                          final Boolean isRecruit, final Member writer) {
+                          final Member writer,
+                          final RecruitmentStatus recruitmentStatus) {
+        super(writer, writer.getAddressTag(), recruitmentStatus);
         this.title = title;
         this.contents = contents;
         this.capacity = capacity;
-        this.isRecruit = isRecruit;
         this.images = new HashSet<>();
         this.appliers = new HashSet<>();
         this.likes = new HashSet<>();
         this.comments = new HashSet<>();
-        setWriter(writer);
-        setAddressTag(writer.getAddressTag());
     }
 
     public static ChildCareGroup of(final Member member,
@@ -97,7 +94,7 @@ public class ChildCareGroup extends BaseChildCareEntity {
                 .title(childCareGroupRegisterRequest.getTitle())
                 .contents(childCareGroupRegisterRequest.getContents())
                 .capacity(childCareGroupRegisterRequest.getCapacity())
-                .isRecruit(childCareGroupRegisterRequest.getIsRecruit())
+                .recruitmentStatus(childCareGroupRegisterRequest.getRecruitmentStatus())
                 .writer(member)
                 .build();
         member.addGroup(childCareGroup);
@@ -125,8 +122,8 @@ public class ChildCareGroup extends BaseChildCareEntity {
 
     public void modifiedFor(final ChildCareGroupModifiedRequest childCareGroupModifiedRequest) {
         changeContents(childCareGroupModifiedRequest.getContents());
-        changeIsRecruit(childCareGroupModifiedRequest.getIsRecruit());
         changeCapacity(childCareGroupModifiedRequest.getCapacity());
+        super.changeRecruitmentStatus(childCareGroupModifiedRequest.getRecruitmentStatus());
     }
 
     public void resetAssociated() {
@@ -146,13 +143,6 @@ public class ChildCareGroup extends BaseChildCareEntity {
             return;
         }
         this.contents = newContents;
-    }
-
-    private void changeIsRecruit(final Boolean isRecruit) {
-        if (isRecruit == null) {
-            return;
-        }
-        this.isRecruit = isRecruit;
     }
 
     private void changeCapacity(final Long capacity) {

@@ -2,12 +2,16 @@ package io.wisoft.poomi.domain.child_care.expert.apply;
 
 import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
 import io.wisoft.poomi.domain.member.Member;
+import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertApplyRequest;
+import io.wisoft.poomi.global.exception.exceptions.NoPermissionOfContentException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
+import java.util.Optional;
 
 @Getter
 @NoArgsConstructor
@@ -38,6 +42,13 @@ public class ChildCareExpertApply {
     )
     private Member writer;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "child_id",
+            referencedColumnName = "id"
+    )
+    private Child child;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "expert_id",
@@ -52,27 +63,52 @@ public class ChildCareExpertApply {
 
     @Builder
     private ChildCareExpertApply(final String contents,
-                                 final Member writer,
+                                 final Member writer, final Child child,
                                  final ChildCareExpert childCareExpert) {
         this.contents = contents;
         this.writer = writer;
+        this.child = child;
         this.childCareExpert = childCareExpert;
     }
 
     public static ChildCareExpertApply of(final ChildCareExpertApplyRequest childCareExpertApplyRequest,
                                           final ChildCareExpert childCareExpert,
-                                          final Member member) {
-        ChildCareExpertApply application = ChildCareExpertApply.builder()
+                                          final Member member, final Child child) {
+        ChildCareExpertApply expertApply = ChildCareExpertApply.builder()
                 .contents(childCareExpertApplyRequest.getContents())
                 .writer(member)
+                .child(child)
                 .childCareExpert(childCareExpert)
                 .build();
 
-        return application;
+        return expertApply;
+    }
+
+    public void checkWriter(final Member member) {
+        if (!this.writer.equals(member)) {
+            throw new NoPermissionOfContentException();
+        }
+    }
+
+    public void modifiedByRequest(final String contents, Child child) {
+        changeContents(contents);
+        changeChild(Optional.ofNullable(child));
     }
 
     public void reset() {
-        this.writer.removeApplication(this);
+        this.writer.removeExpertApply(this);
+    }
+
+    private void changeContents(final String contents) {
+        if (StringUtils.hasText(contents) && !this.contents.equals(contents)) {
+            this.contents = contents;
+        }
+    }
+
+    private void changeChild(final Optional<Child> optionalChild) {
+        optionalChild.ifPresent(child -> {
+            this.child = child;
+        });
     }
 
 }
