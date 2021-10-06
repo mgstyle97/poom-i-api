@@ -8,10 +8,12 @@ import io.wisoft.poomi.global.dto.request.member.SigninRequest;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
 import io.wisoft.poomi.configures.web.resolver.SignInMember;
 import io.wisoft.poomi.domain.member.Member;
+import io.wisoft.poomi.global.dto.response.oauth.OAuthUserResultResponse;
 import io.wisoft.poomi.service.member.MemberService;
 import io.wisoft.poomi.service.oauth2.OAuth2Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -62,12 +64,29 @@ public class MemberController {
     }
 
     @GetMapping("/oauth2/{social}")
-    public ApiResponse<OAuthUserPropertiesResponse> oauthCodeToUserInfo(
+    public ApiResponse<OAuthUserResultResponse> oauthCodeToUserInfo(
             @PathVariable("social")@Valid final Social social,
             @RequestParam("code") @Valid final String code) {
+
+        OAuthUserResultResponse userResultResponse = oAuth2Service.getUserProperties(social, code);
+
+        return generateApiResponseHasAccessToken(userResultResponse);
+    }
+
+    private ApiResponse<OAuthUserResultResponse> generateApiResponseHasAccessToken(final OAuthUserResultResponse userResultResponse) {
+        if (StringUtils.hasText(userResultResponse.getAccessToken())) {
+            userResultResponse.setAccessToken(null);
+
+            return ApiResponse.succeedWithAccessToken(
+                    HttpStatus.OK,
+                    userResultResponse,
+                    userResultResponse.getAccessToken()
+            );
+        }
+
         return ApiResponse.succeed(
                 HttpStatus.OK,
-                oAuth2Service.getUserProperties(social, code)
+                userResultResponse
         );
     }
 

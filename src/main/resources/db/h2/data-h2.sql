@@ -1,6 +1,7 @@
 INSERT INTO authority
 VALUES (1, 'ROLE_USER'),
-       (2, 'ROLE_ADMIN');
+       (2, 'ROLE_ADMIN'),
+       (3, 'ROLE_ANONYMOUS');
 
 INSERT INTO address_tag(id, extra_address)
 VALUES (1, '월평동');
