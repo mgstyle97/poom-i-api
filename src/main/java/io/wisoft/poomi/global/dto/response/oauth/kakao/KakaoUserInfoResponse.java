@@ -38,6 +38,9 @@ public class KakaoUserInfoResponse {
         @JsonProperty("profile_nickname_needs_agreement")
         private Boolean profileNicknameNeedsAgreement;
 
+        @JsonProperty("profile_image_needs_agreement")
+        private Boolean profileImageNeedsAgreement;
+
         @JsonProperty("profile")
         private Profile profile;
 
@@ -59,7 +62,17 @@ public class KakaoUserInfoResponse {
         @Getter
         @Setter
         public static class Profile {
+
             private String nickname;
+
+            @JsonProperty("thumbnail_image_url")
+            private String thumbnailImageUrl;
+
+            @JsonProperty("profile_image_url")
+            private String profileImageUrl;
+
+            @JsonProperty("is_default_image")
+            private Boolean isDefaultImage;
         }
     }
 
