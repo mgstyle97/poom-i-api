@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS image CASCADE;
 DROP TABLE IF EXISTS child_care_expert CASCADE;
 DROP TABLE IF EXISTS expert_apply CASCADE;
 DROP TABLE IF EXISTS expert_likes CASCADE;
+DROP TABLE IF EXISTS profile_image CASCADE;
 
 
 CREATE TABLE sms_certification(
@@ -27,6 +28,12 @@ CREATE TABLE email_certification(
     id integer primary key,
     email varchar not null,
     certification_number varchar not null
+);
+
+CREATE TABLE profile_image(
+    id integer primary key,
+    email varchar not null,
+    profile_image_url varchar not null
 );
 
 CREATE TABLE refresh_token (

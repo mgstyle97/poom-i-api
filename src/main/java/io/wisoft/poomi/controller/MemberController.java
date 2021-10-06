@@ -47,6 +47,13 @@ public class MemberController {
         return ApiResponse.succeed(HttpStatus.OK, MyPageResponse.of(member));
     }
 
+    @PostMapping("/member/profile-image")
+    public void registProfileImage(
+            @RequestPart("profile") final MultipartFile profileImage,
+            @SignInMember final Member member) {
+
+    }
+
     @GetMapping("/oauth2/success")
     public ApiResponse<SigninResponse> oauthSignin(final HttpServletRequest request) {
         SigninResponse dto = (SigninResponse) request.getAttribute("signin-dto");

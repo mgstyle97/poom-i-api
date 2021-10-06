@@ -45,6 +45,11 @@ public class NaverManager extends OAuth2Manager {
     protected OAuthUserPropertiesResponse stringToUserProperties(String userInfo) throws JsonProcessingException {
         NaverUserInfoResponse userInfoResponse = objectMapper.readValue(userInfo, NaverUserInfoResponse.class);
 
+        saveProfileImage(
+                userInfoResponse.getResponse().getEmail(),
+                userInfoResponse.getResponse().getProfileImage()
+        );
+
         return OAuthUserPropertiesResponse
                 .of(userInfoResponse.getResponse().getName(), userInfoResponse.getResponse().getEmail());
     }

@@ -2,9 +2,12 @@ package io.wisoft.poomi.global.oauth2.manager;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.wisoft.poomi.domain.member.profile_image.ProfileImage;
+import io.wisoft.poomi.domain.member.profile_image.ProfileImageRepository;
 import io.wisoft.poomi.global.dto.response.oauth.OAuthUserPropertiesResponse;
 import io.wisoft.poomi.global.oauth2.properties.oauth2.OAuth2Property;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -17,6 +20,9 @@ public abstract class OAuth2Manager {
 
     protected final ObjectMapper objectMapper;
     private final RestTemplate restTemplate;
+
+    @Autowired
+    private ProfileImageRepository profileImageRepository;
 
     protected OAuth2Manager() {
         this.objectMapper = new ObjectMapper();
@@ -58,6 +64,15 @@ public abstract class OAuth2Manager {
         headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
 
         return headers;
+    }
+
+    protected void saveProfileImage(final String email, String profileImageUrl) {
+        ProfileImage profileImage = ProfileImage.builder()
+                .email(email)
+                .profileImageUrl(profileImageUrl)
+                .build();
+
+        profileImageRepository.save(profileImage);
     }
 
     protected abstract MultiValueMap<String, String> getParams(final String code);

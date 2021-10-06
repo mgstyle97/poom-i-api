@@ -73,6 +73,7 @@ public class KakaoUserInfoResponse {
 
             @JsonProperty("is_default_image")
             private Boolean isDefaultImage;
+
         }
     }
 
