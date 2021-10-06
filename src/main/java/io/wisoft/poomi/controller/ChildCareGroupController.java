@@ -1,5 +1,6 @@
 package io.wisoft.poomi.controller;
 
+import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupApplyRequest;
 import io.wisoft.poomi.global.dto.response.ApiResponse;
 import io.wisoft.poomi.global.dto.response.child_care.group.*;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupModifiedRequest;
@@ -79,8 +80,11 @@ public class ChildCareGroupController {
     }
 
     @PostMapping("/{group-id}/apply")
-    public void applyChildCareGroup(@PathVariable("group-id") final Long groupId, @SignInMember final Member member) {
-        childCareGroupService.applyChildCareGroup(groupId, member);
+    public void applyChildCareGroup(
+            @PathVariable("group-id") final Long groupId,
+            @RequestBody @Valid final ChildCareGroupApplyRequest applyRequest,
+            @SignInMember final Member member) {
+        childCareGroupService.applyChildCareGroup(groupId, member, applyRequest);
     }
 
     @PostMapping("/{group-id}/like")

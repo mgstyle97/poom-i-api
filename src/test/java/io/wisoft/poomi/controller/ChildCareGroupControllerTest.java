@@ -3,6 +3,7 @@ package io.wisoft.poomi.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
+import io.wisoft.poomi.domain.child_care.RecruitmentStatus;
 import io.wisoft.poomi.domain.member.Gender;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.MemberRepository;
@@ -89,7 +90,7 @@ class ChildCareGroupControllerTest {
                 .title("테스트")
                 .contents("테스트입니다.")
                 .capacity(15L)
-                .isRecruit(false)
+                .recruitmentStatus(RecruitmentStatus.RECRUITING)
                 .writer(member)
                 .build();
 
@@ -97,7 +98,7 @@ class ChildCareGroupControllerTest {
                 .title("테스트2")
                 .contents("테스트2입니다.")
                 .capacity(12L)
-                .isRecruit(false)
+                .recruitmentStatus(RecruitmentStatus.RECRUITING)
                 .writer(member)
                 .build();
         childCareGroupRepository.saveAll(List.of(childCareGroup, childCareGroup2));

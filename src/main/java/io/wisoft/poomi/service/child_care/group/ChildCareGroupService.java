@@ -1,6 +1,7 @@
 package io.wisoft.poomi.service.child_care.group;
 
 import io.wisoft.poomi.global.aop.child_care.NoAccessCheck;
+import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupApplyRequest;
 import io.wisoft.poomi.global.dto.response.child_care.group.*;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupModifiedRequest;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupRegisterRequest;
@@ -97,7 +98,8 @@ public class ChildCareGroupService {
     }
 
     @Transactional
-    public void applyChildCareGroup(final Long groupId, final Member member) {
+    public void applyChildCareGroup(final Long groupId, final Member member,
+                                    final ChildCareGroupApplyRequest applyRequest) {
         ChildCareGroup childCareGroup = generateChildCareGroupById(groupId);
 
         childCareGroup.addApplier(member);
