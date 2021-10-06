@@ -91,13 +91,6 @@ CREATE TABLE child_care_group(
     foreign key (address_tag_id) references address_tag(id)
 );
 
-CREATE TABLE group_apply(
-    group_id integer not null,
-    member_id integer not null,
-    foreign key(group_id) references child_care_group(id),
-    foreign key(member_id) references member(id)
-);
-
 CREATE TABLE group_likes(
     group_id integer not null,
     member_id integer not null,
@@ -158,10 +151,10 @@ CREATE TABLE child(
 CREATE TABLE expert_apply(
     id integer primary key,
     contents varchar not null,
-    member_id integer not null,
+    writer_id integer not null,
     child_id integer,
     expert_id integer not null,
-    foreign key(member_id) references member(id),
+    foreign key(writer_id) references member(id),
     foreign key(child_id) references child(id),
     foreign key(expert_id) references child_care_expert(id)
 );
@@ -171,4 +164,15 @@ CREATE TABLE expert_likes(
     expert_id integer not null,
     foreign key(member_id) references member(id),
     foreign key(expert_id) references child_care_expert(id)
+);
+
+CREATE TABLE group_apply(
+    id integer primary key,
+    contents varchar not null,
+    writer_id integer not null,
+    child_id integer,
+    group_id integer not null,
+    foreign key(writer_id) references member(id),
+    foreign key(child_id) references child(id),
+    foreign key(group_id) references child_care_group(id)
 );

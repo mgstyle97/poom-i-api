@@ -1,5 +1,6 @@
 package io.wisoft.poomi.domain.child_care.group;
 
+import io.wisoft.poomi.domain.child_care.RecruitmentStatus;
 import io.wisoft.poomi.domain.member.Gender;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.MemberRepository;
@@ -83,7 +84,7 @@ class ChildCareGroupRepositoryTest {
                         .title("테스트")
                         .contents("테스트입니다.")
                         .capacity(15L)
-                        .isRecruit(false)
+                        .recruitmentStatus(RecruitmentStatus.RECRUITING)
                         .writer(member)
                         .build();
 
@@ -94,7 +95,7 @@ class ChildCareGroupRepositoryTest {
                 () -> assertEquals("테스트", childCareGroup.getTitle()),
                 () -> assertEquals("테스트입니다.", childCareGroup.getContents()),
                 () -> assertEquals(15L, childCareGroup.getCapacity()),
-                () -> assertFalse(childCareGroup.getIsRecruit()),
+                () -> assertEquals(childCareGroup.getRecruitmentStatus(), RecruitmentStatus.RECRUITING),
                 () -> assertNotNull(childCareGroup.getCreatedAt())
         );
 
@@ -107,7 +108,7 @@ class ChildCareGroupRepositoryTest {
                 .title("테스트")
                 .contents("테스트입니다.")
                 .capacity(15L)
-                .isRecruit(false)
+                .recruitmentStatus(RecruitmentStatus.RECRUITING)
                 .writer(member)
                 .build();
 

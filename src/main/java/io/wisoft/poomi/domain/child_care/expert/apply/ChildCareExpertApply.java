@@ -37,7 +37,7 @@ public class ChildCareExpertApply {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
-            name = "member_id",
+            name = "writer_id",
             referencedColumnName = "id"
     )
     private Member writer;

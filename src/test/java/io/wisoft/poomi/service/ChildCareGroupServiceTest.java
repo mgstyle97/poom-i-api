@@ -1,5 +1,7 @@
 package io.wisoft.poomi.service;
 
+import io.wisoft.poomi.domain.child_care.RecruitmentStatus;
+import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupApplyRequest;
 import io.wisoft.poomi.global.dto.response.child_care.group.ChildCareGroupLookupResponse;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupRegisterRequest;
 import io.wisoft.poomi.domain.member.Gender;
@@ -79,7 +81,7 @@ class ChildCareGroupServiceTest {
                 .title("테스트")
                 .contents("테스트입니다.")
                 .capacity(15L)
-                .isRecruit(false)
+                .recruitmentStatus(RecruitmentStatus.RECRUITING)
                 .writer(member)
                 .build();
 
@@ -87,7 +89,7 @@ class ChildCareGroupServiceTest {
                 .title("테스트2")
                 .contents("테스트2입니다.")
                 .capacity(12L)
-                .isRecruit(false)
+                .recruitmentStatus(RecruitmentStatus.RECRUITING)
                 .writer(member)
                 .build();
         childCareGroupRepository.saveAll(List.of(childCareGroup, childCareGroup2));
@@ -130,7 +132,11 @@ class ChildCareGroupServiceTest {
     @DisplayName("테스트: 클래스 프로그램 지원")
     @Transactional
     void apply_class_program() {
-        childCareGroupService.applyChildCareGroup(1L, member);
+        // given
+        ChildCareGroupApplyRequest applyRequest = new ChildCareGroupApplyRequest();
+        applyRequest.setContents("잘 부탁드립니다.");
+
+        childCareGroupService.applyChildCareGroup(1L, member, applyRequest);
 
         ChildCareGroup childCareGroup = childCareGroupRepository.getById(1L);
         Set<ChildCareGroup> appliedClasses = member.getChildCareGroupProperties().getAppliedGroups();
