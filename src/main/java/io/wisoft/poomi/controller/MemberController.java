@@ -68,19 +68,20 @@ public class MemberController {
             @PathVariable("social")@Valid final Social social,
             @RequestParam("code") @Valid final String code) {
 
-        OAuthUserResultResponse userResultResponse = oAuth2Service.getUserProperties(social, code);
+        final OAuthUserResultResponse userResultResponse = oAuth2Service.getUserProperties(social, code);
 
         return generateApiResponseHasAccessToken(userResultResponse);
     }
 
     private ApiResponse<OAuthUserResultResponse> generateApiResponseHasAccessToken(final OAuthUserResultResponse userResultResponse) {
         if (StringUtils.hasText(userResultResponse.getAccessToken())) {
+            final String accessToken = userResultResponse.getAccessToken();
             userResultResponse.setAccessToken(null);
 
             return ApiResponse.succeedWithAccessToken(
                     HttpStatus.OK,
                     userResultResponse,
-                    userResultResponse.getAccessToken()
+                    accessToken
             );
         }
 
