@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 @Setter
 public class ChildCareGroupSinglePageResponse {
 
-    @JsonProperty("class_id")
-    private Long classId;
+    @JsonProperty("group_id")
+    private Long groupId;
 
     private String title;
 
@@ -41,11 +41,11 @@ public class ChildCareGroupSinglePageResponse {
     private Date requestedAt;
 
     @Builder
-    private ChildCareGroupSinglePageResponse(final Long classId,
+    private ChildCareGroupSinglePageResponse(final Long groupId,
                                              final String title, final String contents, final String writer,
                                              final RecruitmentStatus recruitmentStatus, final List<String> imageUris,
                                              final List<CommentSinglePageDto> comments) {
-        this.classId = classId;
+        this.groupId = groupId;
         this.title = title;
         this.contents = contents;
         this.writer = writer;
@@ -57,7 +57,7 @@ public class ChildCareGroupSinglePageResponse {
 
     public static ChildCareGroupSinglePageResponse of(final ChildCareGroup childCareGroup, final String domainInfo) {
         return ChildCareGroupSinglePageResponse.builder()
-                .classId(childCareGroup.getId())
+                .groupId(childCareGroup.getId())
                 .title(childCareGroup.getTitle())
                 .contents(childCareGroup.getContents())
                 .writer(childCareGroup.getWriter().getName())

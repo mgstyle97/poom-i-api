@@ -15,8 +15,8 @@ import java.util.Date;
 @Setter
 public class ChildCareExpertLookupResponse {
 
-    @JsonProperty("childminder_urgent_id")
-    private Long childminderUrgentId;
+    @JsonProperty("expert_id")
+    private Long expertId;
 
     private String writer;
 
@@ -49,7 +49,7 @@ public class ChildCareExpertLookupResponse {
 
     @Builder
     private ChildCareExpertLookupResponse(final ChildCareExpert childCareExpert) {
-        this.childminderUrgentId = childCareExpert.getId();
+        this.expertId = childCareExpert.getId();
         this.writer = childCareExpert.getWriter().getNick();
         this.childminderScore = childCareExpert.getWriter().getScore();
         this.likedCount = childCareExpert.getLikes().size();

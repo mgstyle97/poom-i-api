@@ -2,7 +2,8 @@ package io.wisoft.poomi.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
+import io.wisoft.poomi.configures.security.jwt.JWTToken;
+import io.wisoft.poomi.configures.security.jwt.JWTTokenProvider;
 import io.wisoft.poomi.domain.child_care.RecruitmentStatus;
 import io.wisoft.poomi.domain.member.Gender;
 import io.wisoft.poomi.domain.member.Member;
@@ -38,7 +39,7 @@ class ChildCareGroupControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
     @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    private JWTTokenProvider jwtTokenProvider;
     @Autowired
     private AuthorityRepository authorityRepository;
     @Autowired
@@ -51,7 +52,7 @@ class ChildCareGroupControllerTest {
     private ChildCareGroupRepository childCareGroupRepository;
 
     private Member member;
-    private String token;
+    private JWTToken token;
     private HttpHeaders headers;
     private ObjectMapper objectMapper = new ObjectMapper();
 

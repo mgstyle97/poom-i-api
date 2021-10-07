@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class JwtTokenProvider {
+public class JWTTokenProvider {
 
     private static final String AUTHORITIES_KEY = "auth";
 
@@ -32,7 +32,7 @@ public class JwtTokenProvider {
     private final Key key;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey,
+    public JWTTokenProvider(@Value("${jwt.secret}") String secretKey,
                             RefreshTokenRepository refreshTokenRepository) {
         this.refreshTokenRepository = refreshTokenRepository;
         byte[] keyBytes = Base64.getDecoder().decode(secretKey.getBytes());
@@ -41,14 +41,14 @@ public class JwtTokenProvider {
 
     // jwt 토큰 생성
     @Transactional
-    public String generateToken(Authentication authentication) {
+    public JWTToken generateToken(Authentication authentication) {
         String authorities = authentication.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
         long now = (new Date()).getTime();
 
-        String refreshToken = Jwts.builder()
+        final String refreshToken = Jwts.builder()
                 .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -57,12 +57,19 @@ public class JwtTokenProvider {
         refreshTokenRepository.save(refreshTokenEntity);
 
         Date accessTokenExpiredTime = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
-        return Jwts.builder()
+        final String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
                 .setExpiration(accessTokenExpiredTime)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+
+        return JWTToken.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .accessTokenExpiration(getExpirationDateFromToken(accessToken))
+                .refreshTokenExpiration(getExpirationDateFromToken(refreshToken))
+                .build();
     }
 
     public Authentication getAuthentication(String token) {
@@ -70,9 +77,9 @@ public class JwtTokenProvider {
 
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(
-                        claims.get(AUTHORITIES_KEY).toString().split(",")
-                ).map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+                                claims.get(AUTHORITIES_KEY).toString().split(",")
+                        ).map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
 
         return new UsernamePasswordAuthenticationToken(getUsernameFromToken(token), "", authorities);
     }

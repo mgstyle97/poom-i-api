@@ -2,7 +2,7 @@ package io.wisoft.poomi.configures.security;
 
 import io.wisoft.poomi.configures.security.oauth2.CustomOAuth2Service;
 import io.wisoft.poomi.configures.security.jwt.JwtSecurityConfig;
-import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
+import io.wisoft.poomi.configures.security.jwt.JWTTokenProvider;
 import io.wisoft.poomi.configures.security.jwt.JwtAccessDeniedHandler;
 import io.wisoft.poomi.configures.security.jwt.JwtAuthenticationEntryPoint;
 import io.wisoft.poomi.service.member.MemberDetailsService;
@@ -36,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomOAuth2Service customOAuth2Service;
     private final OAuth2AuthenticationSuccessHandler successHandler;
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JWTTokenProvider jwtTokenProvider;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 

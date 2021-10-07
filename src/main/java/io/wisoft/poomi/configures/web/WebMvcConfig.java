@@ -1,6 +1,6 @@
 package io.wisoft.poomi.configures.web;
 
-import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
+import io.wisoft.poomi.configures.security.jwt.JWTTokenProvider;
 import io.wisoft.poomi.configures.web.formatter.StringToSocialConverter;
 import io.wisoft.poomi.configures.web.resolver.SignInMemberHandlerMethodArgumentResolver;
 import io.wisoft.poomi.domain.member.MemberRepository;
@@ -26,7 +26,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final long MAX_AGE_SECS = 3600;
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JWTTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
 
     @Bean

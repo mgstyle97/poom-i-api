@@ -1,12 +1,14 @@
 package io.wisoft.poomi.service.member;
 
+import io.wisoft.poomi.configures.security.jwt.JWTToken;
+import io.wisoft.poomi.domain.member.authority.Authority;
 import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.global.dto.response.member.SignupResponse;
 import io.wisoft.poomi.global.dto.request.member.SigninRequest;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
 import io.wisoft.poomi.global.utils.FileUtils;
 import io.wisoft.poomi.global.exception.exceptions.DuplicateMemberException;
-import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
+import io.wisoft.poomi.configures.security.jwt.JWTTokenProvider;
 import io.wisoft.poomi.domain.member.address.Address;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.member.authority.AuthorityRepository;
@@ -39,8 +41,6 @@ public class MemberService {
     private final AddressRepository addressRepository;
     private final AddressTagRepository addressTagRepository;
     private final ChildRepository childRepository;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Transactional
     public SignupResponse signup(final SignupRequest signupRequest, final List<MultipartFile> images) {
@@ -51,17 +51,6 @@ public class MemberService {
         FileUtils.saveImageWithUserEmail(member.getEmail(), images);
 
         return SignupResponse.of(member);
-    }
-
-    @Transactional(readOnly = true)
-    public String signin(SigninRequest signinRequest) {
-        Member member = memberRepository.getMemberByEmail(signinRequest.getEmail());
-        Authentication authentication = toAuthentication(signinRequest, member.getAuthority());
-
-        String accessToken = jwtTokenProvider.generateToken(authentication);
-        log.info("Generate JWT token: {}", accessToken);
-
-        return accessToken;
     }
 
     private Member saveMember(final SignupRequest signupRequest) {
@@ -101,18 +90,6 @@ public class MemberService {
         if (memberRepository.existsByNick(nick)) {
             throw new DuplicateMemberException("이미 존재하는 닉네임입니다.");
         }
-    }
-
-    private Authentication toAuthentication(final SigninRequest signinRequest,
-                                            final String authority) {
-        Authentication authentication = authenticationManagerBuilder
-                .getObject()
-                .authenticate(signinRequest.toAuthentication(authority));
-
-        log.info("Generate authentication: {}", authentication.getPrincipal());
-        log.info("Authenticate member: {}", signinRequest.getEmail());
-
-        return authentication;
     }
 
 }

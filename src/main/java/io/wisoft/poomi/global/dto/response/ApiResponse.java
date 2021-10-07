@@ -1,6 +1,7 @@
 package io.wisoft.poomi.global.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.wisoft.poomi.configures.security.jwt.JWTToken;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,14 +12,14 @@ public class ApiResponse<T> extends ResponseEntity<T> {
     private final T data;
     private final T error;
 
-    private final String accessToken;
+    private final JWTToken tokenInfo;
 
     public ApiResponse(final HttpStatus httpStatus, final T data, final T error,
-                       final String accessToken) {
-        super((T) Body.of(data, error, accessToken), httpStatus);
+                       final JWTToken tokenInfo) {
+        super((T) Body.of(data, error, tokenInfo), httpStatus);
         this.data = data;
         this.error = error;
-        this.accessToken = accessToken;
+        this.tokenInfo = tokenInfo;
     }
 
     public static <T> ApiResponse<T> succeed(HttpStatus httpStatus, T data) {
@@ -26,7 +27,7 @@ public class ApiResponse<T> extends ResponseEntity<T> {
     }
 
     public static <T> ApiResponse<T> succeedWithAccessToken(final HttpStatus httpStatus, final T data,
-                                                            final String accessToken) {
+                                                            final JWTToken accessToken) {
         return createResponse(httpStatus, data, null, accessToken);
     }
 
@@ -35,7 +36,7 @@ public class ApiResponse<T> extends ResponseEntity<T> {
     }
 
     private static <T> ApiResponse<T> createResponse(final HttpStatus httpStatus, final T data, final T error,
-                                                     final String accessToken) {
+                                                     final JWTToken accessToken) {
         return new ApiResponse<>(httpStatus, data, error, accessToken);
     }
 
@@ -45,17 +46,17 @@ public class ApiResponse<T> extends ResponseEntity<T> {
         private final T data;
         private final T error;
 
-        @JsonProperty("access_token")
-        private final String accessToken;
+        @JsonProperty("token_info")
+        private final JWTToken tokenInfo;
 
-        private Body(final T data, final T error, final String accessToken) {
+        private Body(final T data, final T error, final JWTToken tokenInfo) {
             this.data = data;
             this.error = error;
-            this.accessToken = accessToken;
+            this.tokenInfo = tokenInfo;
         }
 
-        private static <T> Body of(final T data, final T error, final String accessToken) {
-            return new Body(data, error, accessToken);
+        private static <T> Body of(final T data, final T error, final JWTToken tokenInfo) {
+            return new Body(data, error, tokenInfo);
         }
 
     }

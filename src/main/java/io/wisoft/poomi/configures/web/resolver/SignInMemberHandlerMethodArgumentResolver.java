@@ -1,6 +1,6 @@
 package io.wisoft.poomi.configures.web.resolver;
 
-import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
+import io.wisoft.poomi.configures.security.jwt.JWTTokenProvider;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class SignInMemberHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JWTTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
 
     @Override

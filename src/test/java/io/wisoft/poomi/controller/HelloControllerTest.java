@@ -1,6 +1,7 @@
 package io.wisoft.poomi.controller;
 
-import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
+import io.wisoft.poomi.configures.security.jwt.JWTToken;
+import io.wisoft.poomi.configures.security.jwt.JWTTokenProvider;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.MemberRepository;
 import io.wisoft.poomi.domain.member.address.Address;
@@ -36,7 +37,7 @@ class HelloControllerTest {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    private JWTTokenProvider jwtTokenProvider;
 
     @Autowired
     private AuthorityRepository authorityRepository;
@@ -52,7 +53,7 @@ class HelloControllerTest {
 
     private Member member;
 
-    private String token;
+    private JWTToken token;
 
     @BeforeEach
     void setup() {

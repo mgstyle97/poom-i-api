@@ -13,8 +13,8 @@ import java.util.Date;
 @Setter
 public class ChildCareExpertRegisterResponse {
 
-    @JsonProperty("childminder_urgent_id")
-    private Long childminderUrgentId;
+    @JsonProperty("expert_id")
+    private Long expertId;
 
     private String writer;
 
@@ -23,16 +23,16 @@ public class ChildCareExpertRegisterResponse {
     private Date registeredAt;
 
     @Builder
-    private ChildCareExpertRegisterResponse(final Long childminderUrgentId,
+    private ChildCareExpertRegisterResponse(final Long expertId,
                                             final String writer) {
-        this.childminderUrgentId = childminderUrgentId;
+        this.expertId = expertId;
         this.writer = writer;
         this.registeredAt = new Date();
     }
 
     public static ChildCareExpertRegisterResponse of(final ChildCareExpert childCareExpert) {
         return ChildCareExpertRegisterResponse.builder()
-                .childminderUrgentId(childCareExpert.getId())
+                .expertId(childCareExpert.getId())
                 .writer(childCareExpert.getWriter().getNick())
                 .build();
     }

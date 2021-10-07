@@ -15,8 +15,8 @@ import java.util.Date;
 @Setter
 public class ChildCareExpertModifiedResponse {
 
-    @JsonProperty("childminder_urgent_id")
-    private Long childminderUrgentId;
+    @JsonProperty("expert_id")
+    private Long expertId;
 
     private String contents;
 
@@ -36,11 +36,11 @@ public class ChildCareExpertModifiedResponse {
     private Date registeredAt;
 
     @Builder
-    private ChildCareExpertModifiedResponse(final Long childminderUrgentId,
+    private ChildCareExpertModifiedResponse(final Long expertId,
                                             final String contents,
                                             final RecruitType recruitType,
                                             final LocalDateTime startTime, final LocalDateTime endTime) {
-        this.childminderUrgentId = childminderUrgentId;
+        this.expertId = expertId;
         this.contents = contents;
         this.recruitType = recruitType;
         this.startTime = startTime;
@@ -50,7 +50,7 @@ public class ChildCareExpertModifiedResponse {
 
     public static ChildCareExpertModifiedResponse of(final ChildCareExpert childCareExpert) {
         return ChildCareExpertModifiedResponse.builder()
-                .childminderUrgentId(childCareExpert.getId())
+                .expertId(childCareExpert.getId())
                 .contents(childCareExpert.getContents())
                 .recruitType(childCareExpert.getRecruitType())
                 .startTime(childCareExpert.getStartTime())
