@@ -1,8 +1,8 @@
 package io.wisoft.poomi.service.auth;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.wisoft.poomi.configures.security.jwt.JWTToken;
-import io.wisoft.poomi.configures.security.jwt.JWTTokenProvider;
+import io.wisoft.poomi.configures.security.jwt.JwtToken;
+import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.configures.web.formatter.Social;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.MemberRepository;
@@ -21,7 +21,7 @@ import java.util.Optional;
 public class OAuth2Service {
 
     private final MemberRepository memberRepository;
-    private final JWTTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     private final OAuth2ManagerFactory oAuth2ManagerFactory;
 
@@ -36,7 +36,7 @@ public class OAuth2Service {
 
         Optional<Member> optionalMember = memberRepository.findByEmail(userPropertiesResponse.getEmail());
         optionalMember.ifPresent(member -> {
-            final JWTToken tokenInfo = jwtTokenProvider.generateToken(member.toAuthentication());
+            final JwtToken tokenInfo = jwtTokenProvider.generateToken(member.toAuthentication());
             userResultResponse.setTokenInfo(tokenInfo);
         });
 

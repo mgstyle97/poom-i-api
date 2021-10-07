@@ -1,10 +1,9 @@
 package io.wisoft.poomi.controller;
 
-import io.wisoft.poomi.configures.security.jwt.JWTToken;
+import io.wisoft.poomi.configures.security.jwt.JwtToken;
 import io.wisoft.poomi.configures.web.formatter.Social;
 import io.wisoft.poomi.global.dto.response.ApiResponse;
 import io.wisoft.poomi.global.dto.response.member.*;
-import io.wisoft.poomi.global.dto.request.member.SigninRequest;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
 import io.wisoft.poomi.configures.web.resolver.SignInMember;
 import io.wisoft.poomi.domain.member.Member;
@@ -68,7 +67,7 @@ public class MemberController {
 
     private ApiResponse<OAuthUserResultResponse> generateApiResponseHasAccessToken(final OAuthUserResultResponse userResultResponse) {
         if (!ObjectUtils.isEmpty(userResultResponse.getTokenInfo())) {
-            final JWTToken tokenInfo = userResultResponse.getTokenInfo();
+            final JwtToken tokenInfo = userResultResponse.getTokenInfo();
             userResultResponse.setTokenInfo(null);
 
             return ApiResponse.succeedWithAccessToken(

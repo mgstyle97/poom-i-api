@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class JWTTokenProvider {
+public class JwtTokenProvider {
 
     private static final String AUTHORITIES_KEY = "auth";
 
@@ -32,7 +32,7 @@ public class JWTTokenProvider {
     private final Key key;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public JWTTokenProvider(@Value("${jwt.secret}") String secretKey,
+    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey,
                             RefreshTokenRepository refreshTokenRepository) {
         this.refreshTokenRepository = refreshTokenRepository;
         byte[] keyBytes = Base64.getDecoder().decode(secretKey.getBytes());
@@ -41,7 +41,7 @@ public class JWTTokenProvider {
 
     // jwt 토큰 생성
     @Transactional
-    public JWTToken generateToken(Authentication authentication) {
+    public JwtToken generateToken(Authentication authentication) {
         String authorities = authentication.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
@@ -64,7 +64,7 @@ public class JWTTokenProvider {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
-        return JWTToken.builder()
+        return JwtToken.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .accessTokenExpiration(getExpirationDateFromToken(accessToken))

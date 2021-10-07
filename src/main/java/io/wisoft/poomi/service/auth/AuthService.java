@@ -1,7 +1,7 @@
 package io.wisoft.poomi.service.auth;
 
-import io.wisoft.poomi.configures.security.jwt.JWTToken;
-import io.wisoft.poomi.configures.security.jwt.JWTTokenProvider;
+import io.wisoft.poomi.configures.security.jwt.JwtToken;
+import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.MemberRepository;
 import io.wisoft.poomi.global.dto.request.member.SigninRequest;
@@ -16,15 +16,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
     private final MemberRepository memberRepository;
-    private final JWTTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Transactional(readOnly = true)
-    public JWTToken signin(final SigninRequest signinRequest) {
+    public JwtToken signin(final SigninRequest signinRequest) {
         Member member = memberRepository.getMemberByEmail(signinRequest.getEmail());
         Authentication authentication = verifyRequestProperty(signinRequest.toAuthentication(member.getAuthorities()));
 
-        JWTToken tokenInfo = jwtTokenProvider.generateToken(authentication);
+        JwtToken tokenInfo = jwtTokenProvider.generateToken(authentication);
 
         return tokenInfo;
     }

@@ -1,14 +1,10 @@
 package io.wisoft.poomi.service.member;
 
-import io.wisoft.poomi.configures.security.jwt.JWTToken;
-import io.wisoft.poomi.domain.member.authority.Authority;
 import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.global.dto.response.member.SignupResponse;
-import io.wisoft.poomi.global.dto.request.member.SigninRequest;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
 import io.wisoft.poomi.global.utils.FileUtils;
 import io.wisoft.poomi.global.exception.exceptions.DuplicateMemberException;
-import io.wisoft.poomi.configures.security.jwt.JWTTokenProvider;
 import io.wisoft.poomi.domain.member.address.Address;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.member.authority.AuthorityRepository;
@@ -19,15 +15,12 @@ import io.wisoft.poomi.domain.member.address.AddressTagRepository;
 import io.wisoft.poomi.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j

@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class JWTToken {
+public class JwtToken {
 
     @JsonProperty("access_token")
     private String accessToken;
@@ -24,7 +24,7 @@ public class JWTToken {
     private Date refreshTokenExpiration;
 
     @Builder
-    public JWTToken(final String accessToken, final String refreshToken,
+    public JwtToken(final String accessToken, final String refreshToken,
                     final Date accessTokenExpiration, final Date refreshTokenExpiration) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;

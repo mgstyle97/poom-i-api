@@ -1,6 +1,6 @@
 package io.wisoft.poomi.global.utils;
 
-import io.wisoft.poomi.configures.security.jwt.JWTTokenProvider;
+import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class CookieUtil {
 
-    private final JWTTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public Cookie createTokenCookie(final String cookieName, final String token) {
         Cookie tokenCookie = new Cookie(cookieName, token);

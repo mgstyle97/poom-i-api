@@ -1,7 +1,7 @@
 package io.wisoft.poomi.global.dto.response.oauth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.wisoft.poomi.configures.security.jwt.JWTToken;
+import io.wisoft.poomi.configures.security.jwt.JwtToken;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,11 +14,11 @@ public class OAuthUserResultResponse {
     private OAuthUserPropertiesResponse userProperties;
 
     @JsonProperty("access_token")
-    private JWTToken tokenInfo;
+    private JwtToken tokenInfo;
 
     @Builder
     public OAuthUserResultResponse(final OAuthUserPropertiesResponse userProperties,
-                                   final JWTToken tokenInfo) {
+                                   final JwtToken tokenInfo) {
         this.userProperties = userProperties;
         this.tokenInfo = tokenInfo;
     }
