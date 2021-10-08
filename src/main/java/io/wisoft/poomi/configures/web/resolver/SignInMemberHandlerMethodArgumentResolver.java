@@ -5,6 +5,8 @@ import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -35,9 +37,9 @@ public class SignInMemberHandlerMethodArgumentResolver implements HandlerMethodA
     }
 
     Member resolveHeader(final HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveToken(request);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        String email = jwtTokenProvider.getUsernameFromToken(token);
+        String email = authentication.getName();
 
         return memberRepository.getMemberByEmail(email);
     }

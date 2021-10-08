@@ -36,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomOAuth2Service customOAuth2Service;
     private final OAuth2AuthenticationSuccessHandler successHandler;
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtSecurityConfig jwtSecurityConfig;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
@@ -96,7 +96,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(jwtAccessDeniedHandler)
 
                 .and()
-                .apply(new JwtSecurityConfig(jwtTokenProvider));
+                .apply(jwtSecurityConfig);
 
     }
 

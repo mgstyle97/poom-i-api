@@ -23,6 +23,9 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenProvider {
 
+    public static final String ACCESS_TOKEN_NAME = "access_token";
+    public static final String REFRESH_TOKEN_NAME = "refresh_token";
+
     private static final String AUTHORITIES_KEY = "auth";
 
     // 토근 유효시간
@@ -126,6 +129,7 @@ public class JwtTokenProvider {
             log.error("Wrong JWT Sign");
         } catch (ExpiredJwtException e) {
             log.error("Expired JWT Token");
+            throw e;
         } catch (UnsupportedJwtException e) {
             log.error("Unsupported JWT Token");
         } catch (IllegalArgumentException e) {
