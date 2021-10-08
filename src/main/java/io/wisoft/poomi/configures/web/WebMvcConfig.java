@@ -3,12 +3,16 @@ package io.wisoft.poomi.configures.web;
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.configures.web.formatter.StringToSocialConverter;
 import io.wisoft.poomi.configures.web.resolver.SignInMemberHandlerMethodArgumentResolver;
+import io.wisoft.poomi.configures.web.validator.image.ImageMimeTypeValidator;
+import io.wisoft.poomi.configures.web.validator.pdf.PDFMimeTypeValidator;
 import io.wisoft.poomi.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.tika.Tika;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
@@ -26,6 +30,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final long MAX_AGE_SECS = 3600;
 
+
+
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
 
@@ -42,6 +48,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Bean
     public StringToSocialConverter converter() {
         return new StringToSocialConverter();
+    }
+
+    @Bean
+    public MethodValidationPostProcessor methodValidationPostProcessor() {
+        return new MethodValidationPostProcessor();
     }
 
     @Override

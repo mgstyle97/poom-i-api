@@ -2,6 +2,7 @@ package io.wisoft.poomi.global.exception;
 
 import io.wisoft.poomi.global.dto.response.ApiResponse;
 import io.wisoft.poomi.global.exception.exceptions.BaseException;
+import io.wisoft.poomi.global.exception.exceptions.FileNotReadableException;
 import io.wisoft.poomi.global.exception.exceptions.NoPermissionOfContentException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import javax.validation.ConstraintViolationException;
 import java.net.SocketException;
 import java.util.stream.Collectors;
 
@@ -30,8 +32,8 @@ public class RestExceptionHandler {
     public ApiResponse<ErrorResponse> invalidParameterFormat() {
         return ApiResponse.failure(HttpStatus.BAD_REQUEST,
                 ErrorResponse.builder()
-                .errorCode(ErrorCode.INVALID_FORMAT)
-                .build()
+                        .errorCode(ErrorCode.INVALID_FORMAT)
+                        .build()
         );
     }
 
@@ -40,8 +42,8 @@ public class RestExceptionHandler {
 
         return ApiResponse.failure(HttpStatus.METHOD_NOT_ALLOWED,
                 ErrorResponse.builder()
-                .errorCode(ErrorCode.METHOD_NOT_ALLOWED)
-                .build());
+                        .errorCode(ErrorCode.METHOD_NOT_ALLOWED)
+                        .build());
     }
 
     @ExceptionHandler(BadCredentialsException.class)
@@ -49,8 +51,8 @@ public class RestExceptionHandler {
 
         return ApiResponse.failure(HttpStatus.BAD_REQUEST,
                 ErrorResponse.builder()
-                .errorCode(ErrorCode.BAD_CREDENTIALS)
-                .build());
+                        .errorCode(ErrorCode.BAD_CREDENTIALS)
+                        .build());
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
@@ -58,16 +60,16 @@ public class RestExceptionHandler {
 
         return ApiResponse.failure(HttpStatus.NOT_FOUND,
                 ErrorResponse.builder()
-                .errorCode(ErrorCode.NOT_FOUND)
-                .build());
+                        .errorCode(ErrorCode.NOT_FOUND)
+                        .build());
     }
 
     @ExceptionHandler(NoPermissionOfContentException.class)
     public ApiResponse<ErrorResponse> noPermission() {
         return ApiResponse.failure(HttpStatus.FORBIDDEN,
                 ErrorResponse.builder()
-                .errorCode(ErrorCode.NO_PERMISSION)
-                .build()
+                        .errorCode(ErrorCode.NO_PERMISSION)
+                        .build()
         );
     }
 
@@ -87,8 +89,8 @@ public class RestExceptionHandler {
 
         return ApiResponse
                 .failure(HttpStatus.BAD_REQUEST, ErrorResponse.builder()
-                .errorCode(errorCode)
-                .build());
+                        .errorCode(errorCode)
+                        .build());
     }
 
     @ExceptionHandler(TypeMismatchException.class)
@@ -96,8 +98,8 @@ public class RestExceptionHandler {
 
         return ApiResponse.failure(HttpStatus.BAD_REQUEST,
                 ErrorResponse.builder()
-                .errorCode(ErrorCode.TYPE_MISMATCH)
-                .build());
+                        .errorCode(ErrorCode.TYPE_MISMATCH)
+                        .build());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -105,8 +107,8 @@ public class RestExceptionHandler {
 
         return ApiResponse.failure(HttpStatus.BAD_REQUEST,
                 ErrorResponse.builder()
-                .errorCode(ErrorCode.INVALID_JSON_FORMAT)
-                .build());
+                        .errorCode(ErrorCode.INVALID_JSON_FORMAT)
+                        .build());
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
@@ -118,8 +120,25 @@ public class RestExceptionHandler {
 
         return ApiResponse.failure(HttpStatus.BAD_REQUEST,
                 ErrorResponse.builder()
-                .errorCode(ErrorCode.argumentNotValid(errorMessage))
-                .build());
+                        .errorCode(ErrorCode.argumentNotValid(errorMessage))
+                        .build());
+    }
+
+    @ExceptionHandler(FileNotReadableException.class)
+    public ApiResponse<ErrorResponse> fileNotReadable(final FileNotReadableException ex) {
+        return ApiResponse.failure(HttpStatus.BAD_REQUEST,
+                ErrorResponse.builder()
+                        .errorCode(ex.getErrorCode())
+                        .build());
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ApiResponse<ErrorResponse> constraintViolation(final ConstraintViolationException ex) {
+
+        return ApiResponse.failure(HttpStatus.BAD_REQUEST,
+                ErrorResponse.builder()
+                        .errorCode(ErrorCode.notHandlingFileType(ex.getMessage()))
+                        .build());
     }
 
     @ExceptionHandler(FileUploadException.class)

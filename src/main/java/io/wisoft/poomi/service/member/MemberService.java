@@ -53,24 +53,9 @@ public class MemberService {
         Member member = Member.of(signupRequest, passwordEncoder, authorityRepository.getUserAuthority());
         log.info("Generate member data through request");
 
-        AddressTag addressTag = addressTagRepository
-                .saveAddressTagWithExtraAddress(signupRequest.getExtraAddress());
-        log.info("Generate address tag data through request");
+        saveAddressInfo(member, signupRequest);
 
-        Address address = Address.of(signupRequest, addressTag);
-        addressRepository.save(address);
-        log.info("Generate address data through request");
-
-        member.updateAddressInfo(address);
-        memberRepository.save(member);
-        log.info("Set request data to member properties");
-
-        List<Child> children = signupRequest.getChildren().stream()
-                        .map(childAddRequest -> Child.of(childAddRequest, member))
-                                .collect(Collectors.toList());
-        childRepository.saveAll(children);
-        member.setChildren(children);
-        log.info("Save member data through member repository");
+        saveChildInfo(member, signupRequest);
 
         return member;
     }
@@ -82,6 +67,33 @@ public class MemberService {
 
         if (memberRepository.existsByNick(nick)) {
             throw new DuplicateMemberException("이미 존재하는 닉네임입니다.");
+        }
+    }
+
+    private void saveAddressInfo(final Member member, final SignupRequest signupRequest) {
+
+        AddressTag addressTag = addressTagRepository
+                .saveAddressTagWithExtraAddress(signupRequest.getExtraAddress());
+        log.info("Generate address tag data through request");
+
+        Address address = Address.of(signupRequest, addressTag);
+        addressRepository.save(address);
+        log.info("Generate address data through request");
+
+        member.updateAddressInfo(address);
+        memberRepository.save(member);
+        log.info("Set request data to member properties");
+    }
+
+    private void saveChildInfo(final Member member, final SignupRequest signupRequest) {
+
+        if (signupRequest.getChildren() != null) {
+            List<Child> children = signupRequest.getChildren().stream()
+                    .map(childAddRequest -> Child.of(childAddRequest, member))
+                    .collect(Collectors.toList());
+            childRepository.saveAll(children);
+            member.setChildren(children);
+            log.info("Save member data through member repository");
         }
     }
 

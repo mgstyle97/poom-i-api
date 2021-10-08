@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Component
 @RequiredArgsConstructor
-public class CookieUtil {
+public class CookieUtils {
 
     private final JwtTokenProvider jwtTokenProvider;
 

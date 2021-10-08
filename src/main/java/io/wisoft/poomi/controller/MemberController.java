@@ -2,6 +2,9 @@ package io.wisoft.poomi.controller;
 
 import io.wisoft.poomi.configures.security.jwt.JwtToken;
 import io.wisoft.poomi.configures.web.formatter.Social;
+import io.wisoft.poomi.configures.web.validator.image.Image;
+import io.wisoft.poomi.configures.web.validator.pdf.PDF;
+import io.wisoft.poomi.global.dto.request.member.FamilyDocInfoRequest;
 import io.wisoft.poomi.global.dto.response.ApiResponse;
 import io.wisoft.poomi.global.dto.response.member.*;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
@@ -13,6 +16,7 @@ import io.wisoft.poomi.service.auth.OAuth2Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.ObjectUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
+@Validated
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
@@ -31,7 +36,7 @@ public class MemberController {
     @PostMapping("/signup")
     public ApiResponse<SignupResponse> signup(
             @RequestPart("data") @Valid final SignupRequest signupRequest,
-            @RequestPart(value = "images", required = false) List<MultipartFile> images) {
+            @RequestPart(value = "images", required = false) @Image @PDF List<MultipartFile> images) {
         return ApiResponse
                 .succeed(HttpStatus.CREATED, memberService.signup(signupRequest, images));
     }
@@ -57,7 +62,7 @@ public class MemberController {
 
     @GetMapping("/oauth2/{social}")
     public ApiResponse<OAuthUserResultResponse> oauthCodeToUserInfo(
-            @PathVariable("social")@Valid final Social social,
+            @PathVariable("social") @Valid final Social social,
             @RequestParam("code") @Valid final String code) {
 
         final OAuthUserResultResponse userResultResponse = oAuth2Service.getUserProperties(social, code);

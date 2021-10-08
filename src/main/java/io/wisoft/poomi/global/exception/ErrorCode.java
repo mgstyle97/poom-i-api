@@ -14,10 +14,12 @@ public enum ErrorCode {
 
     ILLEGAL_ARGUMENT(400),
     ARGUMENT_NOT_VALID(400),
+    NOT_HANDLING_FILE_TYPE(400),
     INVALID_FORMAT(400, "파라미터를 읽어들일 수 없습니다."),
     TYPE_MISMATCH(400, "잘못된 타입으로 요청했습니다."),
     INVALID_JSON_FORMAT(400, "읽어들일 수 없는 데이터입니다."),
     FILE_UPLOAD_FAILED(400, "파일을 첨부해야 합니다."),
+    FILE_NOT_READABLE(400, "파일을 읽을 수 없습니다."),
     NOT_SUPPORTED_MEDIA_TYPE(400, "지원하지 않는 Content-type 입니다."),
     HTTP_CLIENT_ERROR(400, "소셜 플랫폼에 요청을 실패하였습니다."),
     NOT_FOUND(404, "요청하신 페이지를 찾을 수 없습니다."),
@@ -66,6 +68,13 @@ public enum ErrorCode {
         argumentNotValid.setMessage(message);
 
         return argumentNotValid;
+    }
+
+    public static ErrorCode notHandlingFileType(final String message) {
+        ErrorCode notHandlingFileType = NOT_HANDLING_FILE_TYPE;
+        notHandlingFileType.setMessage(message);
+
+        return notHandlingFileType;
     }
 
 }

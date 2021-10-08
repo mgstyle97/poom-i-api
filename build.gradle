@@ -48,6 +48,9 @@ dependencies {
     implementation 'com.slack.api:slack-api-model:1.6.2'
     implementation 'com.slack.api:slack-api-client:1.6.2'
 
+    // mime type check - tika
+    implementation group: 'org.apache.tika', name: 'tika-core', version: '1.22'
+
 }
 
 test {
