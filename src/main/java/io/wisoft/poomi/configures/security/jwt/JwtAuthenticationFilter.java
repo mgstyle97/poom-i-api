@@ -36,22 +36,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-//        final Cookie accessTokenCookie = cookieUtils.getCookie(request, JwtTokenProvider.ACCESS_TOKEN_NAME);
-//
-//        String accessToken = null;
-//        if (accessTokenCookie != null) {
-//            accessToken = accessTokenCookie.getValue();
-//        }
-//
-//        final String refreshToken = verifyAccessToken(accessToken, request);
-//
-//        verifyRefreshToken(refreshToken, accessToken, response);
+        final String accessToken = jwtTokenProvider.resolveToken(request);
 
-        final String sessionAccessToken = sessionUtils.getToken(request, "access_token");
-
-        String sessionRefreshToken = verifySessionAccessToken(sessionAccessToken, request);
-
-        verifySessionRefreshToken(sessionRefreshToken, sessionAccessToken, request);
+        try {
+            if (validateJwtToken(accessToken)) {
+                Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (ExpiredJwtException e) {
+            Cookie refreshTokenCookie = cookieUtils.getCookie(request, JwtTokenProvider.REFRESH_TOKEN_NAME);
+            verifyRefreshToken(refreshTokenCookie.getValue(), accessToken, response);
+        }
 
         filterChain.doFilter(request, response);
 
@@ -127,7 +122,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
                 JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
-                cookieUtils.generateCookiesAndSave(jwtToken, response);
+                cookieUtils.generateRefreshTokenCookiesAndSave(jwtToken.getRefreshToken(), response);
             }
         } catch (ExpiredJwtException e) {
             log.error("Expired Refresh Token");

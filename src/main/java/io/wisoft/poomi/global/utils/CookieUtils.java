@@ -15,11 +15,9 @@ public class CookieUtils {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    public void generateCookiesAndSave(final JwtToken jwtToken, final HttpServletResponse response) {
-        Cookie accessTokenCookie = createTokenCookie(JwtTokenProvider.ACCESS_TOKEN_NAME, jwtToken.getAccessToken());
-        Cookie refreshTokenCookie = createTokenCookie(JwtTokenProvider.REFRESH_TOKEN_NAME, jwtToken.getRefreshToken());
+    public void generateRefreshTokenCookiesAndSave(final String refreshToken, final HttpServletResponse response) {
+        Cookie refreshTokenCookie = createTokenCookie(JwtTokenProvider.REFRESH_TOKEN_NAME, refreshToken);
 
-        response.addCookie(accessTokenCookie);
         response.addCookie(refreshTokenCookie);
     }
 

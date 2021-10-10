@@ -12,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RequiredArgsConstructor
@@ -20,21 +22,19 @@ import javax.validation.Valid;
 @RequestMapping("/api")
 public class AuthController {
 
-    private final SessionUtils sessionUtils;
     private final CookieUtils cookieUtils;
     private final AuthService authService;
     private final OAuth2Service oAuth2Service;
 
     @PostMapping("/signin")
     public ApiResponse<SigninResponse> signin(
-            @RequestBody @Valid final SigninRequest signinRequest, final HttpServletRequest request) {
+            @RequestBody @Valid final SigninRequest signinRequest, final HttpServletResponse response) {
 
         final JwtToken jwtToken = authService.signin(signinRequest);
-        sessionUtils.setSessionToken(request, jwtToken.getAccessToken(), "access_token");
-        sessionUtils.setSessionToken(request, jwtToken.getRefreshToken(), "refresh_token");
+        cookieUtils.generateRefreshTokenCookiesAndSave(jwtToken.getRefreshToken(), response);
 
         return ApiResponse
-                .succeed(HttpStatus.OK, null);
+                .succeedWithAccessToken(HttpStatus.OK, null, jwtToken);
     }
 
 }
