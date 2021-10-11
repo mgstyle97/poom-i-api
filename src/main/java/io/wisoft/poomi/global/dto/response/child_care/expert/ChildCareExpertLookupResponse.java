@@ -3,6 +3,7 @@ package io.wisoft.poomi.global.dto.response.child_care.expert;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
+import io.wisoft.poomi.domain.child_care.expert.RecruitType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,8 +21,8 @@ public class ChildCareExpertLookupResponse {
 
     private String writer;
 
-    @JsonProperty("childminder_score")
-    private Integer childminderScore;
+    @JsonProperty("writer_score")
+    private Integer writerScore;
 
     @JsonProperty("liked_count")
     private Integer likedCount;
@@ -30,6 +31,9 @@ public class ChildCareExpertLookupResponse {
     private Integer appliedCount;
 
     private String contents;
+
+    @JsonProperty("recruit_type")
+    private RecruitType recruitType;
 
     @JsonProperty("created_at")
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -51,10 +55,11 @@ public class ChildCareExpertLookupResponse {
     private ChildCareExpertLookupResponse(final ChildCareExpert childCareExpert) {
         this.expertId = childCareExpert.getId();
         this.writer = childCareExpert.getWriter().getNick();
-        this.childminderScore = childCareExpert.getWriter().getScore();
+        this.writerScore = childCareExpert.getWriter().getScore();
         this.likedCount = childCareExpert.getLikes().size();
         this.appliedCount = childCareExpert.getApplications().size();
         this.contents = childCareExpert.getContents();
+        this.recruitType = childCareExpert.getRecruitType();
         this.createdAt = Timestamp.valueOf(childCareExpert.getCreatedAt());
         this.startTime = childCareExpert.getStartTime();
         this.endTime = childCareExpert.getEndTime();
