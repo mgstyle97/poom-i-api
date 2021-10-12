@@ -15,6 +15,5 @@ public class ImageMimeTypeValidator implements ConstraintValidator<Image, List<M
         return needToVerifyFiles.stream()
                 .map(FileUtils::getMimeType)
                 .allMatch(mimeType -> mimeType.startsWith("image"));
-
     }
 }

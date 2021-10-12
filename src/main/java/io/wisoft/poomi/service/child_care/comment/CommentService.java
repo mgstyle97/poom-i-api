@@ -1,12 +1,14 @@
 package io.wisoft.poomi.service.child_care.comment;
 
-import io.wisoft.poomi.global.dto.response.child_care.group.comment.CommentDeleteResponse;
-import io.wisoft.poomi.global.dto.response.child_care.group.comment.CommentModifiedResponse;
-import io.wisoft.poomi.global.dto.response.child_care.group.comment.CommentRegistResponse;
-import io.wisoft.poomi.global.dto.request.child_care.group.comment.CommentModifiedRequest;
-import io.wisoft.poomi.global.dto.request.child_care.group.comment.CommentRegisterRequest;
+import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
+import io.wisoft.poomi.domain.child_care.group.board.GroupBoardRepository;
+import io.wisoft.poomi.global.dto.response.child_care.comment.CommentDeleteResponse;
+import io.wisoft.poomi.global.dto.response.child_care.comment.CommentLookupResponse;
+import io.wisoft.poomi.global.dto.response.child_care.comment.CommentModifiedResponse;
+import io.wisoft.poomi.global.dto.response.child_care.comment.CommentRegistResponse;
+import io.wisoft.poomi.global.dto.request.child_care.comment.CommentModifiedRequest;
+import io.wisoft.poomi.global.dto.request.child_care.comment.CommentRegisterRequest;
 import io.wisoft.poomi.domain.member.Member;
-import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroupRepository;
 import io.wisoft.poomi.domain.child_care.group.comment.Comment;
 import io.wisoft.poomi.domain.child_care.group.comment.CommentRepository;
@@ -16,7 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,22 +28,30 @@ import java.util.Set;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final GroupBoardRepository groupBoardRepository;
     private final ChildCareGroupRepository childCareGroupRepository;
 
+    @Transactional(readOnly = true)
+    public List<CommentLookupResponse> lookupAllCommentByBoardId(final Long boardId, final Member member) {
+        GroupBoard board = groupBoardRepository.getBoardById(boardId);
+
+        return board.getComments().stream()
+                .map(CommentLookupResponse::new)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
-    public CommentRegistResponse registComment(final Long classId,
-                                               final CommentRegisterRequest commentRegisterRequest,
-                                               final Member member) {
-        ChildCareGroup childCareGroup = childCareGroupRepository.getById(classId);
-        log.info("Generate class program id: {}", classId);
+    public CommentRegistResponse registerComment(final Long boardId,
+                                                 final CommentRegisterRequest commentRegisterRequest,
+                                                 final Member member) {
+        GroupBoard board = groupBoardRepository.getBoardById(boardId);
+        log.info("Generate board id: {}", boardId);
 
-//        Comment comment = Comment.of(commentRegisterRequest, member, childCareGroup);
-//        log.info("Generate comment entity from request");
-//
-//        commentRepository.save(comment);
-//        log.info("Save comment data id: {}", comment.getId());
+        Comment comment = Comment.of(commentRegisterRequest, member, board);
+        commentRepository.save(comment);
+        log.info("Generate comment and save comment id: {}", comment.getId());
 
-        return null;
+        return CommentRegistResponse.of(comment);
     }
 
     @Transactional
@@ -50,7 +62,7 @@ public class CommentService {
 
         ContentPermissionVerifier.verifyModifyPermission(comment.getWriter(), member);
 
-        comment.updateContents(commentModifiedRequest.getContents());
+        comment.changeContents(commentModifiedRequest.getContents());
         log.info("Update comment entity: {}", commentId);
 
         return CommentModifiedResponse.of(comment);

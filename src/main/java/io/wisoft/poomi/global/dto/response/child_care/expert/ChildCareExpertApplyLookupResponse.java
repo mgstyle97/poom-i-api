@@ -13,8 +13,8 @@ public class ChildCareExpertApplyLookupResponse {
 
     private String applier;
 
-    @JsonProperty("childminder_score")
-    private Integer childminderScore;
+    @JsonProperty("writer_score")
+    private Integer writerScore;
 
     private String contents;
 
@@ -25,7 +25,7 @@ public class ChildCareExpertApplyLookupResponse {
     @Builder
     private ChildCareExpertApplyLookupResponse(final ChildCareExpertApply application) {
         this.applier = application.getWriter().getNick();
-        this.childminderScore = application.getWriter().getScore();
+        this.writerScore = application.getWriter().getScore();
         this.contents = application.getContents();
         this.registeredAt = new Date();
     }

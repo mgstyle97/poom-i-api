@@ -5,6 +5,7 @@ import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
 import io.wisoft.poomi.domain.child_care.group.comment.Comment;
 import io.wisoft.poomi.domain.child_care.group.image.Image;
 import io.wisoft.poomi.domain.member.Member;
+import io.wisoft.poomi.global.dto.request.child_care.board.GroupBoardRegisterRequest;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -53,7 +54,7 @@ public class GroupBoard extends BaseTimeEntity {
     )
     private Member writer;
 
-    @OneToMany(mappedBy = "childCareGroup")
+    @OneToMany(mappedBy = "board")
     private Set<Image> images;
 
     @OneToMany(mappedBy = "board")
@@ -69,8 +70,18 @@ public class GroupBoard extends BaseTimeEntity {
         this.comments = new HashSet<>();
     }
 
-    public void setImages(final Set<Image> images) {
-        this.images = images;
+    public static GroupBoard of(final GroupBoardRegisterRequest registerRequest,
+                                final ChildCareGroup childCareGroup,
+                                final Member writer) {
+        return GroupBoard.builder()
+                .contents(registerRequest.getContents())
+                .childCareGroup(childCareGroup)
+                .writer(writer)
+                .build();
+    }
+
+    public void addImage(final Image image) {
+        this.images.add(image);
     }
 
     public void addComment(final Comment comment) {

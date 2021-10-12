@@ -72,6 +72,8 @@ public class ChildCareExpertService {
         childCareExpertRepository.save(childCareExpert);
         log.info("Save child care expert id: {}", childCareExpert.getId());
 
+        childRepository.save(child);
+
         return ChildCareExpertRegisterResponse.of(childCareExpert);
     }
 
@@ -215,6 +217,7 @@ public class ChildCareExpertService {
                                        final ChildCareExpertModifiedRequest childCareExpertModifiedRequest,
                                        final Child child) {
         childCareExpert.modifiedFor(childCareExpertModifiedRequest, child);
+        childRepository.save(child);
         childCareExpertRepository.save(childCareExpert);
         log.info("Update child care expert entity id: {}", childCareExpert.getId());
     }
@@ -222,6 +225,9 @@ public class ChildCareExpertService {
     private void deleteChildCareExpert(final ChildCareExpert childCareExpert,
                                        final Member member) {
         childCareExpert.resetAssociated();
+        Child child = childCareExpert.getCaringChild();
+        childRepository.save(child);
+
         member.removeWrittenExpertContent(childCareExpert);
         childCareExpertApplyRepository.deleteAll(childCareExpert.getApplications());
         childCareExpertRepository.delete(childCareExpert);

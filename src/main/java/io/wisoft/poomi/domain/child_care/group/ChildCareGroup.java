@@ -7,6 +7,7 @@ import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupModifie
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupRegisterRequest;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.child_care.BaseChildCareEntity;
+import io.wisoft.poomi.global.exception.exceptions.NoPermissionOfContentException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -86,7 +87,7 @@ public class ChildCareGroup extends BaseChildCareEntity {
         this.participatingMembers.add(participatingMember);
     }
 
-    public void addApplier(final GroupApply apply) {
+    public void addApply(final GroupApply apply) {
         this.applies.add(apply);
     }
 
@@ -100,6 +101,16 @@ public class ChildCareGroup extends BaseChildCareEntity {
 
     public void resetAssociated() {
         getWriter().removeWrittenGroup(this);
+    }
+
+    public void validateMemberIsParticipating(final Member member) {
+        boolean isMemberParticipating = this.participatingMembers.stream()
+                .map(GroupParticipatingMember::getMember)
+                .anyMatch(participatingMember -> participatingMember.equals(member));
+
+        if (!isMemberParticipating) {
+            throw new NoPermissionOfContentException();
+        }
     }
 
     private void changeTitle(final String title) {

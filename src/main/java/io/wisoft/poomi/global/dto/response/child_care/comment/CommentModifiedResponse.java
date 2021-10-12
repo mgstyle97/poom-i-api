@@ -1,4 +1,4 @@
-package io.wisoft.poomi.global.dto.response.child_care.group.comment;
+package io.wisoft.poomi.global.dto.response.child_care.comment;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

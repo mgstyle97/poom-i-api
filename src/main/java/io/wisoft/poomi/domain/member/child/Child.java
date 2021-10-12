@@ -49,11 +49,7 @@ public class Child {
     )
     private Member parent;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "expert_id",
-            referencedColumnName = "id"
-    )
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "caringChild")
     private ChildCareExpert caredExpertContent;
 
     @Override

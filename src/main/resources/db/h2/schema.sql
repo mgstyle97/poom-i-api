@@ -105,6 +105,8 @@ CREATE TABLE child_care_group(
 CREATE TABLE group_board(
     id integer primary key,
     contents CLOB not null,
+    created_at date,
+    modified_at date,
     group_id integer not null,
     writer_id integer not null,
     foreign key (group_id) references child_care_group(id),
@@ -123,9 +125,9 @@ CREATE TABLE comment(
     contents CLOB not null,
     created_at date,
     modified_at date,
-    group_id integer not null,
+    board_id integer not null,
     writer_id integer not null,
-    foreign key(group_id) references child_care_group(id),
+    foreign key(board_id) references group_board(id),
     foreign key(writer_id) references member(id)
 );
 
@@ -135,8 +137,19 @@ CREATE TABLE image(
     image_original_name varchar not null,
     image_path varchar not null,
     image_uri varchar not null,
-    group_id integer,
-    foreign key(group_id) references child_care_group(id)
+    board_id integer,
+    foreign key(board_id) references group_board(id)
+);
+
+
+CREATE TABLE child(
+    id integer primary key,
+    name varchar not null,
+    birthday date not null,
+    school varchar not null,
+    special_note varchar,
+    member_id integer not null,
+    foreign key(member_id) references member(id)
 );
 
 CREATE TABLE child_care_expert(
@@ -149,23 +162,13 @@ CREATE TABLE child_care_expert(
     start_time timestamp not null,
     end_time timestamp not null,
     writer_id integer not null,
+    child_id integer,
     manager_id integer,
     address_tag_id integer not null,
     foreign key(writer_id) references member(id),
+    foreign key(child_id) references child(id),
     foreign key(manager_id) references member(id),
     foreign key(address_tag_id) references address_tag(id)
-);
-
-CREATE TABLE child(
-    id integer primary key,
-    name varchar not null,
-    birthday date not null,
-    school varchar not null,
-    special_note varchar,
-    member_id integer not null,
-    expert_id integer,
-    foreign key(member_id) references member(id),
-    foreign key(expert_id) references child_care_expert(id)
 );
 
 CREATE TABLE expert_apply(

@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -21,6 +20,9 @@ public class ChildCareExpertLookupResponse {
     private Long expertId;
 
     private String writer;
+
+    @JsonProperty("child_id")
+    private Long childId;
 
     @JsonProperty("writer_score")
     private Integer writerScore;
@@ -60,6 +62,7 @@ public class ChildCareExpertLookupResponse {
     private ChildCareExpertLookupResponse(final ChildCareExpert childCareExpert) {
         this.expertId = childCareExpert.getId();
         this.writer = childCareExpert.getWriter().getNick();
+        this.childId = childCareExpert.getCaringChild().getId();
         this.writerScore = childCareExpert.getWriter().getScore();
         this.likedCount = childCareExpert.getLikes().size();
         this.appliedCount = childCareExpert.getApplications().size();

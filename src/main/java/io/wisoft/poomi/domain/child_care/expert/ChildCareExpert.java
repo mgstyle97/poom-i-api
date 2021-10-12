@@ -8,7 +8,6 @@ import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertRegis
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.child_care.BaseChildCareEntity;
 import io.wisoft.poomi.global.exception.exceptions.AlreadyRequestException;
-import io.wisoft.poomi.global.exception.exceptions.NoPermissionOfContentException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -65,8 +64,12 @@ public class ChildCareExpert extends BaseChildCareEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "childCareExpert")
     private Set<ChildCareExpertApply> applications;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "caredExpertContent")
-    private Set<Child> caringChildren;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "child_id",
+            referencedColumnName = "id"
+    )
+    private Child caringChild;
 
     @ManyToMany(
             fetch = FetchType.LAZY
@@ -81,14 +84,14 @@ public class ChildCareExpert extends BaseChildCareEntity {
     @Builder
     public ChildCareExpert(final String contents, final RecruitType recruitType,
                            final LocalDateTime startTime, final LocalDateTime endTime,
-                           final Member writer) {
+                           final Member writer, final Child child) {
         super(writer, writer.getAddressTag(), RecruitmentStatus.RECRUITING);
         this.contents = contents;
         this.recruitType = recruitType;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.caringChild = child;
         this.applications = new HashSet<>();
-        this.caringChildren = new HashSet<>();
         this.likes = new HashSet<>();
     }
 
@@ -100,8 +103,8 @@ public class ChildCareExpert extends BaseChildCareEntity {
                 .startTime(childCareExpertRegisterRequest.getStartTime())
                 .endTime(childCareExpertRegisterRequest.getEndTime())
                 .writer(member)
+                .child(child)
                 .build();
-        childCareExpert.addChildToCaringChildren(Optional.ofNullable(child));
         member.addWrittenExpertContent(childCareExpert);
 
         if (childCareExpert.getRecruitType().equals(RecruitType.VOLUNTEER)) {
@@ -112,10 +115,10 @@ public class ChildCareExpert extends BaseChildCareEntity {
         return childCareExpert;
     }
 
-    public void addChildToCaringChildren(final Optional<Child> optionalChild) {
+    public void setChildToCaringChildren(final Optional<Child> optionalChild) {
         optionalChild.ifPresent(child -> {
-            this.caringChildren.add(child);
-            child.designateExpertContent(this);
+            this.caringChild = child;
+            this.caringChild.designateExpertContent(this);
         });
     }
 
@@ -142,6 +145,9 @@ public class ChildCareExpert extends BaseChildCareEntity {
     }
 
     public void addApplication(final ChildCareExpertApply childCareExpertApply) {
+        if (this.recruitType.equals(RecruitType.VOLUNTEER) && childCareExpertApply.getChild() != null) {
+            throw new IllegalArgumentException("품앗이꾼에게 요청하기 위해서는 자식의 정보가 필요합니다.");
+        }
         this.applications.add(childCareExpertApply);
     }
 
@@ -153,8 +159,7 @@ public class ChildCareExpert extends BaseChildCareEntity {
     public void resetAssociated() {
         this.likes.forEach(like -> like.removeLikedExpertContent(this));
         this.applications.forEach(ChildCareExpertApply::reset);
-        this.caringChildren.forEach(child -> child.removeExpertContent(this));
-
+        this.caringChild.cancelExpertContent();
     }
 
     public void checkApplyIncluded(final ChildCareExpertApply expertApply) {
@@ -164,7 +169,7 @@ public class ChildCareExpert extends BaseChildCareEntity {
     }
 
     public void approveApply(final ChildCareExpertApply expertApply) {
-        addChildToCaringChildren(Optional.ofNullable(expertApply.getChild()));
+        setChildToCaringChildren(Optional.ofNullable(expertApply.getChild()));
 
         if (this.recruitType.equals(RecruitType.RECRUIT)) {
             setManager(expertApply.getWriter());
@@ -190,10 +195,11 @@ public class ChildCareExpert extends BaseChildCareEntity {
     }
 
     private void changeCaringChild(final Child child) {
-        this.caringChildren.stream()
-                .findFirst()
-                .ifPresent(Child::cancelExpertContent);
-        this.caringChildren.add(child);
+        if (this.caringChild != null) {
+            this.caringChild.cancelExpertContent();
+            this.caringChild = child;
+            this.caringChild.designateExpertContent(this);
+        }
     }
 
     private void changeStartTime(final LocalDateTime startTime) {

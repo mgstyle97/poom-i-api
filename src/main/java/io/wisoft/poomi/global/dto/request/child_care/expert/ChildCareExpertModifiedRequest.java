@@ -21,11 +21,11 @@ public class ChildCareExpertModifiedRequest {
     private Long childId;
 
     @JsonProperty("start_time")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime startTime;
 
     @JsonProperty("end_time")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime endTime;
 
     public void setRecruitType(final String recruitType) {

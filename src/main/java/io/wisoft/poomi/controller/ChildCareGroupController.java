@@ -34,7 +34,7 @@ public class ChildCareGroupController {
 
     @PostMapping
     public ApiResponse<ChildCareGroupRegisterResponse> registerChildCareGroup(
-            @RequestPart("data") @Valid final ChildCareGroupRegisterRequest childCareGroupRegisterRequest,
+            @RequestBody @Valid final ChildCareGroupRegisterRequest childCareGroupRegisterRequest,
             @SignInMember final Member member) {
         return ApiResponse
                 .succeed(
@@ -57,7 +57,7 @@ public class ChildCareGroupController {
     }
 
     @GetMapping("/{group-id}")
-    public ApiResponse<ChildCareGroupSinglePageResponse> lookupChildCareGroup(
+    public ApiResponse<ChildCareGroupLookupResponse> lookupChildCareGroup(
             @PathVariable("group-id") @Valid final Long groupId,
             @SignInMember final Member member) {
         return ApiResponse.succeed(
@@ -82,12 +82,5 @@ public class ChildCareGroupController {
             @RequestBody @Valid final ChildCareGroupApplyRequest applyRequest,
             @SignInMember final Member member) {
         childCareGroupService.applyChildCareGroup(groupId, member, applyRequest);
-    }
-
-    private String getDomainInfo(final HttpServletRequest request) {
-        return request
-                .getRequestURL()
-                .toString()
-                .replace(request.getRequestURI(), "");
     }
 }

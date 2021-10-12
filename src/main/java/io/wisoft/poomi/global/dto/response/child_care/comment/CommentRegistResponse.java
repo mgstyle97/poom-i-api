@@ -1,4 +1,4 @@
-package io.wisoft.poomi.global.dto.response.child_care.group.comment;
+package io.wisoft.poomi.global.dto.response.child_care.comment;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,8 +15,8 @@ public class CommentRegistResponse {
     @JsonProperty("comment_id")
     private Long commentId;
 
-    @JsonProperty("class_program_id")
-    private Long classProgramId;
+    @JsonProperty("board_id")
+    private Long boardId;
 
     @JsonProperty("writer_id")
     private Long writerId;
@@ -27,6 +27,7 @@ public class CommentRegistResponse {
 
     public CommentRegistResponse(final Comment comment) {
         this.commentId = comment.getId();
+        this.boardId = comment.getBoard().getId();
         this.writerId = comment.getWriter().getId();
         this.requestedAt = new Date();
     }

@@ -12,9 +12,9 @@ public interface ChildCareGroupRepository extends JpaRepository<ChildCareGroup, 
 
     List<ChildCareGroup> findByAddressTag(final AddressTag addressTag);
 
-    default ChildCareGroup getById(final Long classId) {
-        return this.findById(classId).orElseThrow(
-                () -> new NotFoundEntityDataException("class id: " + classId + "에 관한 데이터를 찾지 못했습니다.")
+    default ChildCareGroup getById(final Long groupId) {
+        return this.findById(groupId).orElseThrow(
+                () -> new NotFoundEntityDataException("group id: " + groupId + "에 관한 데이터를 찾지 못했습니다.")
         );
     }
 

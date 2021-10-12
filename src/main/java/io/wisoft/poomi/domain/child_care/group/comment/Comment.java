@@ -2,10 +2,8 @@ package io.wisoft.poomi.domain.child_care.group.comment;
 
 import io.wisoft.poomi.domain.child_care.BaseTimeEntity;
 import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
-import io.wisoft.poomi.global.dto.request.child_care.group.comment.CommentRegisterRequest;
+import io.wisoft.poomi.global.dto.request.child_care.comment.CommentRegisterRequest;
 import io.wisoft.poomi.domain.member.Member;
-import io.wisoft.poomi.domain.child_care.BaseChildCareEntity;
-import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -72,12 +70,11 @@ public class Comment extends BaseTimeEntity {
         return comment;
     }
 
-    public void updateContents(final String contents) {
-        if (!StringUtils.hasText(contents) &&
-                this.contents.equals(contents)) {
-            return;
+    public void changeContents(final String contents) {
+        if (StringUtils.hasText(contents) &&
+                !this.contents.equals(contents)) {
+            this.contents = contents;
         }
-        this.contents = contents;
     }
 
 }

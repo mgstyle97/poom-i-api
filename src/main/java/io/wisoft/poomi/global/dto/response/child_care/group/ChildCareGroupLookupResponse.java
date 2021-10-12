@@ -23,6 +23,12 @@ public class ChildCareGroupLookupResponse {
     @JsonProperty("regular_meeting_day")
     private String regularMeetingDay;
 
+    @JsonProperty("main_activity")
+    private String mainActivity;
+
+    @JsonProperty("including_members")
+    private Integer includingMembers;
+
     @JsonProperty("created_at")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date createdAt;
@@ -36,8 +42,14 @@ public class ChildCareGroupLookupResponse {
         this.title = childCareGroup.getTitle();
         this.writer = childCareGroup.getWriter().getNick();
         this.regularMeetingDay = childCareGroup.getRegularMeetingDay();
+        this.mainActivity = childCareGroup.getMainActivity();
+        this.includingMembers = childCareGroup.getParticipatingMembers().size();
         this.createdAt = LocalDateTimeUtils.toDate(childCareGroup.getCreatedAt());
         this.requestedAt = new Date();
+    }
+
+    public static ChildCareGroupLookupResponse of(final ChildCareGroup childCareGroup) {
+        return new ChildCareGroupLookupResponse(childCareGroup);
     }
 
     /**

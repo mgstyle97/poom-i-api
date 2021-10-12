@@ -1,11 +1,12 @@
 package io.wisoft.poomi.controller;
 
 import io.wisoft.poomi.global.dto.response.ApiResponse;
-import io.wisoft.poomi.global.dto.response.child_care.group.comment.CommentDeleteResponse;
-import io.wisoft.poomi.global.dto.response.child_care.group.comment.CommentModifiedResponse;
-import io.wisoft.poomi.global.dto.response.child_care.group.comment.CommentRegistResponse;
-import io.wisoft.poomi.global.dto.request.child_care.group.comment.CommentModifiedRequest;
-import io.wisoft.poomi.global.dto.request.child_care.group.comment.CommentRegisterRequest;
+import io.wisoft.poomi.global.dto.response.child_care.comment.CommentDeleteResponse;
+import io.wisoft.poomi.global.dto.response.child_care.comment.CommentLookupResponse;
+import io.wisoft.poomi.global.dto.response.child_care.comment.CommentModifiedResponse;
+import io.wisoft.poomi.global.dto.response.child_care.comment.CommentRegistResponse;
+import io.wisoft.poomi.global.dto.request.child_care.comment.CommentModifiedRequest;
+import io.wisoft.poomi.global.dto.request.child_care.comment.CommentRegisterRequest;
 import io.wisoft.poomi.configures.web.resolver.SignInMember;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.service.child_care.comment.CommentService;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,14 +24,24 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/class/{class-id}/comment")
-    public ApiResponse<CommentRegistResponse> registComment(
-            @PathVariable("class-id") @Valid final Long classId,
+    @GetMapping("/board/{board-id}/comment")
+    public ApiResponse<List<CommentLookupResponse>> lookupAllComment(
+            @PathVariable("board-id") @Valid final Long boardId,
+            @SignInMember final Member member) {
+        return ApiResponse.succeed(
+                HttpStatus.OK,
+                commentService.lookupAllCommentByBoardId(boardId, member)
+        );
+    }
+
+    @PostMapping("/board/{board-id}/comment")
+    public ApiResponse<CommentRegistResponse> registerComment(
+            @PathVariable("board-id") @Valid final Long boardId,
             @RequestBody @Valid final CommentRegisterRequest commentRegisterRequest,
             @SignInMember final Member member) {
         return ApiResponse.succeed(
                 HttpStatus.CREATED,
-                commentService.registComment(classId, commentRegisterRequest, member)
+                commentService.registerComment(boardId, commentRegisterRequest, member)
         );
     }
 

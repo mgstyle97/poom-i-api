@@ -17,7 +17,6 @@ import io.wisoft.poomi.domain.member.MemberRepository;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroupRepository;
-import io.wisoft.poomi.domain.child_care.group.image.ImageRepository;
 import io.wisoft.poomi.service.child_care.comment.CommentService;
 import io.wisoft.poomi.service.child_care.ContentPermissionVerifier;
 import io.wisoft.poomi.service.member.ChildService;
@@ -91,11 +90,11 @@ public class ChildCareGroupService {
     }
 
     @Transactional(readOnly = true)
-    public ChildCareGroupSinglePageResponse lookupChildCareGroup(final Long groupId,
+    public ChildCareGroupLookupResponse lookupChildCareGroup(final Long groupId,
                                                                  final Member member) {
         ChildCareGroup childCareGroup = generateChildCareGroupById(groupId);
 
-        return ChildCareGroupSinglePageResponse.of(childCareGroup);
+        return ChildCareGroupLookupResponse.of(childCareGroup);
     }
 
     @Transactional
@@ -120,8 +119,7 @@ public class ChildCareGroupService {
         GroupApply groupApply = GroupApply.of(applyRequest, child, member, childCareGroup);
         groupApplyRepository.save(groupApply);
 
-        childCareGroup.addApplier(groupApply);
-        memberRepository.save(member);
+        childCareGroup.addApply(groupApply);
     }
 
     private void validateGroupTitle(final String title) {
@@ -130,7 +128,7 @@ public class ChildCareGroupService {
         }
     }
 
-    private ChildCareGroup generateChildCareGroupById(final Long id) {
+    public ChildCareGroup generateChildCareGroupById(final Long id) {
         ChildCareGroup childCareGroup = childCareGroupRepository.getById(id);
         log.info("Generate child care group id: {}", id);
 

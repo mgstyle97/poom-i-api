@@ -1,6 +1,7 @@
 package io.wisoft.poomi.global.utils;
 
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
+import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
 import io.wisoft.poomi.domain.child_care.group.image.Image;
 import io.wisoft.poomi.global.exception.exceptions.FileNotReadableException;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
@@ -49,24 +51,26 @@ public class FileUtils {
         }
     }
 
-    public static Set<Image> saveImageWithGroupId(final ChildCareGroup childCareGroup,
+    public static Set<Image> saveImageWithBoardId(final GroupBoard board,
                                                   final List<MultipartFile> images,
                                                   final String domainInfo) {
         int idx = 1;
 
         Set<Image> imageEntities = new HashSet<>();
         try {
-            for (MultipartFile image : images) {
-                String extension = FilenameUtils.getExtension(image.getOriginalFilename());
-                Long groupId = childCareGroup.getId();
-                File destImage = generateFile(String.valueOf(groupId), idx, extension);
-                image.transferTo(destImage);
-                log.info("Save file: {}", destImage.getName());
-                idx++;
+            if (!CollectionUtils.isEmpty(images)) {
+                for (MultipartFile image : images) {
+                    String extension = FilenameUtils.getExtension(image.getOriginalFilename());
+                    Long groupId = board.getId();
+                    File destImage = generateFile(String.valueOf(groupId), idx, extension);
+                    image.transferTo(destImage);
+                    log.info("Save file: {}", destImage.getName());
+                    idx++;
 
-                imageEntities.add(
-                    Image.of(destImage, childCareGroup, image.getOriginalFilename(), domainInfo)
-                );
+                    imageEntities.add(
+                            Image.of(destImage, board, image.getOriginalFilename(), domainInfo)
+                    );
+                }
             }
         } catch (IOException e) {
             throw new IllegalArgumentException();

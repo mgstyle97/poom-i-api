@@ -133,15 +133,7 @@ class ChildCareGroupServiceTest {
         childCareGroupService.applyChildCareGroup(1L, member, applyRequest);
 
         ChildCareGroup childCareGroup = childCareGroupRepository.getById(1L);
-        Set<ChildCareGroup> appliedClasses = member.getChildCareGroupProperties().getAppliedGroups();
 
-        ChildCareGroup childCareGroup1 = appliedClasses.stream()
-                .filter(appliedClass -> childCareGroup.getTitle().equals(appliedClass.getTitle()))
-                .collect(Collectors.toList()).get(0);
-        assertAll(
-                () -> assertNotNull(childCareGroup1),
-                () -> assertTrue(childCareGroup1.getAppliers().contains(member))
-        );
     }
 
     @Test
@@ -150,15 +142,7 @@ class ChildCareGroupServiceTest {
     void like_class_program() {
 
         ChildCareGroup childCareGroup = childCareGroupRepository.getById(1L);
-        Set<ChildCareGroup> likedClasses = member.getChildCareGroupProperties().getLikedGroups();
 
-        ChildCareGroup childCareGroup1 = likedClasses.stream()
-                        .filter(likedClass -> childCareGroup.getTitle().equals(likedClass.getTitle()))
-                        .collect(Collectors.toList()).get(0);
-
-        assertAll(
-                () -> assertNotNull(childCareGroup1)
-        );
 
     }
 
