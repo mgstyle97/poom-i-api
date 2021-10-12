@@ -1,6 +1,7 @@
 package io.wisoft.poomi.domain.member;
 
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
+import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMember;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -12,27 +13,13 @@ import java.util.Set;
 public class ChildCareGroupProperties {
 
     @OneToMany(
-            mappedBy = "writer",
+            mappedBy = "member",
             fetch = FetchType.LAZY
     )
-    private Set<ChildCareGroup> writtenGroups;
-
-    @ManyToMany(
-            mappedBy = "appliers",
-            fetch = FetchType.LAZY
-    )
-    private Set<ChildCareGroup> appliedGroups;
-
-    @ManyToMany(
-            mappedBy = "likes",
-            fetch = FetchType.LAZY
-    )
-    private Set<ChildCareGroup> likedGroups;
+    private Set<GroupParticipatingMember> participatingGroups;
 
     public ChildCareGroupProperties() {
-        this.writtenGroups = new HashSet<>();
-        this.appliedGroups = new HashSet<>();
-        this.likedGroups = new HashSet<>();
+        this.participatingGroups = new HashSet<>();
     }
 
 }

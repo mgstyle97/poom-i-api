@@ -1,6 +1,7 @@
 package io.wisoft.poomi.domain.member;
 
 import io.wisoft.poomi.domain.child_care.expert.apply.ChildCareExpertApply;
+import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMember;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
 import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
 import io.wisoft.poomi.domain.member.address.Address;
@@ -116,7 +117,7 @@ public class Member {
 
     @Override
     public int hashCode() {
-        return this.getId().intValue();
+        return this.id.intValue();
     }
 
     @Builder
@@ -211,31 +212,13 @@ public class Member {
         return this.address.getAddressTag();
     }
 
-    public void addGroup(final ChildCareGroup childCareGroup) {
-        Set<ChildCareGroup> writtenGroup = this.childCareGroupProperties.getWrittenGroups();
-        writtenGroup.add(childCareGroup);
+    public void addParticipatingGroup(final GroupParticipatingMember participatingGroup) {
+        Set<GroupParticipatingMember> participatingGroups = this.childCareGroupProperties.getParticipatingGroups();
+        participatingGroups.add(participatingGroup);
     }
 
     public void removeWrittenGroup(final ChildCareGroup childCareGroup) {
-        this.childCareGroupProperties.getWrittenGroups().remove(childCareGroup);
-    }
-
-    public void removeLikedGroup(final ChildCareGroup childCareGroup) {
-        this.childCareGroupProperties.getLikedGroups().remove(childCareGroup);
-    }
-
-    public void removeAppliedGroup(final ChildCareGroup childCareGroup) {
-        this.childCareGroupProperties.getAppliedGroups().remove(childCareGroup);
-    }
-
-    public void addAppliedGroup(final ChildCareGroup childCareGroup) {
-        Set<ChildCareGroup> appliedGroup = this.childCareGroupProperties.getAppliedGroups();
-        appliedGroup.add(childCareGroup);
-    }
-
-    public void addLikedGroup(final ChildCareGroup childCareGroup) {
-        Set<ChildCareGroup> likedGroup = this.childCareGroupProperties.getLikedGroups();
-        likedGroup.add(childCareGroup);
+        this.childCareGroupProperties.getParticipatingGroups().remove(childCareGroup);
     }
 
     public void addWrittenExpertContent(final ChildCareExpert expertContent) {

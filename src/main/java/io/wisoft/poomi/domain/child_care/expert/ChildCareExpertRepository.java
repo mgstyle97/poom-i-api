@@ -13,7 +13,7 @@ public interface ChildCareExpertRepository extends JpaRepository<ChildCareExpert
     default ChildCareExpert getById(final Long urgentId) {
         return this.findById(urgentId)
                 .orElseThrow(
-                        () -> new NotFoundEntityDataException("urgent id: " + urgentId + "에 관한 데이터를 찾지 못했습니다.")
+                        () -> new NotFoundEntityDataException("expert id: " + urgentId + "에 관한 데이터를 찾지 못했습니다.")
                 );
 
     }

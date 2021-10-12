@@ -123,17 +123,13 @@ public class ChildCareExpert extends BaseChildCareEntity {
         this.manager = member;
     }
 
-    public void modifiedFor(final ChildCareExpertModifiedRequest childCareExpertModifiedRequest) {
+    public void modifiedFor(final ChildCareExpertModifiedRequest childCareExpertModifiedRequest,
+                            final Child child) {
         changeContents(childCareExpertModifiedRequest.getContents());
         changeIsRecruit(childCareExpertModifiedRequest.getRecruitType());
+        changeCaringChild(child);
         changeStartTime(childCareExpertModifiedRequest.getStartTime());
         changeEndTime(childCareExpertModifiedRequest.getEndTime());
-    }
-
-    public void isWriter(final Member member) {
-        if (getWriter().equals(member)) {
-            throw new IllegalArgumentException("작성자는 지원할 수 없습니다.");
-        }
     }
 
     public void isAlreadyApplier(final Member member) {
@@ -159,12 +155,6 @@ public class ChildCareExpert extends BaseChildCareEntity {
         this.applications.forEach(ChildCareExpertApply::reset);
         this.caringChildren.forEach(child -> child.removeExpertContent(this));
 
-    }
-
-    public void validateWriter(final Member member) {
-        if (!getWriter().equals(member)) {
-            throw new NoPermissionOfContentException();
-        }
     }
 
     public void checkApplyIncluded(final ChildCareExpertApply expertApply) {
@@ -197,6 +187,13 @@ public class ChildCareExpert extends BaseChildCareEntity {
             return;
         }
         this.recruitType = recruitType;
+    }
+
+    private void changeCaringChild(final Child child) {
+        this.caringChildren.stream()
+                .findFirst()
+                .ifPresent(Child::cancelExpertContent);
+        this.caringChildren.add(child);
     }
 
     private void changeStartTime(final LocalDateTime startTime) {

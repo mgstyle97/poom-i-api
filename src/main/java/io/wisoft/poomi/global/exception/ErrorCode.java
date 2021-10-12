@@ -7,6 +7,7 @@ public enum ErrorCode {
 
     DUPLICATE_MEMBER_INFO(400),
     NO_MATCH_DATA(400),
+    ALREADY_EXISTS_GROUP_TITLE(400, "이미 존재하는 품앗이반 이름입니다."),
     ALREADY_REQUEST(400, "컨텐츠에 대해 이미 요청한 작업입니다."),
     NOT_FOUND_ENTITY_DATA(404, "입력하신 인증번호는 유효하지 않습니다."),
     BAD_CREDENTIALS(400, "입력한 이메일과 패스워드가 일치하지 않습니다."),

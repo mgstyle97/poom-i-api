@@ -9,10 +9,10 @@ import io.wisoft.poomi.domain.member.child.ChildRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -47,6 +47,20 @@ public class ChildService {
         log.info("Delete child data: {}", childId);
 
         return new ChildDeleteResponse(childId, member.getId());
+    }
+
+    @Transactional(readOnly = true)
+    public Child checkChildId(
+            final Member member,
+            final Optional<Long> optionalChildId) {
+        if (optionalChildId.isPresent()) {
+            Child child = childRepository.getById(optionalChildId.get());
+            member.checkChildInChildren(child);
+
+            return child;
+        }
+
+        return null;
     }
 
 }

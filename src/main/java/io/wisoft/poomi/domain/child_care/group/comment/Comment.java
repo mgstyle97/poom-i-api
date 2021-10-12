@@ -1,6 +1,7 @@
 package io.wisoft.poomi.domain.child_care.group.comment;
 
 import io.wisoft.poomi.domain.child_care.BaseTimeEntity;
+import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
 import io.wisoft.poomi.global.dto.request.child_care.group.comment.CommentRegisterRequest;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.child_care.BaseChildCareEntity;
@@ -39,10 +40,10 @@ public class Comment extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(
-            name = "group_id",
+            name = "board_id",
             referencedColumnName = "id"
     )
-    private ChildCareGroup childCareGroup;
+    private GroupBoard board;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(
@@ -52,21 +53,21 @@ public class Comment extends BaseTimeEntity {
     private Member writer;
 
     @Builder
-    public Comment(final String contents, final ChildCareGroup childCareGroup, final Member writer) {
+    public Comment(final String contents, final GroupBoard board, final Member writer) {
         this.contents = contents;
-        this.childCareGroup = childCareGroup;
+        this.board = board;
         this.writer = writer;
     }
 
     public static Comment of(final CommentRegisterRequest commentRegisterRequest,
                              final Member writer,
-                             final ChildCareGroup childCareGroup) {
+                             final GroupBoard board) {
         Comment comment = Comment.builder()
                 .contents(commentRegisterRequest.getContents())
-                .childCareGroup(childCareGroup)
+                .board(board)
                 .writer(writer)
                 .build();
-        childCareGroup.addComment(comment);
+        board.addComment(comment);
 
         return comment;
     }

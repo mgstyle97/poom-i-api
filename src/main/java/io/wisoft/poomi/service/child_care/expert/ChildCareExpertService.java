@@ -20,6 +20,7 @@ import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
 import io.wisoft.poomi.domain.child_care.expert.ChildCareExpertRepository;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.service.child_care.ContentPermissionVerifier;
+import io.wisoft.poomi.service.member.ChildService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,8 @@ public class ChildCareExpertService {
     private final ChildCareExpertApplyRepository childCareExpertApplyRepository;
     private final ChildRepository childRepository;
 
+    private final ChildService childService;
+
     @NoAccessCheck
     @Transactional(readOnly = true)
     public List<ChildCareExpertLookupResponse> lookupAllChildCareExpert(final AddressTag addressTag) {
@@ -61,7 +64,7 @@ public class ChildCareExpertService {
                 childCareExpertRegisterRequest.getEndTime()
         );
 
-        Child child = checkChildId(member, Optional.ofNullable(childCareExpertRegisterRequest.getChildId()));
+        Child child = childService.checkChildId(member, Optional.ofNullable(childCareExpertRegisterRequest.getChildId()));
 
         ChildCareExpert childCareExpert = ChildCareExpert.of(childCareExpertRegisterRequest, member, child);
         log.info("Generate child care expert entity");
@@ -92,7 +95,9 @@ public class ChildCareExpertService {
 
         ChildCareExpert childCareExpert = generateChildCareExpertById(expertId);
 
-        modifyChildCareExpert(childCareExpert, childCareExpertModifiedRequest);
+        Child child = childService
+                .checkChildId(member, Optional.ofNullable(childCareExpertModifiedRequest.getChildId()));
+        modifyChildCareExpert(childCareExpert, childCareExpertModifiedRequest, child);
 
         return ChildCareExpertModifiedResponse.of(childCareExpert);
     }
@@ -115,7 +120,7 @@ public class ChildCareExpertService {
         childCareExpert.isAlreadyApplier(member);
         log.info("Check member to make a request id: {}", member.getId());
 
-        Child child = checkChildId(member, Optional.ofNullable(childCareExpertApplyRequest.getChildId()));
+        Child child = childService.checkChildId(member, Optional.ofNullable(childCareExpertApplyRequest.getChildId()));
 
         ChildCareExpertApply expertApply =
                 ChildCareExpertApply.of(childCareExpertApplyRequest, childCareExpert, member, child);
@@ -154,7 +159,7 @@ public class ChildCareExpertService {
 
         validateWriterOfApply(expertApply, member);
 
-        Child child = checkChildId(member, Optional.ofNullable(applyModifiedRequest.getChildId()));
+        Child child = childService.checkChildId(member, Optional.ofNullable(applyModifiedRequest.getChildId()));
         expertApply.modifiedByRequest(applyModifiedRequest.getContents(), child);
         childCareExpertApplyRepository.save(expertApply);
     }
@@ -181,26 +186,13 @@ public class ChildCareExpertService {
     @Transactional
     public void approveExpertApply(final Long expertId, final Long applyId, final Member member) {
         ChildCareExpert childCareExpert = generateChildCareExpertById(expertId);
-        childCareExpert.validateWriter(member);
+        childCareExpert.isNotWriter(member);
         log.info("Check expert writer");
 
         ChildCareExpertApply expertApply = childCareExpertApplyRepository.getById(applyId);
         childCareExpert.checkApplyIncluded(expertApply);
 
         childCareExpert.approveApply(expertApply);
-    }
-
-    private Child checkChildId(
-            final Member member,
-            final Optional<Long> optionalChildId) {
-        if (optionalChildId.isPresent()) {
-            Child child = childRepository.getById(optionalChildId.get());
-            member.checkChildInChildren(child);
-
-            return child;
-        }
-
-        return null;
     }
 
     private ChildCareExpert generateChildCareExpertById(final Long expertId) {
@@ -220,8 +212,9 @@ public class ChildCareExpertService {
     }
 
     private void modifyChildCareExpert(final ChildCareExpert childCareExpert,
-                                       final ChildCareExpertModifiedRequest childCareExpertModifiedRequest) {
-        childCareExpert.modifiedFor(childCareExpertModifiedRequest);
+                                       final ChildCareExpertModifiedRequest childCareExpertModifiedRequest,
+                                       final Child child) {
+        childCareExpert.modifiedFor(childCareExpertModifiedRequest, child);
         childCareExpertRepository.save(childCareExpert);
         log.info("Update child care expert entity id: {}", childCareExpert.getId());
     }

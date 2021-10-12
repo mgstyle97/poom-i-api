@@ -3,6 +3,7 @@ package io.wisoft.poomi.global.dto.response.child_care.group;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
+import io.wisoft.poomi.global.utils.LocalDateTimeUtils;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +20,13 @@ public class ChildCareGroupLookupResponse {
 
     private String writer;
 
+    @JsonProperty("regular_meeting_day")
+    private String regularMeetingDay;
+
+    @JsonProperty("created_at")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date createdAt;
+
     @JsonProperty("requested_at")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date requestedAt;
@@ -26,7 +34,9 @@ public class ChildCareGroupLookupResponse {
     public ChildCareGroupLookupResponse(final ChildCareGroup childCareGroup) {
         this.id = childCareGroup.getId();
         this.title = childCareGroup.getTitle();
-        this.writer = childCareGroup.getWriter().getName();
+        this.writer = childCareGroup.getWriter().getNick();
+        this.regularMeetingDay = childCareGroup.getRegularMeetingDay();
+        this.createdAt = LocalDateTimeUtils.toDate(childCareGroup.getCreatedAt());
         this.requestedAt = new Date();
     }
 

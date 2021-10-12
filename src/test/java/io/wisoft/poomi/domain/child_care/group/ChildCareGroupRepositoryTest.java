@@ -82,8 +82,6 @@ class ChildCareGroupRepositoryTest {
         // given
         ChildCareGroup childCareGroup = ChildCareGroup.builder()
                         .title("테스트")
-                        .contents("테스트입니다.")
-                        .capacity(15L)
                         .recruitmentStatus(RecruitmentStatus.RECRUITING)
                         .writer(member)
                         .build();
@@ -93,8 +91,6 @@ class ChildCareGroupRepositoryTest {
 
         assertAll(
                 () -> assertEquals("테스트", childCareGroup.getTitle()),
-                () -> assertEquals("테스트입니다.", childCareGroup.getContents()),
-                () -> assertEquals(15L, childCareGroup.getCapacity()),
                 () -> assertEquals(childCareGroup.getRecruitmentStatus(), RecruitmentStatus.RECRUITING),
                 () -> assertNotNull(childCareGroup.getCreatedAt())
         );
@@ -106,8 +102,6 @@ class ChildCareGroupRepositoryTest {
     void delete_class_program() {
         ChildCareGroup childCareGroup = ChildCareGroup.builder()
                 .title("테스트")
-                .contents("테스트입니다.")
-                .capacity(15L)
                 .recruitmentStatus(RecruitmentStatus.RECRUITING)
                 .writer(member)
                 .build();

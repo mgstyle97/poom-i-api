@@ -33,13 +33,13 @@ public class CommentService {
         ChildCareGroup childCareGroup = childCareGroupRepository.getById(classId);
         log.info("Generate class program id: {}", classId);
 
-        Comment comment = Comment.of(commentRegisterRequest, member, childCareGroup);
-        log.info("Generate comment entity from request");
+//        Comment comment = Comment.of(commentRegisterRequest, member, childCareGroup);
+//        log.info("Generate comment entity from request");
+//
+//        commentRepository.save(comment);
+//        log.info("Save comment data id: {}", comment.getId());
 
-        commentRepository.save(comment);
-        log.info("Save comment data id: {}", comment.getId());
-
-        return CommentRegistResponse.of(comment);
+        return null;
     }
 
     @Transactional

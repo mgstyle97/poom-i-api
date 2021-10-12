@@ -10,15 +10,23 @@ import org.springframework.util.StringUtils;
 @Setter
 public class ChildCareGroupModifiedRequest {
 
-    private String contents;
+    private String title;
 
-    private Long capacity;
+    @JsonProperty("regular_meeting_day")
+    private String regularMeetingDay;
+
+    @JsonProperty("main_activity")
+    private String mainActivity;
+
+    private String description;
 
     @JsonProperty("recruitment_status")
     private RecruitmentStatus recruitmentStatus;
 
     public void setRecruitmentStatus(final String recruitmentStatus) {
-        this.recruitmentStatus = RecruitmentStatus.valueOf(recruitmentStatus);
+        if (StringUtils.hasText(recruitmentStatus)) {
+            this.recruitmentStatus = RecruitmentStatus.valueOf(recruitmentStatus);
+        }
     }
 
 }

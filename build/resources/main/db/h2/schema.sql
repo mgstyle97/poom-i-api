@@ -8,8 +8,11 @@ DROP TABLE IF EXISTS sms_certification CASCADE;
 DROP TABLE IF EXISTS email_certification CASCADE;
 DROP TABLE IF EXISTS refresh_token CASCADE;
 DROP TABLE IF EXISTS child_care_group CASCADE;
+DROP TABLE IF EXISTS group_board CASCADE;
 DROP TABLE IF EXISTS group_apply CASCADE;
 DROP TABLE IF EXISTS group_likes CASCADE;
+DROP TABLE IF EXISTS group_participating_member CASCADE;
+DROP TABLE IF EXISTS group_participating_child CASCADE;
 DROP TABLE IF EXISTS comment CASCADE;
 DROP TABLE IF EXISTS image CASCADE;
 DROP TABLE IF EXISTS child_care_expert CASCADE;
@@ -86,9 +89,10 @@ CREATE TABLE member_authority(
 
 CREATE TABLE child_care_group(
     id integer primary key,
-    title varchar not null,
-    contents CLOB not null,
-    capacity bigint,
+    title varchar unique,
+    regular_meeting_day varchar not null,
+    main_activity varchar not null,
+    description varchar not null,
     created_at date,
     modified_at date,
     recruitment_status varchar,
@@ -96,6 +100,15 @@ CREATE TABLE child_care_group(
     address_tag_id integer not null,
     foreign key (writer_id) references member(id),
     foreign key (address_tag_id) references address_tag(id)
+);
+
+CREATE TABLE group_board(
+    id integer primary key,
+    contents CLOB not null,
+    group_id integer not null,
+    writer_id integer not null,
+    foreign key (group_id) references child_care_group(id),
+    foreign key (writer_id) references member(id)
 );
 
 CREATE TABLE group_likes(
@@ -176,10 +189,27 @@ CREATE TABLE expert_likes(
 CREATE TABLE group_apply(
     id integer primary key,
     contents varchar not null,
-    writer_id integer not null,
     child_id integer,
+    writer_id integer not null,
     group_id integer not null,
-    foreign key(writer_id) references member(id),
     foreign key(child_id) references child(id),
+    foreign key(writer_id) references member(id),
     foreign key(group_id) references child_care_group(id)
+);
+
+CREATE TABLE group_participating_member(
+    id integer primary key,
+    participating_type varchar not null,
+    member_id integer not null,
+    group_id integer not null,
+    foreign key (member_id) references member(id),
+    foreign key (group_id) references child_care_group(id)
+);
+
+CREATE TABLE group_participating_child(
+    id integer primary key,
+    child_id integer not null,
+    group_id integer not null,
+    foreign key (child_id) references child(id),
+    foreign key (group_id) references child_care_group(id)
 );

@@ -27,7 +27,6 @@ public class CommentRegistResponse {
 
     public CommentRegistResponse(final Comment comment) {
         this.commentId = comment.getId();
-        this.classProgramId = comment.getChildCareGroup().getId();
         this.writerId = comment.getWriter().getId();
         this.requestedAt = new Date();
     }

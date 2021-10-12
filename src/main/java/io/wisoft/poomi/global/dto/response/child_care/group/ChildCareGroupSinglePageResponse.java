@@ -55,20 +55,12 @@ public class ChildCareGroupSinglePageResponse {
         this.requestedAt = new Date();
     }
 
-    public static ChildCareGroupSinglePageResponse of(final ChildCareGroup childCareGroup, final String domainInfo) {
+    public static ChildCareGroupSinglePageResponse of(final ChildCareGroup childCareGroup) {
         return ChildCareGroupSinglePageResponse.builder()
                 .groupId(childCareGroup.getId())
                 .title(childCareGroup.getTitle())
-                .contents(childCareGroup.getContents())
                 .writer(childCareGroup.getWriter().getName())
                 .recruitmentStatus(childCareGroup.getRecruitmentStatus())
-                .imageUris(childCareGroup.getImages()
-                        .stream()
-                        .map(image -> domainInfo + "/api/image/" + image.getImageName())
-                        .collect(Collectors.toList()))
-                .comments(childCareGroup.getComments().stream()
-                        .map(CommentSinglePageDto::of)
-                        .collect(Collectors.toList()))
                 .build();
     }
 

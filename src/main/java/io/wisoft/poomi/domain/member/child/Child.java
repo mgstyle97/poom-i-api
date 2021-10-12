@@ -86,6 +86,10 @@ public class Child {
         this.caredExpertContent = childCareExpert;
     }
 
+    public void cancelExpertContent() {
+        this.caredExpertContent = null;
+    }
+
     public void removeExpertContent(final ChildCareExpert childCareExpert) {
         this.caredExpertContent = null;
     }

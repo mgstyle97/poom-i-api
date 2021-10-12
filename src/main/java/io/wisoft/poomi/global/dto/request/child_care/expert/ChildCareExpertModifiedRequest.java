@@ -17,6 +17,9 @@ public class ChildCareExpertModifiedRequest {
     @JsonProperty("recruit_type")
     private RecruitType recruitType;
 
+    @JsonProperty("child_id")
+    private Long childId;
+
     @JsonProperty("start_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime startTime;

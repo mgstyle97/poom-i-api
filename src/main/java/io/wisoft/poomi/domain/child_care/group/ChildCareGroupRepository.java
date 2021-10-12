@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface ChildCareGroupRepository extends JpaRepository<ChildCareGroup, Long> {
 
+    Boolean existsByTitle(final String title);
+
     List<ChildCareGroup> findByAddressTag(final AddressTag addressTag);
 
     default ChildCareGroup getById(final Long classId) {

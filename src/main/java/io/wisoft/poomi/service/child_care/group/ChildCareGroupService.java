@@ -1,29 +1,33 @@
 package io.wisoft.poomi.service.child_care.group;
 
+import io.wisoft.poomi.domain.child_care.group.apply.GroupApply;
+import io.wisoft.poomi.domain.child_care.group.apply.GroupApplyRepository;
+import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMember;
+import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMemberRepository;
+import io.wisoft.poomi.domain.child_care.group.participating.member.ParticipatingType;
+import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.global.aop.child_care.NoAccessCheck;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupApplyRequest;
 import io.wisoft.poomi.global.dto.response.child_care.group.*;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupModifiedRequest;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupRegisterRequest;
-import io.wisoft.poomi.global.utils.FileUtils;
+import io.wisoft.poomi.global.exception.exceptions.AlreadyExistsGroupTitleException;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.MemberRepository;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroupRepository;
-import io.wisoft.poomi.domain.child_care.group.image.Image;
 import io.wisoft.poomi.domain.child_care.group.image.ImageRepository;
 import io.wisoft.poomi.service.child_care.comment.CommentService;
 import io.wisoft.poomi.service.child_care.ContentPermissionVerifier;
+import io.wisoft.poomi.service.member.ChildService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -32,10 +36,12 @@ import java.util.stream.Collectors;
 public class ChildCareGroupService {
 
     private final ChildCareGroupRepository childCareGroupRepository;
-    private final ImageRepository imageRepository;
+    private final GroupParticipatingMemberRepository groupParticipatingMemberRepository;
+    private final GroupApplyRepository groupApplyRepository;
     private final MemberRepository memberRepository;
 
     private final CommentService commentService;
+    private final ChildService childService;
 
     @NoAccessCheck
     @Transactional(readOnly = true)
@@ -48,18 +54,25 @@ public class ChildCareGroupService {
     @NoAccessCheck
     @Transactional
     public ChildCareGroupRegisterResponse registerChildCareGroup(final Member member,
-                                                                 final ChildCareGroupRegisterRequest childCareGroupRegisterRequest,
-                                                                 final List<MultipartFile> images,
-                                                                 final String domainInfo) {
+                                                                 final ChildCareGroupRegisterRequest childCareGroupRegisterRequest) {
+        validateGroupTitle(childCareGroupRegisterRequest.getTitle());
+
         ChildCareGroup childCareGroup = ChildCareGroup.of(member, childCareGroupRegisterRequest);
         log.info("Generate child care group title: {}", childCareGroup.getTitle());
 
         childCareGroupRepository.save(childCareGroup);
         log.info("Save child care group id: {}", childCareGroup.getId());
 
-        saveFiles(childCareGroup, images, domainInfo);
+        GroupParticipatingMember groupParticipatingMember = GroupParticipatingMember.builder()
+                .participatingType(ParticipatingType.MANAGE)
+                .member(member)
+                .childCareGroup(childCareGroup)
+                .build();
+        groupParticipatingMemberRepository.save(groupParticipatingMember);
+        log.info("Save participating group with writer id: {}", member.getId());
 
-        memberRepository.save(member);
+        member.addParticipatingGroup(groupParticipatingMember);
+        childCareGroup.addParticipatingMember(groupParticipatingMember);
 
         return ChildCareGroupRegisterResponse.from(childCareGroup);
     }
@@ -79,11 +92,10 @@ public class ChildCareGroupService {
 
     @Transactional(readOnly = true)
     public ChildCareGroupSinglePageResponse lookupChildCareGroup(final Long groupId,
-                                                                 final Member member,
-                                                                 final String domainInfo) {
+                                                                 final Member member) {
         ChildCareGroup childCareGroup = generateChildCareGroupById(groupId);
 
-        return ChildCareGroupSinglePageResponse.of(childCareGroup, domainInfo);
+        return ChildCareGroupSinglePageResponse.of(childCareGroup);
     }
 
     @Transactional
@@ -101,28 +113,21 @@ public class ChildCareGroupService {
     public void applyChildCareGroup(final Long groupId, final Member member,
                                     final ChildCareGroupApplyRequest applyRequest) {
         ChildCareGroup childCareGroup = generateChildCareGroupById(groupId);
+        childCareGroup.isWriter(member);
 
-        childCareGroup.addApplier(member);
+        Child child = childService.checkChildId(member, Optional.ofNullable(applyRequest.getChildId()));
+
+        GroupApply groupApply = GroupApply.of(applyRequest, child, member, childCareGroup);
+        groupApplyRepository.save(groupApply);
+
+        childCareGroup.addApplier(groupApply);
         memberRepository.save(member);
     }
 
-    @Transactional
-    public void likeChildCareGroup(final Long id, final Member member) {
-        ChildCareGroup childCareGroup = generateChildCareGroupById(id);
-
-        childCareGroup.addLikes(member);
-        memberRepository.save(member);
-    }
-
-    private void saveFiles(final ChildCareGroup childCareGroup, final List<MultipartFile> images,
-                           final String domainInfo) {
-        Set<Image> imageEntities = FileUtils.saveImageWithGroupId(childCareGroup, images, domainInfo);
-
-        if (!CollectionUtils.isEmpty(imageEntities)) {
-            imageRepository.saveAll(imageEntities);
+    private void validateGroupTitle(final String title) {
+        if (childCareGroupRepository.existsByTitle(title)) {
+            throw new AlreadyExistsGroupTitleException();
         }
-
-        childCareGroup.setImages(imageEntities);
     }
 
     private ChildCareGroup generateChildCareGroupById(final Long id) {
@@ -140,8 +145,6 @@ public class ChildCareGroupService {
     }
 
     private void deleteChildCareGroup(final ChildCareGroup childCareGroup, final Member member) {
-        commentService.deleteAll(childCareGroup.getComments(), childCareGroup.getId());
-        imageRepository.deleteAll(childCareGroup.getImages());
         childCareGroup.resetAssociated();
         childCareGroupRepository.delete(childCareGroup);
         log.info("Delete child care group id: {}", childCareGroup.getId());

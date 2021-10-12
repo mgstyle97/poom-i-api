@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
 import io.wisoft.poomi.domain.child_care.expert.RecruitType;
+import io.wisoft.poomi.global.utils.LocalDateTimeUtils;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,13 +40,17 @@ public class ChildCareExpertLookupResponse {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date createdAt;
 
+    @JsonProperty("start_date")
+    private String startDate;
+
     @JsonProperty("start_time")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
-    private LocalDateTime startTime;
+    private String startTime;
+
+    @JsonProperty("end_date")
+    private String endDate;
 
     @JsonProperty("end_time")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
-    private LocalDateTime endTime;
+    private String endTime;
 
     @JsonProperty("registered_at")
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -61,8 +66,10 @@ public class ChildCareExpertLookupResponse {
         this.contents = childCareExpert.getContents();
         this.recruitType = childCareExpert.getRecruitType();
         this.createdAt = Timestamp.valueOf(childCareExpert.getCreatedAt());
-        this.startTime = childCareExpert.getStartTime();
-        this.endTime = childCareExpert.getEndTime();
+        this.startDate = LocalDateTimeUtils.getDateToString(childCareExpert.getStartTime());
+        this.startTime = LocalDateTimeUtils.getTimeToString(childCareExpert.getStartTime());
+        this.endDate = LocalDateTimeUtils.getDateToString(childCareExpert.getEndTime());
+        this.endTime = LocalDateTimeUtils.getTimeToString(childCareExpert.getEndTime());
         this.registeredAt = new Date();
     }
 

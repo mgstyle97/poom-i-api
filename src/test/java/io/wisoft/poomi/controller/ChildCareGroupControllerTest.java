@@ -89,16 +89,12 @@ class ChildCareGroupControllerTest {
 
         ChildCareGroup childCareGroup = ChildCareGroup.builder()
                 .title("테스트")
-                .contents("테스트입니다.")
-                .capacity(15L)
                 .recruitmentStatus(RecruitmentStatus.RECRUITING)
                 .writer(member)
                 .build();
 
         ChildCareGroup childCareGroup2 = ChildCareGroup.builder()
                 .title("테스트2")
-                .contents("테스트2입니다.")
-                .capacity(12L)
                 .recruitmentStatus(RecruitmentStatus.RECRUITING)
                 .writer(member)
                 .build();

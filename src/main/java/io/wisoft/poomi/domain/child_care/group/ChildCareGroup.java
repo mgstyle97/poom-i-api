@@ -1,12 +1,12 @@
 package io.wisoft.poomi.domain.child_care.group;
 
 import io.wisoft.poomi.domain.child_care.RecruitmentStatus;
+import io.wisoft.poomi.domain.child_care.group.apply.GroupApply;
+import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMember;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupModifiedRequest;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupRegisterRequest;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.child_care.BaseChildCareEntity;
-import io.wisoft.poomi.domain.child_care.group.comment.Comment;
-import io.wisoft.poomi.domain.child_care.group.image.Image;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,117 +39,91 @@ public class ChildCareGroup extends BaseChildCareEntity {
     @Column(name = "title")
     private String title;
 
-    @Column(
-            name = "contents",
-            columnDefinition = "TEXT"
-    )
-    private String contents;
+    @Column(name = "regular_meeting_day")
+    private String regularMeetingDay;
 
-    @Column(name = "capacity")
-    private Long capacity;
+    @Column(name = "main_activity")
+    private String mainActivity;
+
+    @Column(name = "description")
+    private String description;
 
     @OneToMany(mappedBy = "childCareGroup")
-    private Set<Image> images;
+    private Set<GroupParticipatingMember> participatingMembers;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "group_apply",
-            joinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "member_id", referencedColumnName = "id")}
-    )
-    private Set<Member> appliers;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "group_likes",
-        joinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")},
-        inverseJoinColumns = {@JoinColumn(name = "member_id", referencedColumnName = "id")}
-    )
-    private Set<Member> likes;
-
-    @OneToMany(
-            fetch = FetchType.LAZY,
-            mappedBy = "childCareGroup"
-    )
-    private Set<Comment> comments;
+    @OneToMany(mappedBy = "childCareGroup", fetch = FetchType.LAZY)
+    private Set<GroupApply> applies;
 
     @Builder
-    public ChildCareGroup(final String title, final String contents,
-                          final Long capacity,
+    public ChildCareGroup(final String title, final String regularMeetingDay,
+                          final String mainActivity,  final String description,
                           final Member writer,
                           final RecruitmentStatus recruitmentStatus) {
         super(writer, writer.getAddressTag(), recruitmentStatus);
         this.title = title;
-        this.contents = contents;
-        this.capacity = capacity;
-        this.images = new HashSet<>();
-        this.appliers = new HashSet<>();
-        this.likes = new HashSet<>();
-        this.comments = new HashSet<>();
+        this.regularMeetingDay = regularMeetingDay;
+        this.mainActivity = mainActivity;
+        this.description = description;
+        this.participatingMembers = new HashSet<>();
+        this.applies = new HashSet<>();
     }
 
     public static ChildCareGroup of(final Member member,
                                     final ChildCareGroupRegisterRequest childCareGroupRegisterRequest) {
         ChildCareGroup childCareGroup = ChildCareGroup.builder()
                 .title(childCareGroupRegisterRequest.getTitle())
-                .contents(childCareGroupRegisterRequest.getContents())
-                .capacity(childCareGroupRegisterRequest.getCapacity())
+                .regularMeetingDay(childCareGroupRegisterRequest.getRegularMeetingDay())
+                .mainActivity(childCareGroupRegisterRequest.getMainActivity())
+                .description(childCareGroupRegisterRequest.getDescription())
                 .recruitmentStatus(childCareGroupRegisterRequest.getRecruitmentStatus())
                 .writer(member)
                 .build();
-        member.addGroup(childCareGroup);
 
         return childCareGroup;
     }
 
-    public void setImages(final Set<Image> images) {
-        this.images = images;
+    public void addParticipatingMember(final GroupParticipatingMember participatingMember) {
+        this.participatingMembers.add(participatingMember);
     }
 
-    public void addApplier(final Member member) {
-        if (!this.appliers.contains(member)) {
-            this.appliers.add(member);
-            member.addAppliedGroup(this);
-        }
-    }
-
-    public void addLikes(final Member member) {
-        if (!this.likes.contains(member)) {
-            this.likes.add(member);
-            member.addLikedGroup(this);
-        }
+    public void addApplier(final GroupApply apply) {
+        this.applies.add(apply);
     }
 
     public void modifiedFor(final ChildCareGroupModifiedRequest childCareGroupModifiedRequest) {
-        changeContents(childCareGroupModifiedRequest.getContents());
-        changeCapacity(childCareGroupModifiedRequest.getCapacity());
+        changeTitle(childCareGroupModifiedRequest.getTitle());
+        changeDescription(childCareGroupModifiedRequest.getDescription());
+        changeMainActivity(childCareGroupModifiedRequest.getMainActivity());
+        changeRegularMeetingDay(childCareGroupModifiedRequest.getRegularMeetingDay());
         super.changeRecruitmentStatus(childCareGroupModifiedRequest.getRecruitmentStatus());
     }
 
     public void resetAssociated() {
         getWriter().removeWrittenGroup(this);
-        this.appliers.forEach(applier -> applier.removeAppliedGroup(this));
-        this.likes.forEach(like -> like.removeLikedGroup(this));
-        this.comments.clear();
     }
 
-    public void addComment(final Comment comment) {
-        this.comments.add(comment);
-    }
-
-    private void changeContents(final String newContents) {
-        if (!StringUtils.hasText(newContents) ||
-                this.contents.equals(newContents)) {
-            return;
+    private void changeTitle(final String title) {
+        if (StringUtils.hasText(title) && !this.title.equals(title)) {
+            this.title = title;
         }
-        this.contents = newContents;
     }
 
-    private void changeCapacity(final Long capacity) {
-        if (capacity == null) {
-            return;
+    private void changeRegularMeetingDay(final String regularMeetingDay) {
+        if (StringUtils.hasText(regularMeetingDay) && !this.regularMeetingDay.equals(regularMeetingDay)) {
+            this.regularMeetingDay = regularMeetingDay;
         }
-        this.capacity = capacity;
+    }
+
+    private void changeMainActivity(final String mainActivity) {
+        if (StringUtils.hasText(mainActivity) && !this.mainActivity.equals(mainActivity)) {
+            this.mainActivity = mainActivity;
+        }
+    }
+
+    private void changeDescription(final String description) {
+        if (StringUtils.hasText(description) && !this.description.equals(description)) {
+            this.description = description;
+        }
     }
 
 }

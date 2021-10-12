@@ -51,6 +51,18 @@ public class BaseChildCareEntity extends BaseTimeEntity {
         this.writer = writer;
     }
 
+    public void isWriter(final Member member) {
+        if (this.writer.equals(member)) {
+            throw new IllegalArgumentException("작성자는 지원할 수 없습니다.");
+        }
+    }
+
+    public void isNotWriter(final Member member) {
+        if (!this.writer.equals(member)) {
+            throw new NoPermissionOfContentException();
+        }
+    }
+
     protected void changeRecruitmentStatus(final RecruitmentStatus recruitmentStatus) {
         if (recruitmentStatus == null) {
             return;
