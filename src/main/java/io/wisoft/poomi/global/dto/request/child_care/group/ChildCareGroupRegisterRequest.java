@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 public class ChildCareGroupRegisterRequest {
 
     @NotBlank(message = "품앗이반의 이름을 입력해주세요.")
-    private String title;
+    private String name;
 
     @JsonProperty("regular_meeting_day")
     @NotBlank(message = "품앗이반의 정기모임일을 입력해주세요.")

@@ -54,10 +54,10 @@ public class ChildCareGroupService {
     @Transactional
     public ChildCareGroupRegisterResponse registerChildCareGroup(final Member member,
                                                                  final ChildCareGroupRegisterRequest childCareGroupRegisterRequest) {
-        validateGroupTitle(childCareGroupRegisterRequest.getTitle());
+        validateGroupTitle(childCareGroupRegisterRequest.getName());
 
         ChildCareGroup childCareGroup = ChildCareGroup.of(member, childCareGroupRegisterRequest);
-        log.info("Generate child care group title: {}", childCareGroup.getTitle());
+        log.info("Generate child care group title: {}", childCareGroup.getName());
 
         childCareGroupRepository.save(childCareGroup);
         log.info("Save child care group id: {}", childCareGroup.getId());

@@ -10,7 +10,7 @@ import org.springframework.util.StringUtils;
 @Setter
 public class ChildCareGroupModifiedRequest {
 
-    private String title;
+    private String name;
 
     @JsonProperty("regular_meeting_day")
     private String regularMeetingDay;

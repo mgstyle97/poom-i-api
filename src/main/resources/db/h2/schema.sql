@@ -89,7 +89,7 @@ CREATE TABLE member_authority(
 
 CREATE TABLE child_care_group(
     id integer primary key,
-    title varchar unique,
+    name varchar unique,
     regular_meeting_day varchar not null,
     main_activity varchar not null,
     description varchar not null,

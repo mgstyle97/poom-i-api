@@ -90,7 +90,7 @@ class ChildCareGroupRepositoryTest {
         System.out.println(childCareGroup.getCreatedAt());
 
         assertAll(
-                () -> assertEquals("테스트", childCareGroup.getTitle()),
+                () -> assertEquals("테스트", childCareGroup.getName()),
                 () -> assertEquals(childCareGroup.getRecruitmentStatus(), RecruitmentStatus.RECRUITING),
                 () -> assertNotNull(childCareGroup.getCreatedAt())
         );

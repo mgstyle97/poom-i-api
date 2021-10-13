@@ -38,8 +38,8 @@ public class ChildCareGroup extends BaseChildCareEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "title")
-    private String title;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "regular_meeting_day")
     private String regularMeetingDay;
@@ -60,12 +60,12 @@ public class ChildCareGroup extends BaseChildCareEntity {
     private Set<GroupBoard> boards;
 
     @Builder
-    public ChildCareGroup(final String title, final String regularMeetingDay,
-                          final String mainActivity,  final String description,
+    public ChildCareGroup(final String name, final String regularMeetingDay,
+                          final String mainActivity, final String description,
                           final Member writer,
                           final RecruitmentStatus recruitmentStatus) {
         super(writer, writer.getAddressTag(), recruitmentStatus);
-        this.title = title;
+        this.name = name;
         this.regularMeetingDay = regularMeetingDay;
         this.mainActivity = mainActivity;
         this.description = description;
@@ -77,7 +77,7 @@ public class ChildCareGroup extends BaseChildCareEntity {
     public static ChildCareGroup of(final Member member,
                                     final ChildCareGroupRegisterRequest childCareGroupRegisterRequest) {
         ChildCareGroup childCareGroup = ChildCareGroup.builder()
-                .title(childCareGroupRegisterRequest.getTitle())
+                .name(childCareGroupRegisterRequest.getName())
                 .regularMeetingDay(childCareGroupRegisterRequest.getRegularMeetingDay())
                 .mainActivity(childCareGroupRegisterRequest.getMainActivity())
                 .description(childCareGroupRegisterRequest.getDescription())
@@ -97,7 +97,7 @@ public class ChildCareGroup extends BaseChildCareEntity {
     }
 
     public void modifiedFor(final ChildCareGroupModifiedRequest childCareGroupModifiedRequest) {
-        changeTitle(childCareGroupModifiedRequest.getTitle());
+        changeTitle(childCareGroupModifiedRequest.getName());
         changeDescription(childCareGroupModifiedRequest.getDescription());
         changeMainActivity(childCareGroupModifiedRequest.getMainActivity());
         changeRegularMeetingDay(childCareGroupModifiedRequest.getRegularMeetingDay());
@@ -127,8 +127,8 @@ public class ChildCareGroup extends BaseChildCareEntity {
     }
 
     private void changeTitle(final String title) {
-        if (StringUtils.hasText(title) && !this.title.equals(title)) {
-            this.title = title;
+        if (StringUtils.hasText(title) && !this.name.equals(title)) {
+            this.name = title;
         }
     }
 

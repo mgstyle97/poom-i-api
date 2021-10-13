@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -58,7 +57,7 @@ public class ChildCareGroupSinglePageResponse {
     public static ChildCareGroupSinglePageResponse of(final ChildCareGroup childCareGroup) {
         return ChildCareGroupSinglePageResponse.builder()
                 .groupId(childCareGroup.getId())
-                .title(childCareGroup.getTitle())
+                .title(childCareGroup.getName())
                 .writer(childCareGroup.getWriter().getName())
                 .recruitmentStatus(childCareGroup.getRecruitmentStatus())
                 .build();

@@ -16,7 +16,8 @@ public class ChildCareGroupLookupResponse {
 
     private Long id;
 
-    private String title;
+    @JsonProperty("group_name")
+    private String groupName;
 
     private String writer;
 
@@ -39,7 +40,7 @@ public class ChildCareGroupLookupResponse {
 
     public ChildCareGroupLookupResponse(final ChildCareGroup childCareGroup) {
         this.id = childCareGroup.getId();
-        this.title = childCareGroup.getTitle();
+        this.groupName = childCareGroup.getName();
         this.writer = childCareGroup.getWriter().getNick();
         this.regularMeetingDay = childCareGroup.getRegularMeetingDay();
         this.mainActivity = childCareGroup.getMainActivity();
@@ -55,16 +56,16 @@ public class ChildCareGroupLookupResponse {
     /**
      * 테스트 코드 확인 시 json parsing 을 위한 생성자
      * @param id
-     * @param title
+     * @param groupName
      * @param writer
      * @param requestedAt
      */
     @ConstructorProperties({"id", "title", "writer", "requested_at"})
     public ChildCareGroupLookupResponse(final Long id,
-                                        final String title, final String writer,
+                                        final String groupName, final String writer,
                                         final Date requestedAt) {
         this.id = id;
-        this.title = title;
+        this.groupName = groupName;
         this.writer = writer;
         this.requestedAt = requestedAt;
     }

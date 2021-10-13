@@ -22,10 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -104,7 +100,7 @@ class ChildCareGroupServiceTest {
     void select_through_address_tag() {
         List<ChildCareGroupLookupResponse> result = childCareGroupService.findByAddressTag(member.getAddressTag());
         result
-                .forEach(childCareGroupLookupResponse -> System.out.println(childCareGroupLookupResponse.getTitle()));
+                .forEach(childCareGroupLookupResponse -> System.out.println(childCareGroupLookupResponse.getGroupName()));
     }
 
     @Test
@@ -112,14 +108,14 @@ class ChildCareGroupServiceTest {
     @Disabled
     void save_class_program() {
         ChildCareGroupRegisterRequest childCareGroupRegisterRequest = new ChildCareGroupRegisterRequest();
-        childCareGroupRegisterRequest.setTitle("테스트3");
+        childCareGroupRegisterRequest.setName("테스트3");
         childCareGroupRegisterRequest.setRecruitmentStatus(null);
 
 //        classProgramService.registerClassProgram(member, classProgramRegisterRequest);
 
         List<ChildCareGroupLookupResponse> result = childCareGroupService.findByAddressTag(member.getAddressTag());
         result
-                .forEach(childCareGroupLookupResponse -> System.out.println(childCareGroupLookupResponse.getTitle()));
+                .forEach(childCareGroupLookupResponse -> System.out.println(childCareGroupLookupResponse.getGroupName()));
     }
 
     @Test

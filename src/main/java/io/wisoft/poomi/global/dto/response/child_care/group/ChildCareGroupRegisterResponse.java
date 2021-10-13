@@ -15,7 +15,7 @@ public class ChildCareGroupRegisterResponse {
 
     private Long id;
 
-    private String title;
+    private String name;
 
     private String writer;
 
@@ -25,9 +25,9 @@ public class ChildCareGroupRegisterResponse {
 
     @Builder
     private ChildCareGroupRegisterResponse(final Long id,
-                                           final String title, final String writer) {
+                                           final String name, final String writer) {
         this.id = id;
-        this.title = title;
+        this.name = name;
         this.writer = writer;
         this.registeredAt = new Date();
     }
@@ -35,7 +35,7 @@ public class ChildCareGroupRegisterResponse {
     public static ChildCareGroupRegisterResponse from(final ChildCareGroup childCareGroup) {
         ChildCareGroupRegisterResponse childCareGroupRegisterResponse = ChildCareGroupRegisterResponse.builder()
                 .id(childCareGroup.getId())
-                .title(childCareGroup.getTitle())
+                .name(childCareGroup.getName())
                 .writer(childCareGroup.getWriter().getName())
                 .build();
 

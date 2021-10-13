@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.poomi.domain.child_care.RecruitmentStatus;
 import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
-import io.wisoft.poomi.domain.child_care.group.image.Image;
 import io.wisoft.poomi.global.utils.LocalDateTimeUtils;
 import lombok.Builder;
 import lombok.Getter;
@@ -48,7 +47,7 @@ public class GroupBoardLookupResponse {
 
     @Builder
     public GroupBoardLookupResponse(final GroupBoard board) {
-        this.title = board.getChildCareGroup().getTitle();
+        this.title = board.getChildCareGroup().getName();
         this.writer = board.getWriter().getNick();
         this.recruitmentStatus = board.getChildCareGroup().getRecruitmentStatus();
         this.regularMeetingDay = board.getChildCareGroup().getRegularMeetingDay();
