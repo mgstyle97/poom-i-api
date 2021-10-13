@@ -31,7 +31,11 @@ public class ChildCareExpertRegisterRequest {
     private LocalDateTime endTime;
 
     public void setRecruitType(final String recruitType) {
-        this.recruitType = RecruitType.valueOf(recruitType);
+        try {
+            this.recruitType = RecruitType.valueOf(recruitType);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("모집 타입이 잘못되었습니다.");
+        }
     }
 
     public RecruitType getRecruitType() {

@@ -82,9 +82,9 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteAll(final Set<Comment> comments, final Long classId) {
+    public void deleteAll(final Set<Comment> comments, final Long boardId) {
         commentRepository.deleteAll(comments);
-        log.info("Delete all comments data contained in class program id: {}", classId);
+        log.info("Delete all comments data contained in group board id: {}", boardId);
     }
 
     private Comment generateComment(final Long commentId) {

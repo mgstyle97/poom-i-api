@@ -2,6 +2,7 @@ package io.wisoft.poomi.domain.child_care.group;
 
 import io.wisoft.poomi.domain.child_care.RecruitmentStatus;
 import io.wisoft.poomi.domain.child_care.group.apply.GroupApply;
+import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
 import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMember;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupModifiedRequest;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupRegisterRequest;
@@ -55,6 +56,9 @@ public class ChildCareGroup extends BaseChildCareEntity {
     @OneToMany(mappedBy = "childCareGroup", fetch = FetchType.LAZY)
     private Set<GroupApply> applies;
 
+    @OneToMany(mappedBy = "childCareGroup", fetch = FetchType.LAZY)
+    private Set<GroupBoard> boards;
+
     @Builder
     public ChildCareGroup(final String title, final String regularMeetingDay,
                           final String mainActivity,  final String description,
@@ -67,6 +71,7 @@ public class ChildCareGroup extends BaseChildCareEntity {
         this.description = description;
         this.participatingMembers = new HashSet<>();
         this.applies = new HashSet<>();
+        this.boards = new HashSet<>();
     }
 
     public static ChildCareGroup of(final Member member,
@@ -97,6 +102,10 @@ public class ChildCareGroup extends BaseChildCareEntity {
         changeMainActivity(childCareGroupModifiedRequest.getMainActivity());
         changeRegularMeetingDay(childCareGroupModifiedRequest.getRegularMeetingDay());
         super.changeRecruitmentStatus(childCareGroupModifiedRequest.getRecruitmentStatus());
+    }
+
+    public void addBoard(final GroupBoard board) {
+        this.boards.add(board);
     }
 
     public void resetAssociated() {

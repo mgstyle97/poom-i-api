@@ -1,6 +1,7 @@
 package io.wisoft.poomi.domain.member;
 
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
+import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
 import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMember;
 import lombok.Getter;
 
@@ -18,8 +19,12 @@ public class ChildCareGroupProperties {
     )
     private Set<GroupParticipatingMember> participatingGroups;
 
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "likes")
+    private Set<GroupBoard> likeBoards;
+
     public ChildCareGroupProperties() {
         this.participatingGroups = new HashSet<>();
+        this.likeBoards = new HashSet<>();
     }
 
 }

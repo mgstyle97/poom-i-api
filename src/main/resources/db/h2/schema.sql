@@ -9,8 +9,8 @@ DROP TABLE IF EXISTS email_certification CASCADE;
 DROP TABLE IF EXISTS refresh_token CASCADE;
 DROP TABLE IF EXISTS child_care_group CASCADE;
 DROP TABLE IF EXISTS group_board CASCADE;
+DROP TABLE IF EXISTS board_likes CASCADE;
 DROP TABLE IF EXISTS group_apply CASCADE;
-DROP TABLE IF EXISTS group_likes CASCADE;
 DROP TABLE IF EXISTS group_participating_member CASCADE;
 DROP TABLE IF EXISTS group_participating_child CASCADE;
 DROP TABLE IF EXISTS comment CASCADE;
@@ -113,10 +113,10 @@ CREATE TABLE group_board(
     foreign key (writer_id) references member(id)
 );
 
-CREATE TABLE group_likes(
-    group_id integer not null,
+CREATE TABLE board_likes(
+    board_id integer not null,
     member_id integer not null,
-    foreign key(group_id) references child_care_group(id),
+    foreign key(board_id) references group_board(id),
     foreign key(member_id) references member(id)
 );
 

@@ -45,7 +45,7 @@ public class ChildCareGroupService {
     @NoAccessCheck
     @Transactional(readOnly = true)
     public List<ChildCareGroupLookupResponse> findByAddressTag(final AddressTag addressTag) {
-        return childCareGroupRepository.findByAddressTag(addressTag).stream()
+        return childCareGroupRepository.findAllByAddressTag(addressTag).stream()
                 .map(ChildCareGroupLookupResponse::new)
                 .collect(Collectors.toList());
     }
@@ -122,17 +122,18 @@ public class ChildCareGroupService {
         childCareGroup.addApply(groupApply);
     }
 
-    private void validateGroupTitle(final String title) {
-        if (childCareGroupRepository.existsByTitle(title)) {
-            throw new AlreadyExistsGroupTitleException();
-        }
-    }
-
+    @NoAccessCheck
     public ChildCareGroup generateChildCareGroupById(final Long id) {
         ChildCareGroup childCareGroup = childCareGroupRepository.getById(id);
         log.info("Generate child care group id: {}", id);
 
         return childCareGroup;
+    }
+
+    private void validateGroupTitle(final String title) {
+        if (childCareGroupRepository.existsByTitle(title)) {
+            throw new AlreadyExistsGroupTitleException();
+        }
     }
 
     private void modifyChildCareGroup(final ChildCareGroup childCareGroup,

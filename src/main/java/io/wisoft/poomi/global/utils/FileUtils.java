@@ -79,6 +79,28 @@ public class FileUtils {
         return imageEntities;
     }
 
+    public static void removeBoardImages(final Set<Image> images) {
+        if (images.size() != 0) {
+
+            Image anyImage = images.stream().findAny().get();
+            String directoryPath = anyImage.getDirectoryPath();
+
+            try {
+                for (Image image : images) {
+                    File imageFile = new File(image.getImagePath());
+                    if (!removeFile(imageFile)) throw new IOException();
+                }
+            } catch (IOException e) {
+                log.error("파일을 삭제하는데 실패하였습니다.");
+            }
+
+
+            File directory = new File(directoryPath);
+            removeFile(directory);
+        }
+
+    }
+
     public static String getMimeType(final MultipartFile file) {
         try {
             return tika.detect(file.getBytes());
@@ -97,6 +119,14 @@ public class FileUtils {
         }
 
         return file;
+    }
+
+    private static boolean removeFile(final File file) {
+        if (file.exists()) {
+            return file.delete();
+        }
+
+        return false;
     }
 
 }

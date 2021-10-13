@@ -1,6 +1,7 @@
 package io.wisoft.poomi.domain.member;
 
 import io.wisoft.poomi.domain.child_care.expert.apply.ChildCareExpertApply;
+import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
 import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMember;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
 import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
@@ -248,4 +249,13 @@ public class Member {
     public void removeWrittenExpertContent(final ChildCareExpert expertContent) {
         this.writtenExpertContents.remove(expertContent);
     }
+
+    public void addLikeBoard(final GroupBoard board) {
+        this.childCareGroupProperties.getLikeBoards().add(board);
+    }
+
+    public void removeLikeBoard(final GroupBoard board) {
+        this.childCareGroupProperties.getLikeBoards().remove(board);
+    }
+
 }

@@ -73,4 +73,10 @@ public class Image {
             .build();
     }
 
+    public String getDirectoryPath() {
+        int indexOfImageNameInPath = this.imagePath.indexOf(imageName);
+
+        return this.imagePath.substring(0, indexOfImageNameInPath-1);
+    }
+
 }

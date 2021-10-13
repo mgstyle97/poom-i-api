@@ -10,7 +10,7 @@ public interface ChildCareGroupRepository extends JpaRepository<ChildCareGroup, 
 
     Boolean existsByTitle(final String title);
 
-    List<ChildCareGroup> findByAddressTag(final AddressTag addressTag);
+    List<ChildCareGroup> findAllByAddressTag(final AddressTag addressTag);
 
     default ChildCareGroup getById(final Long groupId) {
         return this.findById(groupId).orElseThrow(
