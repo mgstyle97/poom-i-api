@@ -10,7 +10,9 @@ import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -55,6 +57,22 @@ public class RestExceptionHandler {
                         .build());
     }
 
+    @ExceptionHandler(AuthenticationException.class)
+    public ApiResponse<ErrorResponse> unAuthentication() {
+        return ApiResponse.failure(HttpStatus.UNAUTHORIZED,
+                ErrorResponse.builder()
+                        .errorCode(ErrorCode.UN_AUTHENTICATION)
+                        .build());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ApiResponse<ErrorResponse> accessDenied() {
+        return ApiResponse.failure(HttpStatus.FORBIDDEN,
+                ErrorResponse.builder()
+                        .errorCode(ErrorCode.FORBIDDEN)
+                        .build());
+    }
+
     @ExceptionHandler(NoHandlerFoundException.class)
     public ApiResponse<ErrorResponse> notFound(NoHandlerFoundException e) {
 
@@ -64,18 +82,9 @@ public class RestExceptionHandler {
                         .build());
     }
 
-    @ExceptionHandler(NoPermissionOfContentException.class)
-    public ApiResponse<ErrorResponse> noPermission() {
-        return ApiResponse.failure(HttpStatus.FORBIDDEN,
-                ErrorResponse.builder()
-                        .errorCode(ErrorCode.NO_PERMISSION)
-                        .build()
-        );
-    }
-
     @ExceptionHandler(BaseException.class)
     public ApiResponse<ErrorResponse> handleBaseException(final BaseException e) {
-        return ApiResponse.failure(HttpStatus.BAD_REQUEST,
+        return ApiResponse.failure(HttpStatus.valueOf(e.getErrorCode().getStatusCode()),
                 ErrorResponse.builder()
                         .errorCode(e.getErrorCode())
                         .build()

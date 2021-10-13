@@ -74,7 +74,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .cors().and()
-                .csrf().disable()
+
+                .exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler)
+
+                .and().csrf().disable()
                 .headers().frameOptions().disable()
 
                 .and()
@@ -83,21 +88,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers(permitAllPatterns()).permitAll()
                 .anyRequest().authenticated()
-
-                .and()
-                .oauth2Login(o -> {
-                    o.userInfoEndpoint()
-                            .userService(customOAuth2Service)
-                    .and()
-                    .successHandler(successHandler);
-                })
-
-                .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .accessDeniedHandler(jwtAccessDeniedHandler)
 
                 .and()
                 .apply(jwtSecurityConfig);

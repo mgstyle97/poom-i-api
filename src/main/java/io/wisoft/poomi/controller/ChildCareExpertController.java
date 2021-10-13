@@ -14,6 +14,7 @@ import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.service.child_care.expert.ChildCareExpertService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,6 +27,7 @@ public class ChildCareExpertController {
 
     private final ChildCareExpertService childCareExpertService;
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping
     public ApiResponse<List<ChildCareExpertLookupResponse>> lookupAllChildCareExpert(
             @SignInMember final Member member) {

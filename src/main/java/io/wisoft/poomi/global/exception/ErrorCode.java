@@ -24,6 +24,8 @@ public enum ErrorCode {
     FILE_NOT_READABLE(400, "파일을 읽을 수 없습니다."),
     NOT_SUPPORTED_MEDIA_TYPE(400, "지원하지 않는 Content-type 입니다."),
     HTTP_CLIENT_ERROR(400, "소셜 플랫폼에 요청을 실패하였습니다."),
+    UN_AUTHENTICATION(401, "로그인이 필요한 서비스입니다."),
+    FORBIDDEN(403, "허가되지 않은 요청입니다."),
     NOT_FOUND(404, "요청하신 페이지를 찾을 수 없습니다."),
     METHOD_NOT_ALLOWED(405, "지원하지 않는 요청입니다."),
     INTERNAL_SERVER_ERROR(500, "서버측 에러입니다.");

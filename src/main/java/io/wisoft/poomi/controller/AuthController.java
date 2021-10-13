@@ -1,19 +1,17 @@
 package io.wisoft.poomi.controller;
 
 import io.wisoft.poomi.configures.security.jwt.JwtToken;
+import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.global.dto.request.member.SigninRequest;
 import io.wisoft.poomi.global.dto.response.ApiResponse;
 import io.wisoft.poomi.global.dto.response.member.SigninResponse;
 import io.wisoft.poomi.global.utils.CookieUtils;
-import io.wisoft.poomi.global.utils.SessionUtils;
 import io.wisoft.poomi.service.auth.AuthService;
 import io.wisoft.poomi.service.auth.OAuth2Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -31,7 +29,10 @@ public class AuthController {
             @RequestBody @Valid final SigninRequest signinRequest, final HttpServletResponse response) {
 
         final JwtToken jwtToken = authService.signin(signinRequest);
-        cookieUtils.generateRefreshTokenCookiesAndSave(jwtToken.getRefreshToken(), response);
+        cookieUtils
+                .generateTokenCookieAndSave(jwtToken.getAccessToken(), JwtTokenProvider.ACCESS_TOKEN_NAME, response);
+        cookieUtils
+                .generateTokenCookieAndSave(jwtToken.getRefreshToken(), JwtTokenProvider.REFRESH_TOKEN_NAME, response);
 
         return ApiResponse
                 .succeedWithAccessToken(HttpStatus.OK, null, jwtToken);
