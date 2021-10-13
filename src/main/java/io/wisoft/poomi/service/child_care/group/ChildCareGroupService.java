@@ -131,7 +131,7 @@ public class ChildCareGroupService {
     }
 
     private void validateGroupTitle(final String title) {
-        if (childCareGroupRepository.existsByTitle(title)) {
+        if (childCareGroupRepository.existsByName(title)) {
             throw new AlreadyExistsGroupTitleException();
         }
     }

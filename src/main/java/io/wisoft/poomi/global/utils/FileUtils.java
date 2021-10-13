@@ -60,8 +60,7 @@ public class FileUtils {
 
         try {
             for (MultipartFile image : images) {
-                String extension = FilenameUtils.getExtension(image.getOriginalFilename());
-                File destImage = generateFile(email, image.getOriginalFilename(), extension);
+                File destImage = generateFile(email, image.getOriginalFilename());
                 image.transferTo(destImage);
                 log.info("Save file: {}", destImage.getName());
             }
@@ -77,9 +76,8 @@ public class FileUtils {
         try {
             if (!CollectionUtils.isEmpty(images)) {
                 for (MultipartFile image : images) {
-                    String extension = FilenameUtils.getExtension(image.getOriginalFilename());
                     Long groupId = board.getId();
-                    File destImage = generateFile(String.valueOf(groupId), image.getOriginalFilename(), extension);
+                    File destImage = generateFile(String.valueOf(groupId), image.getOriginalFilename());
                     image.transferTo(destImage);
                     log.info("Save file: {}", destImage.getName());
 
@@ -128,7 +126,7 @@ public class FileUtils {
         }
     }
 
-    private static File generateFile(final String id, final String originalName, final String extension) {
+    private static File generateFile(final String id, final String originalName) {
         File file = new File(
                 IMAGE_SAVE_PATH + id + "/" + id + "_" + originalName
         );

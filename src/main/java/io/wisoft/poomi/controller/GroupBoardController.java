@@ -7,6 +7,7 @@ import io.wisoft.poomi.global.dto.request.child_care.board.GroupBoardModifyReque
 import io.wisoft.poomi.global.dto.request.child_care.board.GroupBoardRegisterRequest;
 import io.wisoft.poomi.global.dto.response.ApiResponse;
 import io.wisoft.poomi.global.dto.response.child_care.board.GroupBoardLookupResponse;
+import io.wisoft.poomi.global.dto.response.child_care.board.GroupBoardRegisterResponse;
 import io.wisoft.poomi.global.utils.DomainUtils;
 import io.wisoft.poomi.service.child_care.board.GroupBoardService;
 import lombok.RequiredArgsConstructor;
@@ -34,12 +35,15 @@ public class GroupBoardController {
     }
 
     @PostMapping
-    public void registerGroupBoard(
+    public ApiResponse<GroupBoardRegisterResponse> registerGroupBoard(
             @RequestPart("data") @Valid final GroupBoardRegisterRequest registerRequest,
             @RequestPart(value = "images", required = false) @Image List<MultipartFile> images,
             @SignInMember final Member member, final HttpServletRequest request) {
-        groupBoardService
-                .registerGroupBoard(member, registerRequest, images, DomainUtils.generateDomainByRequest(request));
+        return ApiResponse.succeed(HttpStatus.CREATED,
+                groupBoardService
+                        .registerGroupBoard(
+                                member, registerRequest, images, DomainUtils.generateDomainByRequest(request)
+                        ));
     }
 
     @PatchMapping("/{board-id}")

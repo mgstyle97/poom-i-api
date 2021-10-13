@@ -11,6 +11,7 @@ import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.global.dto.request.child_care.board.GroupBoardModifyRequest;
 import io.wisoft.poomi.global.dto.request.child_care.board.GroupBoardRegisterRequest;
 import io.wisoft.poomi.global.dto.response.child_care.board.GroupBoardLookupResponse;
+import io.wisoft.poomi.global.dto.response.child_care.board.GroupBoardRegisterResponse;
 import io.wisoft.poomi.global.utils.FileUtils;
 import io.wisoft.poomi.service.child_care.ContentPermissionVerifier;
 import io.wisoft.poomi.service.child_care.comment.CommentService;
@@ -52,10 +53,10 @@ public class GroupBoardService {
     }
 
     @Transactional
-    public void registerGroupBoard(final Member member,
-                                   final GroupBoardRegisterRequest registerRequest,
-                                   final List<MultipartFile> images,
-                                   final String domainInfo) {
+    public GroupBoardRegisterResponse registerGroupBoard(final Member member,
+                                                         final GroupBoardRegisterRequest registerRequest,
+                                                         final List<MultipartFile> images,
+                                                         final String domainInfo) {
         ChildCareGroup childCareGroup = childCareGroupService.generateChildCareGroupById(registerRequest.getGroupId());
 
         childCareGroup.validateMemberIsParticipating(member);
@@ -69,6 +70,7 @@ public class GroupBoardService {
         saveImages(board, images, domainInfo);
         log.info("Save images and set in board");
 
+        return new GroupBoardRegisterResponse(board);
     }
 
     @Transactional

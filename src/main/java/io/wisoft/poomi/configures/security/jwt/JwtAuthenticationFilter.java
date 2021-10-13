@@ -36,19 +36,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        final Cookie accessTokenCookie = cookieUtils.getCookie(request, JwtTokenProvider.ACCESS_TOKEN_NAME);
-
-        if (accessTokenCookie != null) {
-            final String accessToken = accessTokenCookie.getValue();
-            try {
-                if (validateJwtToken(accessToken)) {
-                    Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
-            } catch (ExpiredJwtException e) {
-                Cookie refreshTokenCookie = cookieUtils.getCookie(request, JwtTokenProvider.REFRESH_TOKEN_NAME);
-                verifyRefreshToken(refreshTokenCookie.getValue(), accessToken, response);
+        final String accessToken = jwtTokenProvider.resolveToken(request);
+        try {
+            if (validateJwtToken(accessToken)) {
+                Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
+        } catch (ExpiredJwtException e) {
+            Cookie refreshTokenCookie = cookieUtils.getCookie(request, JwtTokenProvider.REFRESH_TOKEN_NAME);
+            verifyRefreshToken(refreshTokenCookie.getValue(), accessToken, response);
         }
 
         filterChain.doFilter(request, response);
