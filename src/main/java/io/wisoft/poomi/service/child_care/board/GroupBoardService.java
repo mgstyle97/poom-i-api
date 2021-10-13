@@ -23,6 +23,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -72,12 +73,14 @@ public class GroupBoardService {
 
     @Transactional
     public void modifyGroupBoard(final Long boardId, final Member member,
-                                 final GroupBoardModifyRequest modifyRequest) {
+                                 final GroupBoardModifyRequest modifyRequest,
+                                 final List<MultipartFile> images,
+                                 final String domainInfo) {
         GroupBoard board = generateGroupBoard(boardId);
 
         ContentPermissionVerifier.verifyModifyPermission(board.getWriter(), member);
 
-        board.modifiedFor(modifyRequest);
+        modifyBoard(board, modifyRequest, images, domainInfo);
         groupBoardRepository.save(board);
 
     }
@@ -107,7 +110,7 @@ public class GroupBoardService {
     }
 
     private GroupBoard generateGroupBoard(final Long boardId) {
-        GroupBoard board  = groupBoardRepository.getBoardById(boardId);
+        GroupBoard board = groupBoardRepository.getBoardById(boardId);
         log.info("Generate group board id: {}", boardId);
 
         return board;
@@ -127,6 +130,33 @@ public class GroupBoardService {
         return boardsList.stream()
                 .flatMap(Set::stream)
                 .collect(Collectors.toList());
+    }
+
+    private void modifyBoard(final GroupBoard board,
+                             final GroupBoardModifyRequest modifyRequest,
+                             final List<MultipartFile> images,
+                             final String domainInfo) {
+        Optional.ofNullable(modifyRequest.getGroupId()).ifPresent(groupId -> {
+            Optional<ChildCareGroup> optionalGroup = childCareGroupRepository.findById(groupId);
+            optionalGroup.ifPresent(board::changeGroup);
+        });
+
+        board.changeContents(modifyRequest.getContents());
+
+        Optional.ofNullable(modifyRequest.getRemoveImageIds()).ifPresent(removeImageIds -> {
+            removeImageIds.stream()
+                    .map(imageRepository::findById)
+                    .forEach(optionalImage -> optionalImage.ifPresent(image -> {
+                        board.removeImage(image);
+                        imageRepository.delete(image);
+                        FileUtils.removeImage(image);
+                    }));
+        });
+
+        Optional.ofNullable(images).ifPresent(imageList -> {
+            saveImages(board, imageList, domainInfo);
+        });
+
     }
 
     private void removeBoard(final GroupBoard board) {

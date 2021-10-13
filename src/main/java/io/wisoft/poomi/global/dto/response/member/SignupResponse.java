@@ -17,6 +17,7 @@ public class SignupResponse {
 
     @JsonProperty("phone_number")
     private String phoneNumber;
+
     private String email;
 
     private String nick;

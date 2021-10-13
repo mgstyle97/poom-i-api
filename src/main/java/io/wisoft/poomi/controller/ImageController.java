@@ -2,6 +2,7 @@ package io.wisoft.poomi.controller;
 
 import io.wisoft.poomi.domain.child_care.group.image.Image;
 import io.wisoft.poomi.domain.child_care.group.image.ImageRepository;
+import io.wisoft.poomi.global.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpHeaders;
@@ -36,14 +37,7 @@ public class ImageController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.IMAGE_PNG);
 
-        try(FileInputStream inputStream = new FileInputStream(imagePath)) {
-
-            byte[] byteImage = IOUtils.toByteArray(inputStream);
-
-            return new ResponseEntity<>(byteImage, headers, HttpStatus.OK);
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Error to read image file");
-        }
+        return new ResponseEntity<>(FileUtils.findFileByPath(imagePath), headers, HttpStatus.OK);
     }
 
 }

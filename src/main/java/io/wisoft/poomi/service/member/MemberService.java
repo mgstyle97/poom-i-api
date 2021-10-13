@@ -15,11 +15,14 @@ import io.wisoft.poomi.domain.member.address.AddressTagRepository;
 import io.wisoft.poomi.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,6 +47,12 @@ public class MemberService {
         FileUtils.saveImageWithUserEmail(member.getEmail(), images);
 
         return SignupResponse.of(member);
+    }
+
+    public void saveProfileImage(final MultipartFile profileImage, final Member member) {
+        FileUtils.saveProfileImage(profileImage, member);
+
+        memberRepository.save(member);
     }
 
     private Member saveMember(final SignupRequest signupRequest) {

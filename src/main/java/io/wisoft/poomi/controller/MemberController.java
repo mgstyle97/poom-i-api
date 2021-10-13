@@ -10,10 +10,15 @@ import io.wisoft.poomi.global.dto.request.member.SignupRequest;
 import io.wisoft.poomi.configures.web.resolver.SignInMember;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.global.dto.response.oauth.OAuthUserResultResponse;
+import io.wisoft.poomi.global.utils.DomainUtils;
+import io.wisoft.poomi.global.utils.FileUtils;
 import io.wisoft.poomi.service.member.MemberService;
 import io.wisoft.poomi.service.auth.OAuth2Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -45,11 +50,21 @@ public class MemberController {
         return ApiResponse.succeed(HttpStatus.OK, MyPageResponse.of(member));
     }
 
+    @GetMapping("/member/profile-image")
+    public ResponseEntity<byte[]> getProfileImage(@SignInMember final Member member) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_PNG);
+
+        return new ResponseEntity<>(
+                FileUtils.findFileByPath(member.getProfileImagePath()), headers, HttpStatus.OK);
+    }
+
     @PostMapping("/member/profile-image")
     public void registerProfileImage(
             @RequestPart("profile") final MultipartFile profileImage,
             @SignInMember final Member member) {
-
+        memberService.saveProfileImage(profileImage, member);
     }
 
     @GetMapping("/oauth2/success")

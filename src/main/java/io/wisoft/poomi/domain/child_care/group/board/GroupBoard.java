@@ -112,11 +112,22 @@ public class GroupBoard extends BaseTimeEntity {
         this.comments.add(comment);
     }
 
-    public void modifiedFor(final GroupBoardModifyRequest modifyRequest) {
-        final String changeContents = modifyRequest.getContents();
+    public void changeGroup(final ChildCareGroup childCareGroup) {
+        if (!this.childCareGroup.equals(childCareGroup)) {
+            this.childCareGroup.removeBoard(this);
+            this.childCareGroup = childCareGroup;
+            childCareGroup.addBoard(this);
+        }
+    }
+
+    public void changeContents(final String changeContents) {
         if (StringUtils.hasText(changeContents) && !this.contents.equals(changeContents)) {
             this.contents = changeContents;
         }
+    }
+
+    public void removeImage(final Image image) {
+        this.images.remove(image);
     }
 
     public void resetAssociated() {

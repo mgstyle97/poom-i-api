@@ -73,7 +73,7 @@ CREATE TABLE member(
     nick varchar unique,
     gender varchar not null,
     age integer not null,
-    profile_image_url varchar,
+    profile_image_path varchar,
     score integer not null default 0,
     score_provider_count integer not null default 0,
     address_id integer,

@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.util.*;
@@ -62,8 +63,8 @@ public class Member {
     @Column(name = "age")
     private Integer age;
 
-    @Column(name = "profile_image_url")
-    private String profileImageUrl;
+    @Column(name = "profile_image_path")
+    private String profileImagePath;
 
     @Column(name = "score")
     private Integer score;
@@ -124,7 +125,7 @@ public class Member {
     @Builder
     public Member(final String name, final String phoneNumber,
                   final String email, final String password,
-                  final String nick, final Integer age, final String profileImageUrl,
+                  final String nick, final Integer age, final String profileImagePath,
                   final Gender gender,
                   final Set<Authority> authorities,
                   final Address address) {
@@ -134,7 +135,7 @@ public class Member {
         this.password = password;
         this.nick = nick;
         this.age = age;
-        this.profileImageUrl = profileImageUrl;
+        this.profileImagePath = profileImagePath;
         this.score = 0;
         this.scoreProviderCount = 0;
         this.gender = gender;
@@ -161,6 +162,12 @@ public class Member {
                 .authorities(Collections.singleton(userAuthority))
                 .build();
         return member;
+    }
+
+    public void saveProfileImagePath(final String profileImagePath) {
+        if (StringUtils.hasText(profileImagePath)) {
+            this.profileImagePath = profileImagePath;
+        }
     }
 
     public void checkChildInChildren(final Child child) {

@@ -1,11 +1,12 @@
 package io.wisoft.poomi.domain.member.profile_image;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@NoArgsConstructor
 @Getter
 @Entity
 @SequenceGenerator(

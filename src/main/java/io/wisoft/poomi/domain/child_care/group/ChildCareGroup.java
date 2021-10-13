@@ -108,6 +108,10 @@ public class ChildCareGroup extends BaseChildCareEntity {
         this.boards.add(board);
     }
 
+    public void removeBoard(final GroupBoard board) {
+        this.boards.remove(board);
+    }
+
     public void resetAssociated() {
         getWriter().removeWrittenGroup(this);
     }

@@ -16,15 +16,15 @@ public class AddressResponse {
     @JsonProperty("tag_name")
     private String tagName;
 
-    @JsonProperty("registered_at")
+    @JsonProperty("requested_at")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date registeredAt;
+    private Date requestedAt;
 
     public static AddressResponse from(String email, String tagName) {
         AddressResponse addressResponse = new AddressResponse();
         addressResponse.setEmail(email);
         addressResponse.setTagName(tagName);
-        addressResponse.setRegisteredAt(new Date());
+        addressResponse.setRequestedAt(new Date());
 
         return addressResponse;
     }

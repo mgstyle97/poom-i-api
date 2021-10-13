@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 public class CMInfoRegisterResponse {
@@ -14,14 +15,14 @@ public class CMInfoRegisterResponse {
 
     private String email;
 
-    @JsonProperty("registered_at")
+    @JsonProperty("requested_at")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime registeredAt;
+    private Date requestedAt;
 
     public CMInfoRegisterResponse(final Long id, final String email) {
         this.id = id;
         this.email = email;
-        this.registeredAt = LocalDateTime.now();
+        this.requestedAt = new Date();
     }
 
 }
