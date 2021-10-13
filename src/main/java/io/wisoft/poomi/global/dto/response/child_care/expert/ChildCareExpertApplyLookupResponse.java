@@ -18,16 +18,16 @@ public class ChildCareExpertApplyLookupResponse {
 
     private String contents;
 
-    @JsonProperty("registered_at")
+    @JsonProperty("requested_at")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date registeredAt;
+    private Date requestedAt;
 
     @Builder
     private ChildCareExpertApplyLookupResponse(final ChildCareExpertApply application) {
         this.applier = application.getWriter().getNick();
         this.writerScore = application.getWriter().getScore();
         this.contents = application.getContents();
-        this.registeredAt = new Date();
+        this.requestedAt = new Date();
     }
 
     public static ChildCareExpertApplyLookupResponse of(final ChildCareExpertApply application) {

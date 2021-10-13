@@ -18,16 +18,16 @@ public class ChildCareExpertRegisterResponse {
 
     private String writer;
 
-    @JsonProperty("registered_at")
+    @JsonProperty("requested_at")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date registeredAt;
+    private Date requestedAt;
 
     @Builder
     private ChildCareExpertRegisterResponse(final Long expertId,
                                             final String writer) {
         this.expertId = expertId;
         this.writer = writer;
-        this.registeredAt = new Date();
+        this.requestedAt = new Date();
     }
 
     public static ChildCareExpertRegisterResponse of(final ChildCareExpert childCareExpert) {

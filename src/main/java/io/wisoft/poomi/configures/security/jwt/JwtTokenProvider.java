@@ -32,6 +32,7 @@ public class JwtTokenProvider {
     // 토근 유효시간
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 24 * 60 * 60 * 1000L;
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;
+    private static final long CERTIFICATION_TOKEN_EXPIRE_TIME = 3 * 60 * 1000L;
 
     private final Key key;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -74,6 +75,15 @@ public class JwtTokenProvider {
                 .accessTokenExpiration(getExpirationDateFromToken(accessToken))
                 .refreshTokenExpiration(getExpirationDateFromToken(refreshToken))
                 .build();
+    }
+
+    public String generateCertificationToken() {
+        long now = (new Date()).getTime();
+
+        return Jwts.builder()
+                .setExpiration(new Date(now + CERTIFICATION_TOKEN_EXPIRE_TIME))
+                .signWith(key, SignatureAlgorithm.ES256)
+                .compact();
     }
 
     public Authentication getAuthentication(String token) {

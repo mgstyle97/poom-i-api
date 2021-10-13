@@ -31,9 +31,9 @@ public class ChildCareExpertModifiedResponse {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime endTime;
 
-    @JsonProperty("registered_at")
+    @JsonProperty("requested_at")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date registeredAt;
+    private Date requestedAt;
 
     @Builder
     private ChildCareExpertModifiedResponse(final Long expertId,
@@ -45,7 +45,7 @@ public class ChildCareExpertModifiedResponse {
         this.recruitType = recruitType;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.registeredAt = new Date();
+        this.requestedAt = new Date();
     }
 
     public static ChildCareExpertModifiedResponse of(final ChildCareExpert childCareExpert) {

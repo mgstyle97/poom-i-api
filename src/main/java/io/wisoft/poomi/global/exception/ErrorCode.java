@@ -11,6 +11,7 @@ public enum ErrorCode {
     ALREADY_REQUEST(400, "컨텐츠에 대해 이미 요청한 작업입니다."),
     NOT_FOUND_ENTITY_DATA(404, "입력하신 인증번호는 유효하지 않습니다."),
     BAD_CREDENTIALS(400, "입력한 이메일과 패스워드가 일치하지 않습니다."),
+    CERTIFICATION_TOKEN_EXPIRED(400, "인증가능한 시간이 만료되었습니다."),
     NO_PERMISSION(403, "컨텐츠에 대한 요청 접근 권한이 없습니다."),
 
     ILLEGAL_ARGUMENT(400),

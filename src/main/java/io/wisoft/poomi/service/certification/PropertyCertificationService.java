@@ -1,6 +1,7 @@
 package io.wisoft.poomi.service.certification;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.global.dto.response.auth.SmsResultResponse;
 import io.wisoft.poomi.global.dto.response.auth.SmsVerifyResponse;
 import io.wisoft.poomi.global.dto.request.auth.*;
@@ -35,6 +36,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class PropertyCertificationService {
+
+    private final JwtTokenProvider jwtTokenProvider;
 
     private final NCSProperty ncsProperty;
     private final SmsCertificationRepository smsCertificationRepository;
@@ -100,6 +103,10 @@ public class PropertyCertificationService {
 
         emailCertificationRepository.delete(emailCertification);
         log.info("Delete verified email: {}", emailCertification.getEmail());
+    }
+
+    private void validateCertificationToken(final String token) {
+        jwtTokenProvider.validateToken(token);
     }
 
     private String generateCertificationNumber() {

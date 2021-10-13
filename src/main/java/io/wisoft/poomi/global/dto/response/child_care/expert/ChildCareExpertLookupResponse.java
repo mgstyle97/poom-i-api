@@ -9,7 +9,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
 @Getter
@@ -39,8 +38,7 @@ public class ChildCareExpertLookupResponse {
     private RecruitType recruitType;
 
     @JsonProperty("created_at")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date createdAt;
+    private String createdAt;
 
     @JsonProperty("start_date")
     private String startDate;
@@ -54,9 +52,9 @@ public class ChildCareExpertLookupResponse {
     @JsonProperty("end_time")
     private String endTime;
 
-    @JsonProperty("registered_at")
+    @JsonProperty("requested_at")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date registeredAt;
+    private Date requestedAt;
 
     @Builder
     private ChildCareExpertLookupResponse(final ChildCareExpert childCareExpert) {
@@ -68,12 +66,12 @@ public class ChildCareExpertLookupResponse {
         this.appliedCount = childCareExpert.getApplications().size();
         this.contents = childCareExpert.getContents();
         this.recruitType = childCareExpert.getRecruitType();
-        this.createdAt = Timestamp.valueOf(childCareExpert.getCreatedAt());
+        this.createdAt = LocalDateTimeUtils.getDateToString(childCareExpert.getCreatedAt());
         this.startDate = LocalDateTimeUtils.getDateToString(childCareExpert.getStartTime());
         this.startTime = LocalDateTimeUtils.getTimeToString(childCareExpert.getStartTime());
         this.endDate = LocalDateTimeUtils.getDateToString(childCareExpert.getEndTime());
         this.endTime = LocalDateTimeUtils.getTimeToString(childCareExpert.getEndTime());
-        this.registeredAt = new Date();
+        this.requestedAt = new Date();
     }
 
     public static ChildCareExpertLookupResponse of(final ChildCareExpert childCareExpert) {
