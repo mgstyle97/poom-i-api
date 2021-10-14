@@ -5,8 +5,11 @@ spring:
 
 server:
   ssl:
-    key-store: classpath:poomi.p12
-    key-store-type: PKCS12
+    enabled: true
+    key-alias: test
+    key-store: classpath:test.pkcs12
     key-store-password: "!alsrlrla97"
-    key-alias: poomi
+    key-password: "!alsrlrla97"
+    trust-store: classpath:testtrust.pkcs12
+    trust-store-password: "!alsrlrla97"
   port: 8081
