@@ -1,10 +1,9 @@
 package io.wisoft.poomi.controller;
 
-import io.wisoft.poomi.domain.child_care.group.image.Image;
-import io.wisoft.poomi.domain.child_care.group.image.ImageRepository;
+import io.wisoft.poomi.domain.image.Image;
+import io.wisoft.poomi.domain.image.ImageRepository;
 import io.wisoft.poomi.global.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.io.FileInputStream;
-import java.io.IOException;
 
 @RequiredArgsConstructor
 @RestController

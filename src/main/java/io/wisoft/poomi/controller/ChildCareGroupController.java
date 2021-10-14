@@ -83,4 +83,13 @@ public class ChildCareGroupController {
             @SignInMember final Member member) {
         childCareGroupService.applyChildCareGroup(groupId, member, applyRequest);
     }
+
+    @PostMapping("/{group-id}/approve/{apply-id}")
+    public void approveGroupApply(
+            @PathVariable("group-id") @Valid final Long boardId,
+            @PathVariable("apply-id") @Valid final Long applyId,
+            @SignInMember final Member member) {
+        childCareGroupService.approveGroupApply(boardId, member, applyId);
+    }
+
 }

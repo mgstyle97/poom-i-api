@@ -9,9 +9,13 @@ import io.wisoft.poomi.global.utils.CookieUtils;
 import io.wisoft.poomi.service.auth.AuthService;
 import io.wisoft.poomi.service.auth.OAuth2Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -22,20 +26,32 @@ public class AuthController {
 
     private final CookieUtils cookieUtils;
     private final AuthService authService;
+    private final JwtTokenProvider jwtTokenProvider;
     private final OAuth2Service oAuth2Service;
 
     @PostMapping("/signin")
-    public ApiResponse<SigninResponse> signin(
+    public ResponseEntity<?> signin(
             @RequestBody @Valid final SigninRequest signinRequest, final HttpServletResponse response) {
 
         final JwtToken jwtToken = authService.signin(signinRequest);
-        cookieUtils
-                .generateTokenCookieAndSave(jwtToken.getAccessToken(), JwtTokenProvider.ACCESS_TOKEN_NAME, response);
-        cookieUtils
-                .generateTokenCookieAndSave(jwtToken.getRefreshToken(), JwtTokenProvider.REFRESH_TOKEN_NAME, response);
+        ResponseCookie accessTokenCookie = ResponseCookie
+                .from(JwtTokenProvider.ACCESS_TOKEN_NAME, jwtToken.getAccessToken())
+                .httpOnly(true)
+                .maxAge(jwtTokenProvider.getExpirationDateFromToken(jwtToken.getAccessToken()).getTime())
+                .path("/")
+                .build();
 
-        return ApiResponse
-                .succeedWithAccessToken(HttpStatus.OK, null, jwtToken);
+        ResponseCookie refreshTokenCookie = ResponseCookie
+                .from(JwtTokenProvider.REFRESH_TOKEN_NAME, jwtToken.getRefreshToken())
+                .httpOnly(true)
+                .maxAge(jwtTokenProvider.getExpirationDateFromToken(jwtToken.getRefreshToken()).getTime())
+                .path("/")
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, accessTokenCookie.toString())
+                .build();
     }
 
 }

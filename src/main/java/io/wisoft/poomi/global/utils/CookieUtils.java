@@ -15,11 +15,12 @@ public class CookieUtils {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    public void generateTokenCookieAndSave(final String token, final String cookieName,
+    public Cookie generateTokenCookieAndSave(final String token, final String cookieName,
                                            final HttpServletResponse response) {
-        Cookie refreshTokenCookie = createTokenCookie(JwtTokenProvider.REFRESH_TOKEN_NAME, token);
+        Cookie tokenCookie = createTokenCookie(cookieName, token);
 
-        response.addCookie(refreshTokenCookie);
+        response.addCookie(tokenCookie);
+        return tokenCookie;
     }
 
     private Cookie createTokenCookie(final String cookieName, final String token) {

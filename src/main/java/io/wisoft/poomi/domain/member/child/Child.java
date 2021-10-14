@@ -1,6 +1,7 @@
 package io.wisoft.poomi.domain.member.child;
 
 import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
+import io.wisoft.poomi.domain.child_care.group.participating.child.GroupParticipatingChild;
 import io.wisoft.poomi.global.dto.request.member.ChildAddRequest;
 import io.wisoft.poomi.domain.member.Member;
 import lombok.Builder;
@@ -9,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
@@ -49,6 +52,9 @@ public class Child {
     )
     private Member parent;
 
+    @OneToMany(mappedBy = "child")
+    private Set<GroupParticipatingChild> participatingGroups;
+
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "caringChild")
     private ChildCareExpert caredExpertContent;
 
@@ -66,6 +72,7 @@ public class Child {
         this.school = school;
         this.specialNote = specialNote;
         this.parent = parent;
+        this.participatingGroups = new HashSet<>();
     }
 
     public static Child of(final ChildAddRequest childAddRequest, final Member parent) {

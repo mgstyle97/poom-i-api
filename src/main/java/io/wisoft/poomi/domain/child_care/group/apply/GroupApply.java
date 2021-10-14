@@ -5,10 +5,12 @@ import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupApplyRequest;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Getter
 @NoArgsConstructor
 @Entity
 @SequenceGenerator(
@@ -50,6 +52,11 @@ public class GroupApply {
             referencedColumnName = "id"
     )
     private ChildCareGroup childCareGroup;
+
+    @Override
+    public int hashCode() {
+        return this.id.intValue();
+    }
 
     @Builder
     public GroupApply(final String contents, final Child child,

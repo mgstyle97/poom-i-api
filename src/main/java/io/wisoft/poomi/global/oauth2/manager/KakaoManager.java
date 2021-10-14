@@ -47,11 +47,6 @@ public class KakaoManager extends OAuth2Manager {
     protected OAuthUserPropertiesResponse stringToUserProperties(String userInfo) throws JsonProcessingException {
         KakaoUserInfoResponse userInfoResponse = objectMapper.readValue(userInfo, KakaoUserInfoResponse.class);
 
-        saveProfileImage(
-                userInfoResponse.getKakaoAccount().getEmail(),
-                userInfoResponse.getKakaoAccount().getProfile().getProfileImageUrl()
-        );
-
         return OAuthUserPropertiesResponse
                 .of(userInfoResponse.getProperties().getNickname(), userInfoResponse.getKakaoAccount().getEmail());
     }

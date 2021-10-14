@@ -1,6 +1,5 @@
 package io.wisoft.poomi.domain.member.address;
 
-import io.wisoft.poomi.domain.member.address.AddressTag;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

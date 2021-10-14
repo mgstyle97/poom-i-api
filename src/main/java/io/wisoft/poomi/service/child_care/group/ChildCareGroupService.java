@@ -2,6 +2,8 @@ package io.wisoft.poomi.service.child_care.group;
 
 import io.wisoft.poomi.domain.child_care.group.apply.GroupApply;
 import io.wisoft.poomi.domain.child_care.group.apply.GroupApplyRepository;
+import io.wisoft.poomi.domain.child_care.group.participating.child.GroupParticipatingChild;
+import io.wisoft.poomi.domain.child_care.group.participating.child.GroupParticipatingChildRepository;
 import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMember;
 import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMemberRepository;
 import io.wisoft.poomi.domain.child_care.group.participating.member.ParticipatingType;
@@ -36,6 +38,7 @@ public class ChildCareGroupService {
 
     private final ChildCareGroupRepository childCareGroupRepository;
     private final GroupParticipatingMemberRepository groupParticipatingMemberRepository;
+    private final GroupParticipatingChildRepository groupParticipatingChildRepository;
     private final GroupApplyRepository groupApplyRepository;
     private final MemberRepository memberRepository;
 
@@ -54,7 +57,7 @@ public class ChildCareGroupService {
     @Transactional
     public ChildCareGroupRegisterResponse registerChildCareGroup(final Member member,
                                                                  final ChildCareGroupRegisterRequest childCareGroupRegisterRequest) {
-        validateGroupTitle(childCareGroupRegisterRequest.getName());
+        validateGroupName(childCareGroupRegisterRequest.getName());
 
         ChildCareGroup childCareGroup = ChildCareGroup.of(member, childCareGroupRegisterRequest);
         log.info("Generate child care group title: {}", childCareGroup.getName());
@@ -84,7 +87,7 @@ public class ChildCareGroupService {
 
         ContentPermissionVerifier.verifyModifyPermission(childCareGroup.getWriter(), member);
 
-        modifyChildCareGroup(childCareGroup, childCareGroupModifiedRequest);
+        modifyGroup(childCareGroup, childCareGroupModifiedRequest);
 
         return ChildCareGroupModifiedResponse.of(groupId);
     }
@@ -103,7 +106,7 @@ public class ChildCareGroupService {
 
         ContentPermissionVerifier.verifyModifyPermission(childCareGroup.getWriter(), member);
 
-        deleteChildCareGroup(childCareGroup, member);
+        deleteGroup(childCareGroup, member);
 
         return ChildCareGroupDeleteResponse.of(groupId);
     }
@@ -122,6 +125,19 @@ public class ChildCareGroupService {
         childCareGroup.addApply(groupApply);
     }
 
+    @Transactional
+    public void approveGroupApply(final Long groupId, final Member member,
+                                  final Long applyId) {
+        ChildCareGroup group = generateChildCareGroupById(groupId);
+        group.isNotWriter(member);
+
+        GroupApply groupApply = groupApplyRepository.getById(applyId);
+        group.checkApplyIncluding(groupApply);
+
+        approveApply(group, groupApply);
+
+    }
+
     @NoAccessCheck
     public ChildCareGroup generateChildCareGroupById(final Long id) {
         ChildCareGroup childCareGroup = childCareGroupRepository.getById(id);
@@ -130,20 +146,26 @@ public class ChildCareGroupService {
         return childCareGroup;
     }
 
-    private void validateGroupTitle(final String title) {
-        if (childCareGroupRepository.existsByName(title)) {
+    private void approveApply(final ChildCareGroup group, final GroupApply apply) {
+        Optional.ofNullable(apply.getChild()).ifPresent(child -> {
+
+        });
+    }
+
+    private void validateGroupName(final String name) {
+        if (childCareGroupRepository.existsByName(name)) {
             throw new AlreadyExistsGroupTitleException();
         }
     }
 
-    private void modifyChildCareGroup(final ChildCareGroup childCareGroup,
-                                      final ChildCareGroupModifiedRequest childCareGroupModifiedRequest) {
+    private void modifyGroup(final ChildCareGroup childCareGroup,
+                             final ChildCareGroupModifiedRequest childCareGroupModifiedRequest) {
         childCareGroup.modifiedFor(childCareGroupModifiedRequest);
         childCareGroupRepository.save(childCareGroup);
         log.info("Update child care group entity id: {}", childCareGroup.getId());
     }
 
-    private void deleteChildCareGroup(final ChildCareGroup childCareGroup, final Member member) {
+    private void deleteGroup(final ChildCareGroup childCareGroup, final Member member) {
         childCareGroup.resetAssociated();
         childCareGroupRepository.delete(childCareGroup);
         log.info("Delete child care group id: {}", childCareGroup.getId());

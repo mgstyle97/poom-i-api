@@ -225,8 +225,8 @@ public class Member {
         participatingGroups.add(participatingGroup);
     }
 
-    public void removeWrittenGroup(final ChildCareGroup childCareGroup) {
-        this.childCareGroupProperties.getParticipatingGroups().remove(childCareGroup);
+    public void withdrawFromGroup(final ChildCareGroup childCareGroup) {
+        this.childCareGroupProperties.getParticipatingGroups();
     }
 
     public void addWrittenExpertContent(final ChildCareExpert expertContent) {

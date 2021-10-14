@@ -3,6 +3,8 @@ package io.wisoft.poomi.domain.child_care.group;
 import io.wisoft.poomi.domain.child_care.RecruitmentStatus;
 import io.wisoft.poomi.domain.child_care.group.apply.GroupApply;
 import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
+import io.wisoft.poomi.domain.image.Image;
+import io.wisoft.poomi.domain.child_care.group.participating.child.GroupParticipatingChild;
 import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMember;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupModifiedRequest;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupRegisterRequest;
@@ -24,7 +26,7 @@ import java.util.Set;
 @SequenceGenerator(
         name = "group_sequence_generator",
         sequenceName = "group_sequence",
-        initialValue = 1,
+        initialValue = 3,
         allocationSize = 1
 )
 @Table(name = "child_care_group")
@@ -50,8 +52,18 @@ public class ChildCareGroup extends BaseChildCareEntity {
     @Column(name = "description")
     private String description;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "profile_image_id",
+            referencedColumnName = "id"
+    )
+    private Image profileImage;
+
     @OneToMany(mappedBy = "childCareGroup")
     private Set<GroupParticipatingMember> participatingMembers;
+
+    @OneToMany(mappedBy = "childCareGroup")
+    private Set<GroupParticipatingChild> participatingChildren;
 
     @OneToMany(mappedBy = "childCareGroup", fetch = FetchType.LAZY)
     private Set<GroupApply> applies;
@@ -70,6 +82,7 @@ public class ChildCareGroup extends BaseChildCareEntity {
         this.mainActivity = mainActivity;
         this.description = description;
         this.participatingMembers = new HashSet<>();
+        this.participatingChildren = new HashSet<>();
         this.applies = new HashSet<>();
         this.boards = new HashSet<>();
     }
@@ -113,7 +126,7 @@ public class ChildCareGroup extends BaseChildCareEntity {
     }
 
     public void resetAssociated() {
-        getWriter().removeWrittenGroup(this);
+        getWriter().withdrawFromGroup(this);
     }
 
     public void validateMemberIsParticipating(final Member member) {
@@ -124,6 +137,16 @@ public class ChildCareGroup extends BaseChildCareEntity {
         if (!isMemberParticipating) {
             throw new NoPermissionOfContentException();
         }
+    }
+
+    public void checkApplyIncluding(final GroupApply groupApply) {
+        if (!this.applies.contains(groupApply)) {
+            throw new IllegalArgumentException("해당 품앗이반에 지원한 요청이 아닙니다.");
+        }
+    }
+
+    public void approveGroupApply(final GroupApply groupApply) {
+
     }
 
     private void changeTitle(final String title) {

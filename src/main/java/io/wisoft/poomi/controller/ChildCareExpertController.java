@@ -27,7 +27,6 @@ public class ChildCareExpertController {
 
     private final ChildCareExpertService childCareExpertService;
 
-    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping
     public ApiResponse<List<ChildCareExpertLookupResponse>> lookupAllChildCareExpert(
             @SignInMember final Member member) {

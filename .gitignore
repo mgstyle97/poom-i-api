@@ -6,6 +6,7 @@ application-mail.yml
 application-oauth.yml
 Dockerfile
 img/
+poomi.p12
 
 ### Database ###
 *.accdb

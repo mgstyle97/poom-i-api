@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS sms_certification CASCADE;
 DROP TABLE IF EXISTS email_certification CASCADE;
 DROP TABLE IF EXISTS refresh_token CASCADE;
 DROP TABLE IF EXISTS child_care_group CASCADE;
+-- DROP TABLE IF EXISTS group_image CASCADE;
 DROP TABLE IF EXISTS group_board CASCADE;
 DROP TABLE IF EXISTS board_likes CASCADE;
 DROP TABLE IF EXISTS group_apply CASCADE;
@@ -18,7 +19,7 @@ DROP TABLE IF EXISTS image CASCADE;
 DROP TABLE IF EXISTS child_care_expert CASCADE;
 DROP TABLE IF EXISTS expert_apply CASCADE;
 DROP TABLE IF EXISTS expert_likes CASCADE;
-DROP TABLE IF EXISTS profile_image CASCADE;
+DROP TABLE IF EXISTS child_care_playground CASCADE;
 
 
 CREATE TABLE sms_certification(
@@ -31,12 +32,6 @@ CREATE TABLE email_certification(
     id integer primary key,
     email varchar not null,
     certification_number varchar not null
-);
-
-CREATE TABLE profile_image(
-    id integer primary key,
-    email varchar not null,
-    profile_image_url varchar not null
 );
 
 CREATE TABLE refresh_token (
@@ -102,6 +97,14 @@ CREATE TABLE child_care_group(
     foreign key (address_tag_id) references address_tag(id)
 );
 
+-- CREATE TABLE group_image(
+--     id integer primary key,
+--     group_id integer not null,
+--     image_id integer not null,
+--     foreign key (group_id) references child_care_group(id),
+--     foreign key (image_id) references image(id)
+-- );
+
 CREATE TABLE group_board(
     id integer primary key,
     contents CLOB not null,
@@ -111,6 +114,16 @@ CREATE TABLE group_board(
     writer_id integer not null,
     foreign key (group_id) references child_care_group(id),
     foreign key (writer_id) references member(id)
+);
+
+CREATE TABLE image(
+    id integer primary key,
+    image_name varchar not null,
+    image_original_name varchar not null,
+    image_path varchar not null,
+    image_uri varchar not null,
+    board_id integer not null,
+    foreign key (board_id) references group_board(id)
 );
 
 CREATE TABLE board_likes(
@@ -129,16 +142,6 @@ CREATE TABLE comment(
     writer_id integer not null,
     foreign key(board_id) references group_board(id),
     foreign key(writer_id) references member(id)
-);
-
-CREATE TABLE image(
-    id integer primary key,
-    image_name varchar not null,
-    image_original_name varchar not null,
-    image_path varchar not null,
-    image_uri varchar not null,
-    board_id integer,
-    foreign key(board_id) references group_board(id)
 );
 
 
@@ -215,4 +218,17 @@ CREATE TABLE group_participating_child(
     group_id integer not null,
     foreign key (child_id) references child(id),
     foreign key (group_id) references child_care_group(id)
+);
+
+CREATE TABLE child_care_playground(
+    id integer primary key,
+    name varchar not null,
+    operating_hours varchar not null,
+    holiday varchar not null,
+    call_number varchar not null,
+    features CLOB,
+    address_id integer not null,
+    registrant_id integer not null,
+    foreign key (address_id) references address(id),
+    foreign key (registrant_id) references member(id)
 );

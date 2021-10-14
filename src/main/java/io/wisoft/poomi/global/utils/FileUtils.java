@@ -1,20 +1,17 @@
 package io.wisoft.poomi.global.utils;
 
-import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
 import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
-import io.wisoft.poomi.domain.child_care.group.image.Image;
+import io.wisoft.poomi.domain.image.Image;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.global.exception.exceptions.FileNotReadableException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.tika.Tika;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

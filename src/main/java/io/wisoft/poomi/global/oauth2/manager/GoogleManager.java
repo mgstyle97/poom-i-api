@@ -47,11 +47,6 @@ public class GoogleManager extends OAuth2Manager {
     protected OAuthUserPropertiesResponse stringToUserProperties(String userInfo) throws JsonProcessingException {
         GoogleUserInfoResponse userInfoResponse = objectMapper.readValue(userInfo, GoogleUserInfoResponse.class);
 
-        saveProfileImage(
-                userInfoResponse.getEmail(),
-                userInfoResponse.getPicture()
-        );
-
         return OAuthUserPropertiesResponse.of(userInfoResponse.getName(), userInfoResponse.getEmail());
     }
 

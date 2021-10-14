@@ -1,7 +1,7 @@
 package io.wisoft.poomi.global.dto.response.child_care.board;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.wisoft.poomi.domain.child_care.group.image.Image;
+import io.wisoft.poomi.domain.image.Image;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
