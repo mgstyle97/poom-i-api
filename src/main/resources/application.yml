@@ -2,10 +2,11 @@ spring:
   profiles:
     active: dev
     include: oauth, mail
-#
-#server:
-#  ssl:
-#    key-store: classpath:poomi.p12
-#    key-store-type: PKCS12
-#    key-store-password: "!alsrlrla97"
-#    key-alias: poomi
+
+server:
+  ssl:
+    key-store: classpath:poomi.p12
+    key-store-type: PKCS12
+    key-store-password: "!alsrlrla97"
+    key-alias: poomi
+  port: 8081
