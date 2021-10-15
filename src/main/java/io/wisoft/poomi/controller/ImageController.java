@@ -2,7 +2,9 @@ package io.wisoft.poomi.controller;
 
 import io.wisoft.poomi.domain.image.Image;
 import io.wisoft.poomi.domain.image.ImageRepository;
-import io.wisoft.poomi.global.utils.FileUtils;
+import io.wisoft.poomi.global.utils.MultipartFileUtils;
+import io.wisoft.poomi.service.child_care.group.ChildCareGroupService;
+import io.wisoft.poomi.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,8 @@ import javax.validation.Valid;
 public class ImageController {
 
     private final ImageRepository imageRepository;
+    private final MemberService memberService;
+    private final ChildCareGroupService childCareGroupService;
 
     @GetMapping("/image/{image_name}")
     @Transactional(readOnly = true)
@@ -31,10 +35,41 @@ public class ImageController {
 
         String imagePath = image.getImagePath();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_PNG);
+        final byte[] fileData = MultipartFileUtils.findFileByteArray(imagePath);
 
-        return new ResponseEntity<>(FileUtils.findFileByPath(imagePath), headers, HttpStatus.OK);
+        HttpHeaders headers = getMimeTypeHeader(fileData);
+
+        return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/profile-image/{nick}")
+    public ResponseEntity<byte[]> getMemberProfileImage(@PathVariable("nick") @Valid final String nick) {
+
+        final byte[] fileData = memberService.getMemberProfileImage(nick);
+
+        HttpHeaders headers = getMimeTypeHeader(fileData);
+
+        return new ResponseEntity<>(
+                fileData, headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/profile-image/{group-name}")
+    public ResponseEntity<byte[]> getGroupProfileImage(@PathVariable("group-name") final String groupName) {
+
+        final byte[] fileData = childCareGroupService.getProfileImage(groupName);
+
+        HttpHeaders headers = getMimeTypeHeader(fileData);
+
+        return new ResponseEntity<>(
+                fileData, headers, HttpStatus.OK
+        );
+    }
+
+    private HttpHeaders getMimeTypeHeader(final byte[] fileData) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_TYPE, MultipartFileUtils.getMimeType(fileData));
+
+        return headers;
     }
 
 }

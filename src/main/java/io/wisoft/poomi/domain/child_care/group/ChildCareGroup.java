@@ -105,6 +105,10 @@ public class ChildCareGroup extends BaseChildCareEntity {
         this.participatingMembers.add(participatingMember);
     }
 
+    public void setProfileImage(final Image profileImage) {
+        this.profileImage = profileImage;
+    }
+
     public void addApply(final GroupApply apply) {
         this.applies.add(apply);
     }

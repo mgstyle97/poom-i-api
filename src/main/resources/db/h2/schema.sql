@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS sms_certification CASCADE;
 DROP TABLE IF EXISTS email_certification CASCADE;
 DROP TABLE IF EXISTS refresh_token CASCADE;
 DROP TABLE IF EXISTS child_care_group CASCADE;
--- DROP TABLE IF EXISTS group_image CASCADE;
+DROP TABLE IF EXISTS board_image CASCADE;
 DROP TABLE IF EXISTS group_board CASCADE;
 DROP TABLE IF EXISTS board_likes CASCADE;
 DROP TABLE IF EXISTS group_apply CASCADE;
@@ -82,6 +82,14 @@ CREATE TABLE member_authority(
     foreign key (authority_id) references authority(id)
 );
 
+CREATE TABLE image(
+    id integer primary key,
+    image_name varchar not null,
+    image_original_name varchar not null,
+    image_path varchar not null,
+    image_uri varchar not null
+);
+
 CREATE TABLE child_care_group(
     id integer primary key,
     name varchar unique,
@@ -93,17 +101,11 @@ CREATE TABLE child_care_group(
     recruitment_status varchar,
     writer_id integer not null,
     address_tag_id integer not null,
+    profile_image_id integer,
     foreign key (writer_id) references member(id),
-    foreign key (address_tag_id) references address_tag(id)
+    foreign key (address_tag_id) references address_tag(id),
+    foreign key (profile_image_id) references image(id)
 );
-
--- CREATE TABLE group_image(
---     id integer primary key,
---     group_id integer not null,
---     image_id integer not null,
---     foreign key (group_id) references child_care_group(id),
---     foreign key (image_id) references image(id)
--- );
 
 CREATE TABLE group_board(
     id integer primary key,
@@ -116,14 +118,12 @@ CREATE TABLE group_board(
     foreign key (writer_id) references member(id)
 );
 
-CREATE TABLE image(
+CREATE TABLE board_image(
     id integer primary key,
-    image_name varchar not null,
-    image_original_name varchar not null,
-    image_path varchar not null,
-    image_uri varchar not null,
     board_id integer not null,
-    foreign key (board_id) references group_board(id)
+    image_id integer not null,
+    foreign key (board_id) references group_board(id),
+    foreign key (image_id) references image(id)
 );
 
 CREATE TABLE board_likes(

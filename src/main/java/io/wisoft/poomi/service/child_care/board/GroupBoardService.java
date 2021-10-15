@@ -5,6 +5,8 @@ import io.wisoft.poomi.domain.child_care.group.ChildCareGroupRepository;
 import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
 import io.wisoft.poomi.domain.child_care.group.board.GroupBoardRepository;
 import io.wisoft.poomi.domain.child_care.group.comment.Comment;
+import io.wisoft.poomi.domain.child_care.group.board.image.BoardImage;
+import io.wisoft.poomi.domain.child_care.group.board.image.BoardImageRepository;
 import io.wisoft.poomi.domain.image.Image;
 import io.wisoft.poomi.domain.image.ImageRepository;
 import io.wisoft.poomi.domain.member.Member;
@@ -12,7 +14,7 @@ import io.wisoft.poomi.global.dto.request.child_care.board.GroupBoardModifyReque
 import io.wisoft.poomi.global.dto.request.child_care.board.GroupBoardRegisterRequest;
 import io.wisoft.poomi.global.dto.response.child_care.board.GroupBoardLookupResponse;
 import io.wisoft.poomi.global.dto.response.child_care.board.GroupBoardRegisterResponse;
-import io.wisoft.poomi.global.utils.FileUtils;
+import io.wisoft.poomi.global.utils.MultipartFileUtils;
 import io.wisoft.poomi.service.child_care.ContentPermissionVerifier;
 import io.wisoft.poomi.service.child_care.comment.CommentService;
 import io.wisoft.poomi.service.child_care.group.ChildCareGroupService;
@@ -35,6 +37,7 @@ public class GroupBoardService {
 
     private final ChildCareGroupRepository childCareGroupRepository;
     private final GroupBoardRepository groupBoardRepository;
+    private final BoardImageRepository boardImageRepository;
     private final ImageRepository imageRepository;
 
     private final ChildCareGroupService childCareGroupService;
@@ -68,7 +71,6 @@ public class GroupBoardService {
         log.info("Save board through request id: {}", board.getId());
 
         saveImages(board, images, domainInfo);
-        log.info("Save images and set in board");
 
         return new GroupBoardRegisterResponse(board);
     }
@@ -119,13 +121,16 @@ public class GroupBoardService {
     }
 
     private void saveImages(final GroupBoard board, final List<MultipartFile> images, final String domainInfo) {
-        Set<Image> savedLocalImages = FileUtils.saveImageWithBoardId(board, images, domainInfo);
+        Set<Image> savedLocalImages = MultipartFileUtils.saveImageWithBoardId(board, images, domainInfo);
 
         if (!CollectionUtils.isEmpty(savedLocalImages)) {
             imageRepository.saveAll(savedLocalImages);
-            savedLocalImages.forEach(board::addImage);
+            savedLocalImages.forEach(image -> {
+                final BoardImage boardImage = board.addImage(image);
+                boardImageRepository.save(boardImage);
+            });
         }
-
+        log.info("Save images and set in board");
     }
 
     private List<GroupBoard> mergeBoards(List<Set<GroupBoard>> boardsList) {
@@ -151,7 +156,7 @@ public class GroupBoardService {
                     .forEach(optionalImage -> optionalImage.ifPresent(image -> {
                         board.removeImage(image);
                         imageRepository.delete(image);
-                        FileUtils.removeImage(image);
+                        MultipartFileUtils.removeImage(image);
                     }));
         });
 
@@ -165,7 +170,9 @@ public class GroupBoardService {
         board.resetAssociated();
 
         Set<Image> images = board.getImages();
-        FileUtils.removeBoardImages(images);
+        Set<BoardImage> boardImages = board.getBoardImages();
+        boardImageRepository.deleteAll(boardImages);
+        MultipartFileUtils.removeBoardImages(images);
         imageRepository.deleteAll(images);
 
         Set<Comment> comments = board.getComments();

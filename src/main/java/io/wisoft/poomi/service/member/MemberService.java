@@ -3,7 +3,8 @@ package io.wisoft.poomi.service.member;
 import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.global.dto.response.member.SignupResponse;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
-import io.wisoft.poomi.global.utils.FileUtils;
+import io.wisoft.poomi.global.exception.exceptions.NotFoundEntityDataException;
+import io.wisoft.poomi.global.utils.MultipartFileUtils;
 import io.wisoft.poomi.global.exception.exceptions.DuplicateMemberException;
 import io.wisoft.poomi.domain.member.address.Address;
 import io.wisoft.poomi.domain.member.address.AddressTag;
@@ -15,14 +16,11 @@ import io.wisoft.poomi.domain.member.address.AddressTagRepository;
 import io.wisoft.poomi.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,13 +42,23 @@ public class MemberService {
 
         log.info("Generate member: {}", member.getEmail());
 
-        FileUtils.saveImageWithUserEmail(member.getEmail(), images);
+        MultipartFileUtils.saveImageWithUserEmail(member, images);
 
         return SignupResponse.of(member);
     }
 
+    @Transactional(readOnly = true)
+    public byte[] getMemberProfileImage(final String nick) {
+        final Member member = memberRepository.findByNick(nick).orElseThrow(
+                () -> new NotFoundEntityDataException("member nick: " + nick + "에 해당하는 회원이 없습니다.")
+        );
+
+        return MultipartFileUtils.findFileByteArray(member.getProfileImagePath());
+    }
+
+    @Transactional
     public void saveProfileImage(final MultipartFile profileImage, final Member member) {
-        FileUtils.saveProfileImage(profileImage, member);
+        MultipartFileUtils.saveProfileImage(profileImage, member);
 
         memberRepository.save(member);
     }

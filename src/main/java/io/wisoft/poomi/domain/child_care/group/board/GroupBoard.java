@@ -3,6 +3,7 @@ package io.wisoft.poomi.domain.child_care.group.board;
 import io.wisoft.poomi.domain.child_care.BaseTimeEntity;
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
 import io.wisoft.poomi.domain.child_care.group.comment.Comment;
+import io.wisoft.poomi.domain.child_care.group.board.image.BoardImage;
 import io.wisoft.poomi.domain.image.Image;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.global.dto.request.child_care.board.GroupBoardRegisterRequest;
@@ -58,7 +59,7 @@ public class GroupBoard extends BaseTimeEntity {
     private Member writer;
 
     @OneToMany(mappedBy = "board")
-    private Set<Image> images;
+    private Set<BoardImage> images;
 
     @OneToMany(mappedBy = "board")
     private Set<Comment> comments;
@@ -97,14 +98,33 @@ public class GroupBoard extends BaseTimeEntity {
                 .build();
     }
 
+    public Set<BoardImage> getBoardImages() {
+        return this.images;
+    }
+
+    public Set<Image> getImages() {
+        return this.images.stream()
+                .map(BoardImage::getImage)
+                .collect(Collectors.toSet());
+    }
+
     public List<String> getImageURIs() {
         return this.images.stream()
-                .map(Image::getImageUri)
+                .map(BoardImage::getImage)
+                .map(Image::getImageURI)
                 .collect(Collectors.toList());
     }
 
-    public void addImage(final Image image) {
-        this.images.add(image);
+    public BoardImage addImage(final Image image) {
+        final BoardImage boardImage = BoardImage.builder()
+                .board(this)
+                .image(image)
+                .build();
+        this.images.add(
+                boardImage
+        );
+
+        return boardImage;
     }
 
     public void addComment(final Comment comment) {

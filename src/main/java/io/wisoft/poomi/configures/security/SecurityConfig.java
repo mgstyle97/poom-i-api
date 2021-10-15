@@ -115,7 +115,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new String[] {
                 "/", "/api/signup", "/api/signin/**", "/favicon.ico/**",
                 "/api/sms-certification/**", "/api/mail-certification/**",
-                "/api/oauth2/**", "/api/image/**", "/hello"
+                "/api/oauth2/**", "/api/image/**", "/api/profile-image/**", "/hello"
         };
     }
 

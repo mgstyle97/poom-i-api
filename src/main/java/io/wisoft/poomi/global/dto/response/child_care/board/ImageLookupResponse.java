@@ -18,7 +18,7 @@ public class ImageLookupResponse {
     private String imageURI;
 
     public static ImageLookupResponse of(final Image image) {
-        return new ImageLookupResponse(image.getId(), image.getImageUri());
+        return new ImageLookupResponse(image.getId(), image.getImageURI());
     }
 
 }

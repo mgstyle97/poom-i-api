@@ -1,6 +1,6 @@
 package io.wisoft.poomi.configures.web.validator.pdf;
 
-import io.wisoft.poomi.global.utils.FileUtils;
+import io.wisoft.poomi.global.utils.MultipartFileUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintValidator;
@@ -12,7 +12,7 @@ public class SignUpFileMimeTypeValidator implements ConstraintValidator<SignUpFi
     @Override
     public boolean isValid(List<MultipartFile> needToVerifyFiles, ConstraintValidatorContext context) {
         return needToVerifyFiles.stream()
-                .map(FileUtils::getMimeType)
+                .map(MultipartFileUtils::getMimeType)
                 .allMatch(this::checkImageOrPDF);
     }
 

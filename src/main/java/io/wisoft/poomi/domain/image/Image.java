@@ -1,6 +1,5 @@
 package io.wisoft.poomi.domain.image;
 
-import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,38 +36,25 @@ public class Image {
     private String imagePath;
 
     @Column(name = "image_uri")
-    private String imageUri;
-
-    @ManyToOne(
-        fetch = FetchType.EAGER
-    )
-    @JoinColumn(
-        name = "board_id",
-        referencedColumnName = "id"
-    )
-    private GroupBoard board;
+    private String imageURI;
 
     @Builder
     public Image(final String imageOriginalName, final String imageName,
-                 final String imagePath, final String imageUri,
-                 final GroupBoard board) {
+                 final String imagePath, final String imageURI) {
         this.imageOriginalName = imageOriginalName;
         this.imageName = imageName;
         this.imagePath = imagePath;
-        this.imageUri = imageUri;
-        this.board = board;
+        this.imageURI = imageURI;
     }
 
     public static Image of(final File imageFile,
-                           final GroupBoard board,
                            final String imageOriginalName,
-                           final String domainInfo) {
+                           final String imageURI) {
         return Image.builder()
                 .imageOriginalName(imageOriginalName)
                 .imageName(imageFile.getName())
                 .imagePath(imageFile.getPath())
-                .imageUri(domainInfo + "/api/image/" + imageFile.getName())
-                .board(board)
+                .imageURI(imageURI)
                 .build();
     }
 

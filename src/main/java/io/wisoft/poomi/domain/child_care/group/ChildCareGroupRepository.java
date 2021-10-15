@@ -5,9 +5,11 @@ import io.wisoft.poomi.global.exception.exceptions.NotFoundEntityDataException;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ChildCareGroupRepository extends JpaRepository<ChildCareGroup, Long> {
 
+    Optional<ChildCareGroup> findByName(final String name);
     Boolean existsByName(final String name);
 
     List<ChildCareGroup> findAllByAddressTag(final AddressTag addressTag);

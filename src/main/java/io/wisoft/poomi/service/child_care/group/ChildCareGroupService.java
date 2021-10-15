@@ -2,11 +2,12 @@ package io.wisoft.poomi.service.child_care.group;
 
 import io.wisoft.poomi.domain.child_care.group.apply.GroupApply;
 import io.wisoft.poomi.domain.child_care.group.apply.GroupApplyRepository;
-import io.wisoft.poomi.domain.child_care.group.participating.child.GroupParticipatingChild;
 import io.wisoft.poomi.domain.child_care.group.participating.child.GroupParticipatingChildRepository;
 import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMember;
 import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMemberRepository;
 import io.wisoft.poomi.domain.child_care.group.participating.member.ParticipatingType;
+import io.wisoft.poomi.domain.image.Image;
+import io.wisoft.poomi.domain.image.ImageRepository;
 import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.global.aop.child_care.NoAccessCheck;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupApplyRequest;
@@ -19,6 +20,8 @@ import io.wisoft.poomi.domain.member.MemberRepository;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroupRepository;
+import io.wisoft.poomi.global.exception.exceptions.NotFoundEntityDataException;
+import io.wisoft.poomi.global.utils.MultipartFileUtils;
 import io.wisoft.poomi.service.child_care.comment.CommentService;
 import io.wisoft.poomi.service.child_care.ContentPermissionVerifier;
 import io.wisoft.poomi.service.member.ChildService;
@@ -26,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +44,7 @@ public class ChildCareGroupService {
     private final GroupParticipatingMemberRepository groupParticipatingMemberRepository;
     private final GroupParticipatingChildRepository groupParticipatingChildRepository;
     private final GroupApplyRepository groupApplyRepository;
+    private final ImageRepository imageRepository;
     private final MemberRepository memberRepository;
 
     private final CommentService commentService;
@@ -54,29 +59,47 @@ public class ChildCareGroupService {
     }
 
     @NoAccessCheck
+    @Transactional(readOnly = true)
+    public byte[] getProfileImage(final String groupName) {
+        final ChildCareGroup group = childCareGroupRepository.findByName(groupName).orElseThrow(
+                () -> new NotFoundEntityDataException("group name: " + groupName + "에 관한 품앗이반이 없습니다.")
+        );
+
+        return MultipartFileUtils.findFileByteArray(group.getProfileImage().getImagePath());
+    }
+
+    @NoAccessCheck
     @Transactional
-    public ChildCareGroupRegisterResponse registerChildCareGroup(final Member member,
-                                                                 final ChildCareGroupRegisterRequest childCareGroupRegisterRequest) {
+    public ChildCareGroupRegisterResponse registerChildCareGroup(
+            final Member member,
+            final ChildCareGroupRegisterRequest childCareGroupRegisterRequest,
+            final MultipartFile groupProfileImage,
+            final String domainInfo) {
         validateGroupName(childCareGroupRegisterRequest.getName());
 
-        ChildCareGroup childCareGroup = ChildCareGroup.of(member, childCareGroupRegisterRequest);
-        log.info("Generate child care group title: {}", childCareGroup.getName());
 
-        childCareGroupRepository.save(childCareGroup);
-        log.info("Save child care group id: {}", childCareGroup.getId());
+        ChildCareGroup group = ChildCareGroup.of(member, childCareGroupRegisterRequest);
+        log.info("Generate child care group title: {}", group.getName());
+
+        Image profileImage = MultipartFileUtils.saveGroupProfileImage(group, groupProfileImage, domainInfo);
+        imageRepository.save(profileImage);
+
+        group.setProfileImage(profileImage);
+        childCareGroupRepository.save(group);
+        log.info("Save child care group id: {}", group.getId());
 
         GroupParticipatingMember groupParticipatingMember = GroupParticipatingMember.builder()
                 .participatingType(ParticipatingType.MANAGE)
                 .member(member)
-                .childCareGroup(childCareGroup)
+                .childCareGroup(group)
                 .build();
         groupParticipatingMemberRepository.save(groupParticipatingMember);
         log.info("Save participating group with writer id: {}", member.getId());
 
         member.addParticipatingGroup(groupParticipatingMember);
-        childCareGroup.addParticipatingMember(groupParticipatingMember);
+        group.addParticipatingMember(groupParticipatingMember);
 
-        return ChildCareGroupRegisterResponse.from(childCareGroup);
+        return ChildCareGroupRegisterResponse.from(group);
     }
 
     @Transactional
@@ -94,7 +117,7 @@ public class ChildCareGroupService {
 
     @Transactional(readOnly = true)
     public ChildCareGroupLookupResponse lookupChildCareGroup(final Long groupId,
-                                                                 final Member member) {
+                                                             final Member member) {
         ChildCareGroup childCareGroup = generateChildCareGroupById(groupId);
 
         return ChildCareGroupLookupResponse.of(childCareGroup);
