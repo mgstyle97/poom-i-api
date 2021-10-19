@@ -120,18 +120,23 @@ public class GroupBoardService {
     }
 
     private void saveImages(final GroupBoard board, final List<String> imageDataList, final String domainInfo) {
-        Set<Image> savedImages = imageDataList.stream()
-                .map(uploadFileUtils::saveFileAndConvertImage)
-                .collect(Collectors.toSet());
+        Optional<List<String>> optionalStrings = Optional.ofNullable(imageDataList);
 
-        if (!CollectionUtils.isEmpty(savedImages)) {
-            imageRepository.saveAll(savedImages);
-            savedImages.forEach(image -> {
-                final BoardImage boardImage = board.addImage(image);
-                boardImageRepository.save(boardImage);
-            });
+        if (optionalStrings.isPresent()) {
+            Set<Image> savedImages = optionalStrings.get().stream()
+                    .map(uploadFileUtils::saveFileAndConvertImage)
+                    .collect(Collectors.toSet());
+
+            if (!CollectionUtils.isEmpty(savedImages)) {
+                imageRepository.saveAll(savedImages);
+                savedImages.forEach(image -> {
+                    final BoardImage boardImage = board.addImage(image);
+                    boardImageRepository.save(boardImage);
+                });
+            }
+            log.info("Save images and set in board");
         }
-        log.info("Save images and set in board");
+
     }
 
     private List<GroupBoard> mergeBoards(List<Set<GroupBoard>> boardsList) {
