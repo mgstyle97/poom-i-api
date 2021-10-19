@@ -30,7 +30,7 @@ public class AuthController {
     private final OAuth2Service oAuth2Service;
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signin(
+    public ApiResponse<?> signin(
             @RequestBody @Valid final SigninRequest signinRequest, final HttpServletResponse response) {
 
         final JwtToken jwtToken = authService.signin(signinRequest);
@@ -48,10 +48,9 @@ public class AuthController {
                 .path("/")
                 .build();
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
-                .header(HttpHeaders.SET_COOKIE, accessTokenCookie.toString())
-                .build();
+        return ApiResponse.succeedWithAccessToken(
+                HttpStatus.OK, null, jwtToken
+        );
     }
 
 }
