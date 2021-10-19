@@ -1,56 +1,58 @@
 package io.wisoft.poomi.controller;
 
-import io.wisoft.poomi.domain.image.Image;
 import io.wisoft.poomi.domain.image.ImageRepository;
-import io.wisoft.poomi.global.utils.MultipartFileUtils;
+import io.wisoft.poomi.global.utils.UploadFileUtils;
 import io.wisoft.poomi.service.child_care.group.ChildCareGroupService;
+import io.wisoft.poomi.service.file.S3FileHandler;
 import io.wisoft.poomi.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
 public class ImageController {
 
     private final ImageRepository imageRepository;
+    private final S3FileHandler s3FileHandler;
     private final MemberService memberService;
     private final ChildCareGroupService childCareGroupService;
 
-    @GetMapping("/image/{image_name}")
+    @GetMapping("/image")
     @Transactional(readOnly = true)
     public ResponseEntity<byte[]> viewImage(
-            @PathVariable("image_name") @Valid final String imageName) {
-        Image image = imageRepository.getImageByImageName(imageName);
-
-        String imagePath = image.getImagePath();
-
-        final byte[] fileData = MultipartFileUtils.findFileByteArray(imagePath);
+            @RequestParam("image") @Valid final String imageName) {
+        final byte[] fileData = s3FileHandler.getFileData(imageName);
 
         HttpHeaders headers = getMimeTypeHeader(fileData);
 
         return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
     }
 
-    @GetMapping("/profile-image/{nick}")
-    public ResponseEntity<byte[]> getMemberProfileImage(@PathVariable("nick") @Valid final String nick) {
+    @GetMapping("/download")
+    public ResponseEntity<byte[]> downloadImage(@RequestParam("image") @Valid final String imageName) {
+        final byte[] fileData = s3FileHandler.getFileData(imageName);
 
-        final byte[] fileData = memberService.getMemberProfileImage(nick);
-
-        HttpHeaders headers = getMimeTypeHeader(fileData);
+        String downloadName = getDownloadName(imageName);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentLength(fileData.length);
+        headers.setContentDispositionFormData("attachment", downloadName);
 
         return new ResponseEntity<>(
-                fileData, headers, HttpStatus.OK);
+                fileData, headers, HttpStatus.OK
+        );
     }
 
     @GetMapping("/profile-image/{group-name}")
@@ -67,9 +69,18 @@ public class ImageController {
 
     private HttpHeaders getMimeTypeHeader(final byte[] fileData) {
         HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.CONTENT_TYPE, MultipartFileUtils.getMimeType(fileData));
+        headers.set(HttpHeaders.CONTENT_TYPE, UploadFileUtils.getMimeType(fileData));
 
         return headers;
+    }
+
+    private String getDownloadName(final String fileName) {
+        try {
+            return URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
+        } catch (UnsupportedEncodingException e) {
+            log.error("다운로드 파일명을 인코딩하는데 실패하였습니다.");
+            return "non-file-name";
+        }
     }
 
 }

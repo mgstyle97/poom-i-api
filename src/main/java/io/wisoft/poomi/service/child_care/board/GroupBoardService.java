@@ -14,7 +14,7 @@ import io.wisoft.poomi.global.dto.request.child_care.board.GroupBoardModifyReque
 import io.wisoft.poomi.global.dto.request.child_care.board.GroupBoardRegisterRequest;
 import io.wisoft.poomi.global.dto.response.child_care.board.GroupBoardLookupResponse;
 import io.wisoft.poomi.global.dto.response.child_care.board.GroupBoardRegisterResponse;
-import io.wisoft.poomi.global.utils.MultipartFileUtils;
+import io.wisoft.poomi.global.utils.UploadFileUtils;
 import io.wisoft.poomi.service.child_care.ContentPermissionVerifier;
 import io.wisoft.poomi.service.child_care.comment.CommentService;
 import io.wisoft.poomi.service.child_care.group.ChildCareGroupService;
@@ -39,6 +39,7 @@ public class GroupBoardService {
     private final GroupBoardRepository groupBoardRepository;
     private final BoardImageRepository boardImageRepository;
     private final ImageRepository imageRepository;
+    private final UploadFileUtils uploadFileUtils;
 
     private final ChildCareGroupService childCareGroupService;
     private final CommentService commentService;
@@ -58,7 +59,6 @@ public class GroupBoardService {
     @Transactional
     public GroupBoardRegisterResponse registerGroupBoard(final Member member,
                                                          final GroupBoardRegisterRequest registerRequest,
-                                                         final List<MultipartFile> images,
                                                          final String domainInfo) {
         ChildCareGroup childCareGroup = childCareGroupService.generateChildCareGroupById(registerRequest.getGroupId());
 
@@ -70,7 +70,7 @@ public class GroupBoardService {
         childCareGroup.addBoard(board);
         log.info("Save board through request id: {}", board.getId());
 
-        saveImages(board, images, domainInfo);
+        saveImages(board, registerRequest.getImages(), domainInfo);
 
         return new GroupBoardRegisterResponse(board);
     }
@@ -78,13 +78,12 @@ public class GroupBoardService {
     @Transactional
     public void modifyGroupBoard(final Long boardId, final Member member,
                                  final GroupBoardModifyRequest modifyRequest,
-                                 final List<MultipartFile> images,
                                  final String domainInfo) {
         GroupBoard board = generateGroupBoard(boardId);
 
         ContentPermissionVerifier.verifyModifyPermission(board.getWriter(), member);
 
-        modifyBoard(board, modifyRequest, images, domainInfo);
+        modifyBoard(board, modifyRequest, domainInfo);
         groupBoardRepository.save(board);
 
     }
@@ -120,12 +119,14 @@ public class GroupBoardService {
         return board;
     }
 
-    private void saveImages(final GroupBoard board, final List<MultipartFile> images, final String domainInfo) {
-        Set<Image> savedLocalImages = MultipartFileUtils.saveImageWithBoardId(board, images, domainInfo);
+    private void saveImages(final GroupBoard board, final List<String> imageDataList, final String domainInfo) {
+        Set<Image> savedImages = imageDataList.stream()
+                .map(uploadFileUtils::saveFileAndConvertImage)
+                .collect(Collectors.toSet());
 
-        if (!CollectionUtils.isEmpty(savedLocalImages)) {
-            imageRepository.saveAll(savedLocalImages);
-            savedLocalImages.forEach(image -> {
+        if (!CollectionUtils.isEmpty(savedImages)) {
+            imageRepository.saveAll(savedImages);
+            savedImages.forEach(image -> {
                 final BoardImage boardImage = board.addImage(image);
                 boardImageRepository.save(boardImage);
             });
@@ -141,7 +142,6 @@ public class GroupBoardService {
 
     private void modifyBoard(final GroupBoard board,
                              final GroupBoardModifyRequest modifyRequest,
-                             final List<MultipartFile> images,
                              final String domainInfo) {
         Optional.ofNullable(modifyRequest.getGroupId()).ifPresent(groupId -> {
             Optional<ChildCareGroup> optionalGroup = childCareGroupRepository.findById(groupId);
@@ -156,12 +156,12 @@ public class GroupBoardService {
                     .forEach(optionalImage -> optionalImage.ifPresent(image -> {
                         board.removeImage(image);
                         imageRepository.delete(image);
-                        MultipartFileUtils.removeImage(image);
+                        uploadFileUtils.removeImage(image);
                     }));
         });
 
-        Optional.ofNullable(images).ifPresent(imageList -> {
-            saveImages(board, imageList, domainInfo);
+        Optional.ofNullable(modifyRequest.getImageDataList()).ifPresent(imageDataList -> {
+            saveImages(board, imageDataList, domainInfo);
         });
 
     }
@@ -172,7 +172,7 @@ public class GroupBoardService {
         Set<Image> images = board.getImages();
         Set<BoardImage> boardImages = board.getBoardImages();
         boardImageRepository.deleteAll(boardImages);
-        MultipartFileUtils.removeBoardImages(images);
+        uploadFileUtils.removeBoardImages(images);
         imageRepository.deleteAll(images);
 
         Set<Comment> comments = board.getComments();

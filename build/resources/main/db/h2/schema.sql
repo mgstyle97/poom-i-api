@@ -20,7 +20,19 @@ DROP TABLE IF EXISTS child_care_expert CASCADE;
 DROP TABLE IF EXISTS expert_apply CASCADE;
 DROP TABLE IF EXISTS expert_likes CASCADE;
 DROP TABLE IF EXISTS child_care_playground CASCADE;
+DROP TABLE IF EXISTS playground_image CASCADE;
+DROP TABLE IF EXISTS playground_search CASCADE;
+DROP TABLE IF EXISTS playground_vote CASCADE;
+DROP TABLE IF EXISTS playground_vote_image CASCADE;
+DROP TABLE IF EXISTS playground_voter CASCADE;
 
+CREATE TABLE image(
+    id integer primary key,
+    image_name varchar not null,
+    image_access_uri varchar not null,
+    image_download_uri varchar not null,
+    content_type varchar not null
+);
 
 CREATE TABLE sms_certification(
     id integer primary key,
@@ -50,8 +62,8 @@ CREATE TABLE address (
     post_code varchar not null,
     address varchar not null,
     detail_address varchar not null,
-    ad_tag_id integer,
-    foreign key(ad_tag_id) references address_tag(id)
+    address_tag_id integer,
+    foreign key(address_tag_id) references address_tag(id)
 );
 
 CREATE TABLE authority (
@@ -68,11 +80,12 @@ CREATE TABLE member(
     nick varchar unique,
     gender varchar not null,
     age integer not null,
-    profile_image_path varchar,
+    profile_image_id integer,
     score integer not null default 0,
     score_provider_count integer not null default 0,
     address_id integer,
-    foreign key (address_id) references address(id)
+    foreign key (address_id) references address(id),
+    foreign key (profile_image_id) references image(id)
 );
 
 CREATE TABLE member_authority(
@@ -80,14 +93,6 @@ CREATE TABLE member_authority(
     authority_id integer not null,
     foreign key (member_id) references member(id),
     foreign key (authority_id) references authority(id)
-);
-
-CREATE TABLE image(
-    id integer primary key,
-    image_name varchar not null,
-    image_original_name varchar not null,
-    image_path varchar not null,
-    image_uri varchar not null
 );
 
 CREATE TABLE child_care_group(
@@ -127,6 +132,7 @@ CREATE TABLE board_image(
 );
 
 CREATE TABLE board_likes(
+    id integer primary key,
     board_id integer not null,
     member_id integer not null,
     foreign key(board_id) references group_board(id),
@@ -186,6 +192,7 @@ CREATE TABLE expert_apply(
 );
 
 CREATE TABLE expert_likes(
+    id integer primary key,
     member_id integer not null,
     expert_id integer not null,
     foreign key(member_id) references member(id),
@@ -231,4 +238,45 @@ CREATE TABLE child_care_playground(
     registrant_id integer not null,
     foreign key (address_id) references address(id),
     foreign key (registrant_id) references member(id)
+);
+
+CREATE TABLE playground_image(
+    id integer primary key,
+    playground_id integer not null,
+    image_id integer not null,
+    foreign key (playground_id) references child_care_playground(id),
+    foreign key (image_id) references image(id)
+);
+
+CREATE TABLE playground_search(
+    id integer primary key,
+    playground_id integer not null,
+    address_tag_id integer not null,
+    foreign key (playground_id) references child_care_playground(id),
+    foreign key (address_tag_id) references address_tag(id)
+);
+
+CREATE TABLE playground_vote(
+    id integer primary key,
+    purpose_using varchar not null,
+    expired_status varchar not null,
+    address_id integer not null,
+    foreign key (address_id) references address(id)
+);
+
+CREATE TABLE playground_vote_image(
+    id integer primary key,
+    vote_id integer not null,
+    image_id integer not null,
+    foreign key (vote_id) references playground_vote(id),
+    foreign key (image_id) references image(id)
+);
+
+CREATE TABLE playground_voter(
+    id integer primary key,
+    dong varchar,
+    ho varchar not null,
+    vote_type varchar not null,
+    vote_id integer not null,
+    foreign key (vote_id) references playground_vote(id)
 );

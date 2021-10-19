@@ -111,7 +111,7 @@ public class GroupBoard extends BaseTimeEntity {
     public List<String> getImageURIs() {
         return this.images.stream()
                 .map(BoardImage::getImage)
-                .map(Image::getImageURI)
+                .map(Image::getImageAccessURI)
                 .collect(Collectors.toList());
     }
 

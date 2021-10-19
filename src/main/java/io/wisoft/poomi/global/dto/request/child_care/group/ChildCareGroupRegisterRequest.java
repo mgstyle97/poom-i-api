@@ -29,6 +29,9 @@ public class ChildCareGroupRegisterRequest {
     @JsonProperty("recruitment_status")
     private RecruitmentStatus recruitmentStatus;
 
+    @JsonProperty("meta_data")
+    private String metaData;
+
     public void setRecruitmentStatus(final String recruitmentStatus) {
         if (StringUtils.hasText(recruitmentStatus)) {
             this.recruitmentStatus = RecruitmentStatus.valueOf(recruitmentStatus);

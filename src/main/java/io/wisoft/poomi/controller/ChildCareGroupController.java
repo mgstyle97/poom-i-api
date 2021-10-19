@@ -11,13 +11,8 @@ import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.global.utils.DomainUtils;
 import io.wisoft.poomi.service.child_care.group.ChildCareGroupService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -42,7 +37,6 @@ public class ChildCareGroupController {
     @PostMapping
     public ApiResponse<ChildCareGroupRegisterResponse> registerChildCareGroup(
             @RequestPart("data") @Valid final ChildCareGroupRegisterRequest childCareGroupRegisterRequest,
-            @RequestPart("image") @Image final MultipartFile groupProfileImage,
             @SignInMember final Member member,
             final HttpServletRequest request) {
         return ApiResponse
@@ -50,7 +44,7 @@ public class ChildCareGroupController {
                         HttpStatus.CREATED,
                         childCareGroupService
                                 .registerChildCareGroup(
-                                        member, childCareGroupRegisterRequest, groupProfileImage,
+                                        member, childCareGroupRegisterRequest,
                                         DomainUtils.generateDomainByRequest(request)
                                 )
                 );

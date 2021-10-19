@@ -21,9 +21,10 @@ import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroupRepository;
 import io.wisoft.poomi.global.exception.exceptions.NotFoundEntityDataException;
-import io.wisoft.poomi.global.utils.MultipartFileUtils;
+import io.wisoft.poomi.global.utils.UploadFileUtils;
 import io.wisoft.poomi.service.child_care.comment.CommentService;
 import io.wisoft.poomi.service.child_care.ContentPermissionVerifier;
+import io.wisoft.poomi.service.file.S3FileHandler;
 import io.wisoft.poomi.service.member.ChildService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +46,8 @@ public class ChildCareGroupService {
     private final GroupParticipatingChildRepository groupParticipatingChildRepository;
     private final GroupApplyRepository groupApplyRepository;
     private final ImageRepository imageRepository;
+    private final S3FileHandler s3FileHandler;
+    private final UploadFileUtils uploadFileUtils;
     private final MemberRepository memberRepository;
 
     private final CommentService commentService;
@@ -65,7 +68,7 @@ public class ChildCareGroupService {
                 () -> new NotFoundEntityDataException("group name: " + groupName + "에 관한 품앗이반이 없습니다.")
         );
 
-        return MultipartFileUtils.findFileByteArray(group.getProfileImage().getImagePath());
+        return s3FileHandler.getFileData(group.getProfileImage().getImageName());
     }
 
     @NoAccessCheck
@@ -73,7 +76,6 @@ public class ChildCareGroupService {
     public ChildCareGroupRegisterResponse registerChildCareGroup(
             final Member member,
             final ChildCareGroupRegisterRequest childCareGroupRegisterRequest,
-            final MultipartFile groupProfileImage,
             final String domainInfo) {
         validateGroupName(childCareGroupRegisterRequest.getName());
 
@@ -81,7 +83,7 @@ public class ChildCareGroupService {
         ChildCareGroup group = ChildCareGroup.of(member, childCareGroupRegisterRequest);
         log.info("Generate child care group title: {}", group.getName());
 
-        Image profileImage = MultipartFileUtils.saveGroupProfileImage(group, groupProfileImage, domainInfo);
+        Image profileImage = uploadFileUtils.saveFileAndConvertImage(childCareGroupRegisterRequest.getMetaData());
         imageRepository.save(profileImage);
 
         group.setProfileImage(profileImage);

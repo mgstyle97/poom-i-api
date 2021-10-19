@@ -1,6 +1,11 @@
 {
   "groups": [
     {
+      "name": "cloud.aws.s3",
+      "type": "io.wisoft.poomi.global.aws.S3Bucket",
+      "sourceType": "io.wisoft.poomi.global.aws.S3Bucket"
+    },
+    {
       "name": "google",
       "type": "io.wisoft.poomi.global.oauth2.properties.oauth2.GoogleProperty",
       "sourceType": "io.wisoft.poomi.global.oauth2.properties.oauth2.GoogleProperty"
@@ -22,6 +27,11 @@
     }
   ],
   "properties": [
+    {
+      "name": "cloud.aws.s3.bucket",
+      "type": "java.lang.String",
+      "sourceType": "io.wisoft.poomi.global.aws.S3Bucket"
+    },
     {
       "name": "google.client-id",
       "type": "java.lang.String",

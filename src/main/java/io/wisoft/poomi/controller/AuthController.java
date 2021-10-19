@@ -33,23 +33,9 @@ public class AuthController {
     public ApiResponse<?> signin(
             @RequestBody @Valid final SigninRequest signinRequest, final HttpServletResponse response) {
 
-        final JwtToken jwtToken = authService.signin(signinRequest);
-        ResponseCookie accessTokenCookie = ResponseCookie
-                .from(JwtTokenProvider.ACCESS_TOKEN_NAME, jwtToken.getAccessToken())
-                .httpOnly(true)
-                .maxAge(jwtTokenProvider.getExpirationDateFromToken(jwtToken.getAccessToken()).getTime())
-                .path("/")
-                .build();
-
-        ResponseCookie refreshTokenCookie = ResponseCookie
-                .from(JwtTokenProvider.REFRESH_TOKEN_NAME, jwtToken.getRefreshToken())
-                .httpOnly(true)
-                .maxAge(jwtTokenProvider.getExpirationDateFromToken(jwtToken.getRefreshToken()).getTime())
-                .path("/")
-                .build();
 
         return ApiResponse.succeedWithAccessToken(
-                HttpStatus.OK, null, jwtToken
+                HttpStatus.OK, null, authService.signin(signinRequest)
         );
     }
 

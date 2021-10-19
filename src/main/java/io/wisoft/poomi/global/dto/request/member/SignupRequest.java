@@ -1,6 +1,7 @@
 package io.wisoft.poomi.global.dto.request.member;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.wisoft.poomi.configures.web.validator.pdf.SignUpFile;
 import io.wisoft.poomi.domain.member.Gender;
 import lombok.Getter;
 import lombok.NonNull;
@@ -51,6 +52,10 @@ public class SignupRequest {
     @JsonProperty("extra_address")
     @NotBlank(message = "부가 주소를 입력해야 합니다.")
     private String extraAddress;
+
+    @SignUpFile
+    @JsonProperty("files")
+    private List<String> files;
 
     @JsonProperty("children")
     private List<ChildAddRequest> children;

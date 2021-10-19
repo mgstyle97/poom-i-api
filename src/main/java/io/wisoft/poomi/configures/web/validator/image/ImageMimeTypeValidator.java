@@ -1,19 +1,18 @@
 package io.wisoft.poomi.configures.web.validator.image;
 
-import io.wisoft.poomi.global.utils.MultipartFileUtils;
-import org.springframework.web.multipart.MultipartFile;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.List;
 
-public class ImageMimeTypeValidator implements ConstraintValidator<Image, List<MultipartFile>> {
+public class ImageMimeTypeValidator implements ConstraintValidator<Image, String> {
 
     @Override
-    public boolean isValid(List<MultipartFile> needToVerifyFiles, ConstraintValidatorContext context) {
+    public boolean isValid(String fileMetaData, ConstraintValidatorContext context) {
 
-        return needToVerifyFiles.stream()
-                .map(MultipartFileUtils::getMimeType)
-                .allMatch(mimeType -> mimeType.startsWith("image"));
+        return isMimeTypeIncludingImage(fileMetaData);
+    }
+
+    private boolean isMimeTypeIncludingImage(final String fileMetaData) {
+        final int mimeTypeStartIndex = fileMetaData.indexOf(":") + 1;
+        return fileMetaData.substring(mimeTypeStartIndex).startsWith("image/");
     }
 }

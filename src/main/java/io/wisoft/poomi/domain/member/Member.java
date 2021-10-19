@@ -3,6 +3,7 @@ package io.wisoft.poomi.domain.member;
 import io.wisoft.poomi.domain.child_care.expert.apply.ChildCareExpertApply;
 import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
 import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMember;
+import io.wisoft.poomi.domain.image.Image;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
 import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
 import io.wisoft.poomi.domain.member.address.Address;
@@ -63,8 +64,12 @@ public class Member {
     @Column(name = "age")
     private Integer age;
 
-    @Column(name = "profile_image_path")
-    private String profileImagePath;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(
+            name = "profile_image_id",
+            referencedColumnName = "id"
+    )
+    private Image profileImage;
 
     @Column(name = "score")
     private Integer score;
@@ -125,7 +130,7 @@ public class Member {
     @Builder
     public Member(final String name, final String phoneNumber,
                   final String email, final String password,
-                  final String nick, final Integer age, final String profileImagePath,
+                  final String nick, final Integer age,
                   final Gender gender,
                   final Set<Authority> authorities,
                   final Address address) {
@@ -135,7 +140,6 @@ public class Member {
         this.password = password;
         this.nick = nick;
         this.age = age;
-        this.profileImagePath = profileImagePath;
         this.score = 0;
         this.scoreProviderCount = 0;
         this.gender = gender;
@@ -164,10 +168,8 @@ public class Member {
         return member;
     }
 
-    public void saveProfileImagePath(final String profileImagePath) {
-        if (StringUtils.hasText(profileImagePath)) {
-            this.profileImagePath = profileImagePath;
-        }
+    public void saveProfileImagePath(final Image profileImage) {
+        this.profileImage = profileImage;
     }
 
     public void checkChildInChildren(final Child child) {

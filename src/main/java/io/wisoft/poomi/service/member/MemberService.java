@@ -1,10 +1,12 @@
 package io.wisoft.poomi.service.member;
 
+import io.wisoft.poomi.domain.image.Image;
 import io.wisoft.poomi.domain.member.child.Child;
+import io.wisoft.poomi.global.dto.request.member.ProfileImageUploadRequest;
 import io.wisoft.poomi.global.dto.response.member.SignupResponse;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
 import io.wisoft.poomi.global.exception.exceptions.NotFoundEntityDataException;
-import io.wisoft.poomi.global.utils.MultipartFileUtils;
+import io.wisoft.poomi.global.utils.UploadFileUtils;
 import io.wisoft.poomi.global.exception.exceptions.DuplicateMemberException;
 import io.wisoft.poomi.domain.member.address.Address;
 import io.wisoft.poomi.domain.member.address.AddressTag;
@@ -14,6 +16,7 @@ import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.address.AddressRepository;
 import io.wisoft.poomi.domain.member.address.AddressTagRepository;
 import io.wisoft.poomi.domain.member.MemberRepository;
+import io.wisoft.poomi.service.file.S3FileHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,30 +38,24 @@ public class MemberService {
     private final AddressRepository addressRepository;
     private final AddressTagRepository addressTagRepository;
     private final ChildRepository childRepository;
+    private final UploadFileUtils uploadFileUtils;
+    private final S3FileHandler s3FileHandler;
 
     @Transactional
-    public SignupResponse signup(final SignupRequest signupRequest, final List<MultipartFile> images) {
+    public SignupResponse signup(final SignupRequest signupRequest) {
         Member member = saveMember(signupRequest);
 
         log.info("Generate member: {}", member.getEmail());
 
-        MultipartFileUtils.saveImageWithUserEmail(member, images);
+        signupRequest.getFiles().forEach(uploadFileUtils::saveFileAndConvertImage);
 
         return SignupResponse.of(member);
     }
 
-    @Transactional(readOnly = true)
-    public byte[] getMemberProfileImage(final String nick) {
-        final Member member = memberRepository.findByNick(nick).orElseThrow(
-                () -> new NotFoundEntityDataException("member nick: " + nick + "에 해당하는 회원이 없습니다.")
-        );
-
-        return MultipartFileUtils.findFileByteArray(member.getProfileImagePath());
-    }
-
     @Transactional
-    public void saveProfileImage(final MultipartFile profileImage, final Member member) {
-        MultipartFileUtils.saveProfileImage(profileImage, member);
+    public void saveProfileImage(final ProfileImageUploadRequest profileImage, final Member member) {
+        Image image = uploadFileUtils.saveFileAndConvertImage(profileImage.getImageMetaData());
+        member.saveProfileImagePath(image);
 
         memberRepository.save(member);
     }

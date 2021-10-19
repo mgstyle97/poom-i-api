@@ -38,7 +38,7 @@ public class Address {
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(
-            name = "ad_tag_id",
+            name = "address_tag_id",
             referencedColumnName = "id"
     )
     private AddressTag addressTag;

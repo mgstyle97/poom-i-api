@@ -1,0 +1,10 @@
+cloud:
+  aws:
+    s3:
+      bucket: migni-springboot-build
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      instance-profile: true

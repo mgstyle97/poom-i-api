@@ -18,4 +18,7 @@ public class GroupBoardModifyRequest {
     @JsonProperty("remove_image_ids")
     private List<Long> removeImageIds;
 
+    @JsonProperty("images")
+    private List<String> imageDataList;
+
 }

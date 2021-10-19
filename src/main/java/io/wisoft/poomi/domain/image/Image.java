@@ -26,42 +26,37 @@ public class Image {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "image_original_name")
-    private String imageOriginalName;
-
     @Column(name = "image_name")
     private String imageName;
 
-    @Column(name = "image_path")
-    private String imagePath;
+    @Column(name = "image_access_uri")
+    private String imageAccessURI;
 
-    @Column(name = "image_uri")
-    private String imageURI;
+    @Column(name = "image_download_uri")
+    private String imageDownloadURI;
+
+    @Column(name = "content_type")
+    private String contentType;
 
     @Builder
-    public Image(final String imageOriginalName, final String imageName,
-                 final String imagePath, final String imageURI) {
-        this.imageOriginalName = imageOriginalName;
+    public Image(final String imageName,
+                 final String imageAccessURI, final String imageDownloadURI,
+                 final String contentType) {
         this.imageName = imageName;
-        this.imagePath = imagePath;
-        this.imageURI = imageURI;
+        this.imageAccessURI = imageAccessURI;
+        this.imageDownloadURI = imageDownloadURI;
+        this.contentType = contentType;
     }
 
-    public static Image of(final File imageFile,
-                           final String imageOriginalName,
-                           final String imageURI) {
+    public static Image of(final String imageName,
+                           final String imageAccessURI, final String imageDownloadURI,
+                           final String contentType) {
         return Image.builder()
-                .imageOriginalName(imageOriginalName)
-                .imageName(imageFile.getName())
-                .imagePath(imageFile.getPath())
-                .imageURI(imageURI)
+                .imageName(imageName)
+                .imageAccessURI(imageAccessURI)
+                .imageDownloadURI(imageDownloadURI)
+                .contentType(contentType)
                 .build();
-    }
-
-    public String getDirectoryPath() {
-        int indexOfImageNameInPath = this.imagePath.indexOf(imageName);
-
-        return this.imagePath.substring(0, indexOfImageNameInPath-1);
     }
 
 }

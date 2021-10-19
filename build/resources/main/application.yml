@@ -1,15 +1,10 @@
 spring:
   profiles:
     active: dev
-    include: oauth, mail
+    include:
+    - credentials
+    - mail
+    - aws
 
 server:
-#  ssl:
-#    enabled: true
-#    key-alias: test
-#    key-store: classpath:test.pkcs12
-#    key-store-password: "!alsrlrla97"
-#    key-password: "!alsrlrla97"
-#    trust-store: classpath:testtrust.pkcs12
-#    trust-store-password: "!alsrlrla97"
-  port: 8081
+  port: 8080

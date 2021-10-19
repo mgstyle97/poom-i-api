@@ -13,7 +13,6 @@ import io.wisoft.poomi.service.child_care.board.GroupBoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -36,25 +35,24 @@ public class GroupBoardController {
 
     @PostMapping
     public ApiResponse<GroupBoardRegisterResponse> registerGroupBoard(
-            @RequestPart("data") @Valid final GroupBoardRegisterRequest registerRequest,
-            @RequestPart(value = "images", required = false) @Image List<MultipartFile> images,
+            @RequestBody @Valid final GroupBoardRegisterRequest registerRequest,
             @SignInMember final Member member, final HttpServletRequest request) {
         return ApiResponse.succeed(HttpStatus.CREATED,
                 groupBoardService
                         .registerGroupBoard(
-                                member, registerRequest, images, DomainUtils.generateDomainByRequest(request)
+                                member, registerRequest,
+                                DomainUtils.generateDomainByRequest(request)
                         ));
     }
 
     @PatchMapping("/{board-id}")
     public void modifyGroupBoard(
             @PathVariable("board-id") @Valid final Long boardId,
-            @RequestPart("data") @Valid final GroupBoardModifyRequest modifyRequest,
-            @RequestPart(value = "images", required = false) final List<MultipartFile> images,
+            @RequestBody @Valid final GroupBoardModifyRequest modifyRequest,
             @SignInMember final Member member,
             final HttpServletRequest request) {
         groupBoardService
-                .modifyGroupBoard(boardId, member, modifyRequest, images, DomainUtils.generateDomainByRequest(request));
+                .modifyGroupBoard(boardId, member, modifyRequest, DomainUtils.generateDomainByRequest(request));
     }
 
     @DeleteMapping("/{board-id}")

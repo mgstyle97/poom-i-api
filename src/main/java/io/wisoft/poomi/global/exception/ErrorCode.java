@@ -27,6 +27,7 @@ public enum ErrorCode {
     UN_AUTHENTICATION(401, "로그인이 필요한 서비스입니다."),
     FORBIDDEN(403, "허가되지 않은 요청입니다."),
     NOT_FOUND(404, "요청하신 페이지를 찾을 수 없습니다."),
+    FILE_NOT_FOUND(404, "요청하신 파일을 찾을 수 없습니다."),
     METHOD_NOT_ALLOWED(405, "지원하지 않는 요청입니다."),
     INTERNAL_SERVER_ERROR(500, "서버측 에러입니다.");
 

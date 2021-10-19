@@ -1,8 +1,6 @@
 package io.wisoft.poomi.configures.security;
 
-import io.wisoft.poomi.configures.security.oauth2.CustomOAuth2Service;
 import io.wisoft.poomi.configures.security.jwt.JwtSecurityConfig;
-import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.configures.security.jwt.JwtAccessDeniedHandler;
 import io.wisoft.poomi.configures.security.jwt.JwtAuthenticationEntryPoint;
 import io.wisoft.poomi.service.member.MemberDetailsService;
@@ -23,21 +21,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsUtils;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
-
-import java.util.Arrays;
-import java.util.Collections;
 
 @RequiredArgsConstructor
 @EnableWebSecurity(debug = true)
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    private final CustomOAuth2Service customOAuth2Service;
-    private final OAuth2AuthenticationSuccessHandler successHandler;
 
     private final JwtSecurityConfig jwtSecurityConfig;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
@@ -113,7 +101,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private String[] permitAllPatterns() {
         return new String[] {
-                "/", "/api/signup", "/api/signin/**", "/favicon.ico/**",
+                "/image/**", "/api/signup", "/api/signin/**", "/favicon.ico/**",
                 "/api/sms-certification/**", "/api/mail-certification/**",
                 "/api/oauth2/**", "/api/image/**", "/api/profile-image/**", "/hello"
         };

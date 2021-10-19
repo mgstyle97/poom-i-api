@@ -3,6 +3,7 @@ package io.wisoft.poomi.controller;
 import io.wisoft.poomi.configures.security.jwt.JwtToken;
 import io.wisoft.poomi.configures.web.formatter.Social;
 import io.wisoft.poomi.configures.web.validator.pdf.SignUpFile;
+import io.wisoft.poomi.global.dto.request.member.ProfileImageUploadRequest;
 import io.wisoft.poomi.global.dto.response.ApiResponse;
 import io.wisoft.poomi.global.dto.response.member.*;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
@@ -33,10 +34,10 @@ public class MemberController {
 
     @PostMapping("/signup")
     public ApiResponse<SignupResponse> signup(
-            @RequestPart("data") @Valid final SignupRequest signupRequest,
-            @RequestPart("images") @SignUpFile List<MultipartFile> images) {
+            @RequestBody @Valid final SignupRequest signupRequest) {
         return ApiResponse
-                .succeed(HttpStatus.CREATED, memberService.signup(signupRequest, images));
+                .succeed(HttpStatus.CREATED, memberService.signup(signupRequest)
+                );
     }
 
     @GetMapping("/member/me")
@@ -46,7 +47,7 @@ public class MemberController {
 
     @PostMapping("/member/profile-image")
     public void registerProfileImage(
-            @RequestPart("profile") final MultipartFile profileImage,
+            @RequestBody @Valid final ProfileImageUploadRequest profileImage,
             @SignInMember final Member member) {
         memberService.saveProfileImage(profileImage, member);
     }

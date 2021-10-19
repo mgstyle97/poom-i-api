@@ -6,7 +6,7 @@ VALUES (1, 'ROLE_USER'),
 INSERT INTO address_tag(id, extra_address)
 VALUES (1, '월평동');
 
-INSERT INTO address(id, post_code, address, detail_address, ad_tag_id)
+INSERT INTO address(id, post_code, address, detail_address, address_tag_id)
 VALUES (1, '35521', '대전 서구 한밭대로570번길', '청산예술관 3층 301호', 1);
 
 INSERT INTO member(id, name, phone_number, email, password, nick, gender, age, address_id, score)
