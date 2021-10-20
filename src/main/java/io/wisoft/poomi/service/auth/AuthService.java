@@ -4,7 +4,7 @@ import io.wisoft.poomi.configures.security.jwt.JwtToken;
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.MemberRepository;
-import io.wisoft.poomi.global.dto.request.member.SigninRequest;
+import io.wisoft.poomi.global.dto.request.auth.SigninRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;

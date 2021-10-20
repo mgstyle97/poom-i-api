@@ -8,4 +8,8 @@ public interface AuthorityRepository extends JpaRepository<Authority, Long> {
         return this.findById(1L).get();
     }
 
+    default Authority getAnonymousAuthority() {
+        return this.findById(3L).get();
+    }
+
 }

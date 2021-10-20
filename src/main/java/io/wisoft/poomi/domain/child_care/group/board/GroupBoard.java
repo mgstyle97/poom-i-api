@@ -4,7 +4,7 @@ import io.wisoft.poomi.domain.child_care.BaseTimeEntity;
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
 import io.wisoft.poomi.domain.child_care.group.comment.Comment;
 import io.wisoft.poomi.domain.child_care.group.board.image.BoardImage;
-import io.wisoft.poomi.domain.image.Image;
+import io.wisoft.poomi.domain.file.UploadFile;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.global.dto.request.child_care.board.GroupBoardRegisterRequest;
 import lombok.Builder;
@@ -102,7 +102,7 @@ public class GroupBoard extends BaseTimeEntity {
         return this.images;
     }
 
-    public Set<Image> getImages() {
+    public Set<UploadFile> getImages() {
         return this.images.stream()
                 .map(BoardImage::getImage)
                 .collect(Collectors.toSet());
@@ -111,14 +111,14 @@ public class GroupBoard extends BaseTimeEntity {
     public List<String> getImageURIs() {
         return this.images.stream()
                 .map(BoardImage::getImage)
-                .map(Image::getImageAccessURI)
+                .map(UploadFile::getFileAccessURI)
                 .collect(Collectors.toList());
     }
 
-    public BoardImage addImage(final Image image) {
+    public BoardImage addImage(final UploadFile uploadFile) {
         final BoardImage boardImage = BoardImage.builder()
                 .board(this)
-                .image(image)
+                .image(uploadFile)
                 .build();
         this.images.add(
                 boardImage
@@ -145,8 +145,8 @@ public class GroupBoard extends BaseTimeEntity {
         }
     }
 
-    public void removeImage(final Image image) {
-        this.images.remove(image);
+    public void removeImage(final UploadFile uploadFile) {
+        this.images.remove(uploadFile);
     }
 
     public void resetAssociated() {

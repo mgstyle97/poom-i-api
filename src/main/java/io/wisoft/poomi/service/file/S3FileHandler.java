@@ -4,6 +4,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import io.wisoft.poomi.global.aws.S3Bucket;
+import io.wisoft.poomi.global.dto.request.file.FileDataOfBase64;
 import io.wisoft.poomi.global.exception.exceptions.FileNotFoundException;
 import io.wisoft.poomi.global.exception.exceptions.FileNotReadableException;
 import io.wisoft.poomi.global.utils.UploadFileUtils;
@@ -42,12 +43,14 @@ public class S3FileHandler {
 
     }
 
-    public String uploadFileData(final File targetFile) {
-        final InputStream inputStream = getInputStream(targetFile);
-        final ObjectMetadata objectMetadata = getObjectMetaData(targetFile);
+    public String uploadFileData(final FileDataOfBase64 fileDataOfBase64) {
+        final InputStream inputStream = getInputStream(fileDataOfBase64.getConvertedOfMetaData());
+        final ObjectMetadata objectMetadata = getObjectMetaData(
+                fileDataOfBase64.getConvertedOfMetaData(), fileDataOfBase64.getContentType()
+        );
 
-        uploadFile(targetFile.getName(), inputStream, objectMetadata);
-        return targetFile.getName();
+        uploadFile(fileDataOfBase64.getConvertedOfMetaData().getName(), inputStream, objectMetadata);
+        return fileDataOfBase64.getConvertedOfMetaData().getName();
     }
 
     public String getFileAccessURI(final String fileName) {
@@ -72,10 +75,10 @@ public class S3FileHandler {
         }
     }
 
-    private ObjectMetadata getObjectMetaData(final File targetFile) {
+    private ObjectMetadata getObjectMetaData(final File targetFile, final String contentType) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(targetFile.length());
-        objectMetadata.setContentType(UploadFileUtils.getMimeType(targetFile));
+        objectMetadata.setContentType(contentType);
 
         return objectMetadata;
     }

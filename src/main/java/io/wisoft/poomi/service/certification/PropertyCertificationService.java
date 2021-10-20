@@ -52,7 +52,7 @@ public class PropertyCertificationService {
     public SmsResultResponse sendSmsToPhoneNumber(final SmsSendRequest smsSendRequest) {
         String phoneNumber = smsSendRequest.getPhoneNumber();
         String certificationNumber = generateCertificationNumber();
-        String content = generateContent(certificationNumber);
+        String content = generateCertificationMessage(certificationNumber);
 
         List<MessageRequest> messages = Collections
                 .singletonList(new MessageRequest(phoneNumber, content));
@@ -94,9 +94,9 @@ public class PropertyCertificationService {
     @Transactional
     public void sendMailToMailAddress(final MailSendRequest mailSendRequest) {
         String certificationNumber = generateCertificationNumber();
-        String content = generateContent(certificationNumber);
+        String content = generateCertificationMessage(certificationNumber);
 
-        sendMessageByEmail(mailSendRequest.getEmail(), content);
+        sendMessageByEmail(mailSendRequest.getEmail(), "[POOM-i] 이메일 인증 안내", content);
 
         emailCertificationRepository.save(
                 EmailCertification.of(
@@ -122,6 +122,13 @@ public class PropertyCertificationService {
         deleteAllMailExpiredEntity();
     }
 
+    public void sendMailOfSignupApproved(final String account) {
+        final String approvedMessage =
+                "[POOMI-i]" + account+ "님의 회원가입이 승인되었습니다.";
+
+        sendMessageByEmail(account, "[POOM-i] 회원가입 안내", approvedMessage);
+    }
+
     private String generateCertificationNumber() {
         String certificationNumber = RandomStringUtils.randomNumeric(6);
         log.info("Generate certification number: {}", certificationNumber);
@@ -129,7 +136,7 @@ public class PropertyCertificationService {
         return certificationNumber;
     }
 
-    private String generateContent(final String certificationNumber) {
+    private String generateCertificationMessage(final String certificationNumber) {
         return "[POOM-i] 인증번호 [" + certificationNumber + "]을 입력해주세요.";
     }
 
@@ -207,11 +214,11 @@ public class PropertyCertificationService {
         return smsResultResponse;
     }
 
-    private void sendMessageByEmail(final String email, final String content) {
+    private void sendMessageByEmail(final String email, final String subject, final String content) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
         message.setFrom(FROM_ADDRESS);
-        message.setSubject("[Poom-i] 이메일 인증 안내");
+        message.setSubject(subject);
         message.setText(content);
 
         javaMailSender.send(message);

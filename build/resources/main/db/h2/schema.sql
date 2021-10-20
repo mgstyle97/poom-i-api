@@ -14,7 +14,7 @@ DROP TABLE IF EXISTS group_apply CASCADE;
 DROP TABLE IF EXISTS group_participating_member CASCADE;
 DROP TABLE IF EXISTS group_participating_child CASCADE;
 DROP TABLE IF EXISTS comment CASCADE;
-DROP TABLE IF EXISTS image CASCADE;
+DROP TABLE IF EXISTS upload_file CASCADE;
 DROP TABLE IF EXISTS child_care_expert CASCADE;
 DROP TABLE IF EXISTS expert_apply CASCADE;
 DROP TABLE IF EXISTS expert_likes CASCADE;
@@ -25,11 +25,11 @@ DROP TABLE IF EXISTS playground_vote CASCADE;
 DROP TABLE IF EXISTS playground_vote_image CASCADE;
 DROP TABLE IF EXISTS playground_voter CASCADE;
 
-CREATE TABLE image(
+CREATE TABLE upload_file(
     id integer primary key,
-    image_name varchar not null,
-    image_access_uri varchar not null,
-    image_download_uri varchar not null,
+    file_name varchar not null,
+    file_access_uri varchar not null,
+    file_download_uri varchar not null,
     content_type varchar not null
 );
 
@@ -37,14 +37,14 @@ CREATE TABLE sms_certification(
     id integer primary key,
     phone_number varchar not null,
     certification_number varchar not null,
-    expiration_token varchar not null
+    expired_validation_token varchar not null
 );
 
 CREATE TABLE email_certification(
     id integer primary key,
     email varchar not null,
     certification_number varchar not null,
-    expiration_token varchar not null
+    expired_validation_token varchar not null
 );
 
 CREATE TABLE address_tag (
@@ -78,9 +78,11 @@ CREATE TABLE member(
     profile_image_id integer,
     score integer not null default 0,
     score_provider_count integer not null default 0,
+    approval_status varchar not null default 'UN_APPROVED',
     address_id integer,
     foreign key (address_id) references address(id),
-    foreign key (profile_image_id) references image(id)
+    foreign key (profile_image_id) references upload_file(id),
+    CONSTRAINT approval_value CHECK approval_status in ('APPROVED', 'UN_APPROVED')
 );
 
 CREATE TABLE member_authority(
@@ -89,6 +91,11 @@ CREATE TABLE member_authority(
     foreign key (member_id) references member(id),
     foreign key (authority_id) references authority(id)
 );
+
+-- CREATE TABLE residence_certification(
+--     id integer primary key,
+--     member_id
+-- )
 
 CREATE TABLE child_care_group(
     id integer primary key,
@@ -104,7 +111,7 @@ CREATE TABLE child_care_group(
     profile_image_id integer,
     foreign key (writer_id) references member(id),
     foreign key (address_tag_id) references address_tag(id),
-    foreign key (profile_image_id) references image(id)
+    foreign key (profile_image_id) references upload_file(id)
 );
 
 CREATE TABLE group_board(
@@ -123,7 +130,7 @@ CREATE TABLE board_image(
     board_id integer not null,
     image_id integer not null,
     foreign key (board_id) references group_board(id),
-    foreign key (image_id) references image(id)
+    foreign key (image_id) references upload_file(id)
 );
 
 CREATE TABLE board_likes(
@@ -240,7 +247,7 @@ CREATE TABLE playground_image(
     playground_id integer not null,
     image_id integer not null,
     foreign key (playground_id) references child_care_playground(id),
-    foreign key (image_id) references image(id)
+    foreign key (image_id) references upload_file(id)
 );
 
 CREATE TABLE playground_search(
@@ -264,7 +271,7 @@ CREATE TABLE playground_vote_image(
     vote_id integer not null,
     image_id integer not null,
     foreign key (vote_id) references playground_vote(id),
-    foreign key (image_id) references image(id)
+    foreign key (image_id) references upload_file(id)
 );
 
 CREATE TABLE playground_voter(

@@ -1,7 +1,7 @@
 package io.wisoft.poomi.domain.child_care.group.board.image;
 
 import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
-import io.wisoft.poomi.domain.image.Image;
+import io.wisoft.poomi.domain.file.UploadFile;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,11 +40,11 @@ public class BoardImage {
             name = "image_id",
             referencedColumnName = "id"
     )
-    private Image image;
+    private UploadFile image;
 
     @Builder
     public BoardImage(final GroupBoard board,
-                      final Image image) {
+                      final UploadFile image) {
         this.board = board;
         this.image = image;
     }

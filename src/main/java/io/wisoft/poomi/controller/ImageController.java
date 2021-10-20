@@ -1,10 +1,8 @@
 package io.wisoft.poomi.controller;
 
-import io.wisoft.poomi.domain.image.ImageRepository;
 import io.wisoft.poomi.global.utils.UploadFileUtils;
 import io.wisoft.poomi.service.child_care.group.ChildCareGroupService;
 import io.wisoft.poomi.service.file.S3FileHandler;
-import io.wisoft.poomi.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -24,16 +22,14 @@ import java.net.URLEncoder;
 @RequestMapping("/api")
 public class ImageController {
 
-    private final ImageRepository imageRepository;
     private final S3FileHandler s3FileHandler;
-    private final MemberService memberService;
     private final ChildCareGroupService childCareGroupService;
 
     @GetMapping("/image")
     @Transactional(readOnly = true)
     public ResponseEntity<byte[]> viewImage(
-            @RequestParam("image") @Valid final String imageName) {
-        final byte[] fileData = s3FileHandler.getFileData(imageName);
+            @RequestParam("fileName") @Valid final String fileName) {
+        final byte[] fileData = s3FileHandler.getFileData(fileName);
 
         HttpHeaders headers = getMimeTypeHeader(fileData);
 
@@ -69,7 +65,7 @@ public class ImageController {
 
     private HttpHeaders getMimeTypeHeader(final byte[] fileData) {
         HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.CONTENT_TYPE, UploadFileUtils.getMimeType(fileData));
+        headers.set(HttpHeaders.CONTENT_TYPE, UploadFileUtils.getContentType(fileData));
 
         return headers;
     }

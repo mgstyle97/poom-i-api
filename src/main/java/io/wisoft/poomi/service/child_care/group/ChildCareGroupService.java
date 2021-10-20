@@ -6,8 +6,8 @@ import io.wisoft.poomi.domain.child_care.group.participating.child.GroupParticip
 import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMember;
 import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMemberRepository;
 import io.wisoft.poomi.domain.child_care.group.participating.member.ParticipatingType;
-import io.wisoft.poomi.domain.image.Image;
-import io.wisoft.poomi.domain.image.ImageRepository;
+import io.wisoft.poomi.domain.file.UploadFile;
+import io.wisoft.poomi.domain.file.UploadFileRepository;
 import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.global.aop.child_care.NoAccessCheck;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupApplyRequest;
@@ -16,13 +16,11 @@ import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupModifie
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupRegisterRequest;
 import io.wisoft.poomi.global.exception.exceptions.AlreadyExistsGroupTitleException;
 import io.wisoft.poomi.domain.member.Member;
-import io.wisoft.poomi.domain.member.MemberRepository;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroupRepository;
 import io.wisoft.poomi.global.exception.exceptions.NotFoundEntityDataException;
 import io.wisoft.poomi.global.utils.UploadFileUtils;
-import io.wisoft.poomi.service.child_care.comment.CommentService;
 import io.wisoft.poomi.service.child_care.ContentPermissionVerifier;
 import io.wisoft.poomi.service.file.S3FileHandler;
 import io.wisoft.poomi.service.member.ChildService;
@@ -30,7 +28,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,12 +42,10 @@ public class ChildCareGroupService {
     private final GroupParticipatingMemberRepository groupParticipatingMemberRepository;
     private final GroupParticipatingChildRepository groupParticipatingChildRepository;
     private final GroupApplyRepository groupApplyRepository;
-    private final ImageRepository imageRepository;
+    private final UploadFileRepository uploadFileRepository;
     private final S3FileHandler s3FileHandler;
     private final UploadFileUtils uploadFileUtils;
-    private final MemberRepository memberRepository;
 
-    private final CommentService commentService;
     private final ChildService childService;
 
     @NoAccessCheck
@@ -68,7 +63,7 @@ public class ChildCareGroupService {
                 () -> new NotFoundEntityDataException("group name: " + groupName + "에 관한 품앗이반이 없습니다.")
         );
 
-        return s3FileHandler.getFileData(group.getProfileImage().getImageName());
+        return s3FileHandler.getFileData(group.getProfileImage().getFileName());
     }
 
     @NoAccessCheck
@@ -83,8 +78,8 @@ public class ChildCareGroupService {
         ChildCareGroup group = ChildCareGroup.of(member, childCareGroupRegisterRequest);
         log.info("Generate child care group title: {}", group.getName());
 
-        Image profileImage = uploadFileUtils.saveFileAndConvertImage(childCareGroupRegisterRequest.getMetaData());
-        imageRepository.save(profileImage);
+        UploadFile profileImage = uploadFileUtils.saveFileAndConvertImage(childCareGroupRegisterRequest.getMetaData());
+        uploadFileRepository.save(profileImage);
 
         group.setProfileImage(profileImage);
         childCareGroupRepository.save(group);

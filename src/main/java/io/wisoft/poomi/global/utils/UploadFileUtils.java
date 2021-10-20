@@ -1,20 +1,16 @@
 package io.wisoft.poomi.global.utils;
 
-import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
-import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
-import io.wisoft.poomi.domain.image.Image;
-import io.wisoft.poomi.domain.member.Member;
+import io.wisoft.poomi.domain.file.UploadFile;
+import io.wisoft.poomi.global.dto.request.file.FileDataOfBase64;
 import io.wisoft.poomi.global.exception.exceptions.FileNotReadableException;
 import io.wisoft.poomi.service.file.S3FileHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.tika.Tika;
+import org.apache.tika.mime.MimeTypeException;
+import org.apache.tika.mime.MimeTypes;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.net.URLConnection;
@@ -26,18 +22,12 @@ import java.util.UUID;
 @Component
 public class UploadFileUtils {
 
-    private static final String IMAGE_SAVE_PATH = System.getProperty("user.dir") + "/img/";
     private final S3FileHandler s3FileHandler;
-    private static final Tika tika = new Tika();
-
-    private enum DomainType {
-        MEMBER, GROUP, BOARD
-    }
 
     private File saveFile(final String fileMetaData, final String extension) {
-        final byte[] fileData = Base64Utils.decodeFromString(getFileData(fileMetaData));
+        final byte[] fileData = Base64Utils.decodeFromString(getFileMetaData(fileMetaData));
         final UUID uuid = UUID.randomUUID();
-        final String fileName = uuid.toString() + "." + extension;
+        final String fileName = uuid + "." + extension;
         final File targetFile = new File(fileName);
         try {
             FileUtils.writeByteArrayToFile(targetFile, fileData);
@@ -62,37 +52,41 @@ public class UploadFileUtils {
         }
     }
 
-    public Image saveFileAndConvertImage(final String fileData) {
-        final String fileExtension = getFileExtension(fileData);
-        String fileName = s3FileHandler.uploadFileData(saveFile(fileData, fileExtension));
+    public UploadFile saveFileAndConvertImage(final String fileData) {
+        final FileDataOfBase64 fileDataOfBase64 = convertToFileData(fileData);
+        String fileName = s3FileHandler.uploadFileData(fileDataOfBase64);
         String fileAccessURI = s3FileHandler.getFileAccessURI(fileName);
         String fileDownloadURI = "/api/download?image=" + fileName;
-        String contentType = "image/" + fileExtension;
+        String contentType = fileDataOfBase64.getContentType();
 
         deleteFile(fileName);
 
-        return Image.of(fileName, fileAccessURI, fileDownloadURI, contentType);
+        return UploadFile.of(fileName, fileAccessURI, fileDownloadURI, contentType);
     }
 
-    public void removeBoardImages(final Set<Image> images) {
-        images
-                .forEach(image -> s3FileHandler.deleteFile(image.getImageName()));
+    public FileDataOfBase64 convertToFileData(final String fileData) {
+        final String contentType = getContentType(fileData);
+        final String fileMetaData = getFileMetaData(fileData);
+        final File convertedOfMetaData = saveFile(fileMetaData, convertContentTypeToExtension(contentType));
+
+        return FileDataOfBase64.builder()
+                .contentType(contentType)
+                .fileMetaData(fileMetaData)
+                .convertedOfMetaData(convertedOfMetaData)
+                .build();
+    }
+
+    public void removeBoardImages(final Set<UploadFile> uploadFiles) {
+        uploadFiles
+                .forEach(image -> s3FileHandler.deleteFile(image.getFileName()));
 
     }
 
-    public void removeImage(final Image image) {
-        s3FileHandler.deleteFile(image.getImageName());
+    public void removeImage(final UploadFile uploadFile) {
+        s3FileHandler.deleteFile(uploadFile.getFileName());
     }
 
-    public static String getMimeType(final File file) {
-        try {
-            return tika.detect(file);
-        } catch (IOException e) {
-            throw new FileNotReadableException();
-        }
-    }
-
-    public static String getMimeType(final byte[] fileData) {
+    public static String getContentType(final byte[] fileData) {
         try {
             InputStream is = new BufferedInputStream(new ByteArrayInputStream(fileData));
             return URLConnection.guessContentTypeFromStream(is);
@@ -102,17 +96,29 @@ public class UploadFileUtils {
 
     }
 
-    public String getFileExtension(final String fileData) {
-        int extensionStartIdx = fileData.indexOf("/") + 1;
-        int extensionEndIdx = fileData.indexOf(";");
+    public static String getContentType(final String fileData) {
+        int contentTypeStartIdx = fileData.indexOf(":") + 1;
+        int contentTypeEndIdx = fileData.indexOf(";");
 
-        return fileData.substring(extensionStartIdx, extensionEndIdx);
+        return fileData.substring(contentTypeStartIdx, contentTypeEndIdx);
     }
 
-    public String getFileData(final String fileMetaData) {
+    public String getFileMetaData(final String fileMetaData) {
         int dataStartIdx = fileMetaData.indexOf(",") + 1;
 
         return fileMetaData.substring(dataStartIdx);
+    }
+
+    public String convertContentTypeToExtension(final String contentType) {
+        try {
+            return MimeTypes
+                    .getDefaultMimeTypes()
+                    .forName(contentType)
+                    .getExtension();
+        } catch (MimeTypeException e) {
+            log.error("존재하지 않는 Content-Type: {}", contentType);
+            throw new FileNotReadableException();
+        }
     }
 
 }

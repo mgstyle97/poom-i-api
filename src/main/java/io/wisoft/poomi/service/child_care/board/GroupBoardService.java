@@ -7,8 +7,8 @@ import io.wisoft.poomi.domain.child_care.group.board.GroupBoardRepository;
 import io.wisoft.poomi.domain.child_care.group.comment.Comment;
 import io.wisoft.poomi.domain.child_care.group.board.image.BoardImage;
 import io.wisoft.poomi.domain.child_care.group.board.image.BoardImageRepository;
-import io.wisoft.poomi.domain.image.Image;
-import io.wisoft.poomi.domain.image.ImageRepository;
+import io.wisoft.poomi.domain.file.UploadFile;
+import io.wisoft.poomi.domain.file.UploadFileRepository;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.global.dto.request.child_care.board.GroupBoardModifyRequest;
 import io.wisoft.poomi.global.dto.request.child_care.board.GroupBoardRegisterRequest;
@@ -23,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +37,7 @@ public class GroupBoardService {
     private final ChildCareGroupRepository childCareGroupRepository;
     private final GroupBoardRepository groupBoardRepository;
     private final BoardImageRepository boardImageRepository;
-    private final ImageRepository imageRepository;
+    private final UploadFileRepository uploadFileRepository;
     private final UploadFileUtils uploadFileUtils;
 
     private final ChildCareGroupService childCareGroupService;
@@ -123,12 +122,12 @@ public class GroupBoardService {
         Optional<List<String>> optionalStrings = Optional.ofNullable(imageDataList);
 
         if (optionalStrings.isPresent()) {
-            Set<Image> savedImages = optionalStrings.get().stream()
+            Set<UploadFile> savedImages = optionalStrings.get().stream()
                     .map(uploadFileUtils::saveFileAndConvertImage)
                     .collect(Collectors.toSet());
 
             if (!CollectionUtils.isEmpty(savedImages)) {
-                imageRepository.saveAll(savedImages);
+                uploadFileRepository.saveAll(savedImages);
                 savedImages.forEach(image -> {
                     final BoardImage boardImage = board.addImage(image);
                     boardImageRepository.save(boardImage);
@@ -157,10 +156,10 @@ public class GroupBoardService {
 
         Optional.ofNullable(modifyRequest.getRemoveImageIds()).ifPresent(removeImageIds -> {
             removeImageIds.stream()
-                    .map(imageRepository::findById)
+                    .map(uploadFileRepository::findById)
                     .forEach(optionalImage -> optionalImage.ifPresent(image -> {
                         board.removeImage(image);
-                        imageRepository.delete(image);
+                        uploadFileRepository.delete(image);
                         uploadFileUtils.removeImage(image);
                     }));
         });
@@ -174,11 +173,11 @@ public class GroupBoardService {
     private void removeBoard(final GroupBoard board) {
         board.resetAssociated();
 
-        Set<Image> images = board.getImages();
+        Set<UploadFile> images = board.getImages();
         Set<BoardImage> boardImages = board.getBoardImages();
         boardImageRepository.deleteAll(boardImages);
         uploadFileUtils.removeBoardImages(images);
-        imageRepository.deleteAll(images);
+        uploadFileRepository.deleteAll(images);
 
         Set<Comment> comments = board.getComments();
         commentService.deleteAll(comments, board.getId());

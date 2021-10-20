@@ -3,7 +3,7 @@ package io.wisoft.poomi.domain.child_care.group;
 import io.wisoft.poomi.domain.child_care.RecruitmentStatus;
 import io.wisoft.poomi.domain.child_care.group.apply.GroupApply;
 import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
-import io.wisoft.poomi.domain.image.Image;
+import io.wisoft.poomi.domain.file.UploadFile;
 import io.wisoft.poomi.domain.child_care.group.participating.child.GroupParticipatingChild;
 import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMember;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupModifiedRequest;
@@ -57,7 +57,7 @@ public class ChildCareGroup extends BaseChildCareEntity {
             name = "profile_image_id",
             referencedColumnName = "id"
     )
-    private Image profileImage;
+    private UploadFile profileImage;
 
     @OneToMany(mappedBy = "childCareGroup")
     private Set<GroupParticipatingMember> participatingMembers;
@@ -105,8 +105,8 @@ public class ChildCareGroup extends BaseChildCareEntity {
         this.participatingMembers.add(participatingMember);
     }
 
-    public void setProfileImage(final Image profileImage) {
-        this.profileImage = profileImage;
+    public void setProfileImage(final UploadFile profileUploadFile) {
+        this.profileImage = profileUploadFile;
     }
 
     public void addApply(final GroupApply apply) {

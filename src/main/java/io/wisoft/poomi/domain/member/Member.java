@@ -3,7 +3,7 @@ package io.wisoft.poomi.domain.member;
 import io.wisoft.poomi.domain.child_care.expert.apply.ChildCareExpertApply;
 import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
 import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMember;
-import io.wisoft.poomi.domain.image.Image;
+import io.wisoft.poomi.domain.file.UploadFile;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
 import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
 import io.wisoft.poomi.domain.member.address.Address;
@@ -17,7 +17,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.util.*;
@@ -69,13 +68,17 @@ public class Member {
             name = "profile_image_id",
             referencedColumnName = "id"
     )
-    private Image profileImage;
+    private UploadFile profileImage;
 
     @Column(name = "score")
     private Integer score;
 
     @Column(name = "score_provider_count")
     private Integer scoreProviderCount;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "approval_status")
+    private ApprovalStatus approvalStatus;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -142,6 +145,7 @@ public class Member {
         this.age = age;
         this.score = 0;
         this.scoreProviderCount = 0;
+        this.approvalStatus = ApprovalStatus.UN_APPROVED;
         this.gender = gender;
         this.authorities = authorities;
         this.address = address;
@@ -168,7 +172,12 @@ public class Member {
         return member;
     }
 
-    public void saveProfileImagePath(final Image profileImage) {
+    public void approveSignup(final Authority authority) {
+        this.approvalStatus = ApprovalStatus.APPROVED;
+        this.authorities.add(authority);
+    }
+
+    public void saveProfileImage(final UploadFile profileImage) {
         this.profileImage = profileImage;
     }
 

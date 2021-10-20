@@ -1,11 +1,11 @@
 package io.wisoft.poomi.service.member;
 
-import io.wisoft.poomi.domain.image.Image;
+import io.wisoft.poomi.domain.file.UploadFile;
+import io.wisoft.poomi.domain.file.UploadFileRepository;
 import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.global.dto.request.member.ProfileImageUploadRequest;
 import io.wisoft.poomi.global.dto.response.member.SignupResponse;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
-import io.wisoft.poomi.global.exception.exceptions.NotFoundEntityDataException;
 import io.wisoft.poomi.global.utils.UploadFileUtils;
 import io.wisoft.poomi.global.exception.exceptions.DuplicateMemberException;
 import io.wisoft.poomi.domain.member.address.Address;
@@ -16,13 +16,11 @@ import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.address.AddressRepository;
 import io.wisoft.poomi.domain.member.address.AddressTagRepository;
 import io.wisoft.poomi.domain.member.MemberRepository;
-import io.wisoft.poomi.service.file.S3FileHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,8 +36,8 @@ public class MemberService {
     private final AddressRepository addressRepository;
     private final AddressTagRepository addressTagRepository;
     private final ChildRepository childRepository;
+    private final UploadFileRepository uploadFileRepository;
     private final UploadFileUtils uploadFileUtils;
-    private final S3FileHandler s3FileHandler;
 
     @Transactional
     public SignupResponse signup(final SignupRequest signupRequest) {
@@ -53,9 +51,10 @@ public class MemberService {
     }
 
     @Transactional
-    public void saveProfileImage(final ProfileImageUploadRequest profileImage, final Member member) {
-        Image image = uploadFileUtils.saveFileAndConvertImage(profileImage.getImageMetaData());
-        member.saveProfileImagePath(image);
+    public void saveProfileImage(final ProfileImageUploadRequest profileImageUploadRequest, final Member member) {
+        UploadFile profileImage = uploadFileUtils.saveFileAndConvertImage(profileImageUploadRequest.getImageMetaData());
+        uploadFileRepository.save(profileImage);
+        member.saveProfileImage(profileImage);
 
         memberRepository.save(member);
     }
@@ -64,7 +63,7 @@ public class MemberService {
         verifyEmailAndNick(signupRequest.getEmail(), signupRequest.getNick());
         log.info("Verify email and nick from request");
 
-        Member member = Member.of(signupRequest, passwordEncoder, authorityRepository.getUserAuthority());
+        Member member = Member.of(signupRequest, passwordEncoder, authorityRepository.getAnonymousAuthority());
         log.info("Generate member data through request");
 
         saveAddressInfo(member, signupRequest);
