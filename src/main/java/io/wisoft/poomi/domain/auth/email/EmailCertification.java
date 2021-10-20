@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Getter
-@NoArgsConstructor
 @Entity
 @SequenceGenerator(
         name = "email_certification_sequence_generator",
@@ -29,18 +28,25 @@ public class EmailCertification extends BaseCertificationEntity {
 
     private String email;
 
+    public EmailCertification() {
+        this(null, null, null);
+    }
+
     @Builder
     private EmailCertification(final String email,
-                              final String certificationNumber) {
+                               final String certificationNumber,
+                               final String expiredValidationToken) {
+        super(certificationNumber, expiredValidationToken);
         this.email = email;
-        setCertificationNumber(certificationNumber);
     }
 
     public static EmailCertification of(final String email,
-                                        final String certificationNumber) {
+                                        final String certificationNumber,
+                                        final String expiredValidationToken) {
         return EmailCertification.builder()
                 .email(email)
                 .certificationNumber(certificationNumber)
+                .expiredValidationToken(expiredValidationToken)
                 .build();
     }
 

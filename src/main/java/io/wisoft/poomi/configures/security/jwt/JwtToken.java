@@ -1,5 +1,6 @@
 package io.wisoft.poomi.configures.security.jwt;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,9 +19,11 @@ public class JwtToken {
     private String refreshToken;
 
     @JsonProperty("access_token_expiration")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date accessTokenExpiration;
 
     @JsonProperty("refresh_token_expiration")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date refreshTokenExpiration;
 
     @Builder

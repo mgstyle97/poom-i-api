@@ -1,6 +1,7 @@
 package io.wisoft.poomi.service.certification;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.global.dto.response.auth.SmsResultResponse;
 import io.wisoft.poomi.global.dto.response.auth.SmsVerifyResponse;
@@ -31,6 +32,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -59,8 +61,15 @@ public class PropertyCertificationService {
         String requestBody = generateRequestBody(messages);
         SmsResultResponse smsResultResponse = sendSmsRequest(requestBody);
 
-        smsCertificationRepository.save(SmsCertification.of(phoneNumber, certificationNumber));
+        smsCertificationRepository.save(
+                SmsCertification.of(
+                        phoneNumber, certificationNumber,
+                        jwtTokenProvider.generateExpiredValidationToken()
+                )
+        );
         log.info("Save phone number and certification number temporarily: {}", phoneNumber);
+
+        deleteAllSmsExpiredEntity();
 
         return smsResultResponse;
     }
@@ -77,6 +86,8 @@ public class PropertyCertificationService {
         smsCertificationRepository.delete(smsCertification);
         log.info("Delete verified phone number: {}", smsCertification.getPhoneNumber());
 
+        deleteAllSmsExpiredEntity();
+
         return new SmsVerifyResponse(verifyRequest.getPhoneNumber());
     }
 
@@ -87,9 +98,13 @@ public class PropertyCertificationService {
 
         sendMessageByEmail(mailSendRequest.getEmail(), content);
 
-        emailCertificationRepository
-                .save(EmailCertification.of(mailSendRequest.getEmail(), certificationNumber));
+        emailCertificationRepository.save(
+                EmailCertification.of(
+                        mailSendRequest.getEmail(), certificationNumber,
+                        jwtTokenProvider.generateExpiredValidationToken())
+        );
 
+        deleteAllMailExpiredEntity();
     }
 
     @Transactional
@@ -103,10 +118,8 @@ public class PropertyCertificationService {
 
         emailCertificationRepository.delete(emailCertification);
         log.info("Delete verified email: {}", emailCertification.getEmail());
-    }
 
-    private void validateCertificationToken(final String token) {
-        jwtTokenProvider.validateToken(token);
+        deleteAllMailExpiredEntity();
     }
 
     private String generateCertificationNumber() {
@@ -132,12 +145,12 @@ public class PropertyCertificationService {
     }
 
     private String generateSignature(Long time) {
-        String space = " ";					// one space
-        String newLine = "\n";					// new line
-        String method = "POST";					// method
-        String url = "/sms/v2/services/" + ncsProperty.getServiceId() + "/messages";	// url (include query string)
-        String timestamp = time.toString();			// current timestamp (epoch)
-        String accessKey = ncsProperty.getAccessKey();			// access key id (from portal or Sub Account)
+        String space = " ";                    // one space
+        String newLine = "\n";                    // new line
+        String method = "POST";                    // method
+        String url = "/sms/v2/services/" + ncsProperty.getServiceId() + "/messages";    // url (include query string)
+        String timestamp = time.toString();            // current timestamp (epoch)
+        String accessKey = ncsProperty.getAccessKey();            // access key id (from portal or Sub Account)
         String secretKey = ncsProperty.getSecretKey();
 
         String message = method +
@@ -202,6 +215,36 @@ public class PropertyCertificationService {
         message.setText(content);
 
         javaMailSender.send(message);
+    }
+
+    private void deleteAllSmsExpiredEntity() {
+        List<SmsCertification> smsCertificationList = smsCertificationRepository.findAll();
+        smsCertificationRepository.deleteAll(
+                smsCertificationList.stream()
+                        .filter(smsCertification -> expiredCertificationTime(smsCertification.getExpiredValidationToken()))
+                        .collect(Collectors.toSet())
+        );
+        log.info("Delete All expired sms certification");
+    }
+
+    private void deleteAllMailExpiredEntity() {
+        List<EmailCertification> emailCertificationList = emailCertificationRepository.findAll();
+        emailCertificationRepository.deleteAll(
+                emailCertificationList.stream()
+                        .filter(emailCertification -> expiredCertificationTime(emailCertification.getExpiredValidationToken()))
+                        .collect(Collectors.toSet())
+        );
+        log.info("Delete All expired email certification");
+    }
+
+    private boolean expiredCertificationTime(final String expirationToken) {
+        try {
+            jwtTokenProvider.validateToken(expirationToken);
+        } catch (ExpiredJwtException e) {
+            return true;
+        }
+
+        return false;
     }
 
 }

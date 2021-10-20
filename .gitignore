@@ -6,8 +6,6 @@ application-mail.yml
 application-oauth.yml
 Dockerfile
 img/
-test.pkcs12
-testtrust.pkcs12
 
 ### Database ###
 *.accdb

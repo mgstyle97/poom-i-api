@@ -35,11 +35,8 @@ public class JwtTokenProvider {
     private static final long CERTIFICATION_TOKEN_EXPIRE_TIME = 3 * 60 * 1000L;
 
     private final Key key;
-    private final RefreshTokenRepository refreshTokenRepository;
 
-    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey,
-                            RefreshTokenRepository refreshTokenRepository) {
-        this.refreshTokenRepository = refreshTokenRepository;
+    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Base64.getDecoder().decode(secretKey.getBytes());
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
@@ -53,21 +50,17 @@ public class JwtTokenProvider {
                 .collect(Collectors.joining(","));
         long now = (new Date()).getTime();
 
-        final String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+        Date refreshTokenExpiration = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
+        final String refreshToken = generateToken(
+                refreshTokenExpiration, null,
+                "refresh", "refresh token"
+        );
 
-        RefreshToken refreshTokenEntity = new RefreshToken(authentication.getName(), refreshToken);
-        refreshTokenRepository.save(refreshTokenEntity);
-
-        Date accessTokenExpiredTime = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
-        final String accessToken = Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY, authorities)
-                .setExpiration(accessTokenExpiredTime)
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+        Date accessTokenExpiration = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+        final String accessToken = generateToken(
+                accessTokenExpiration, authentication.getName(),
+                AUTHORITIES_KEY, authorities
+        );
 
         return JwtToken.builder()
                 .accessToken(accessToken)
@@ -77,12 +70,22 @@ public class JwtTokenProvider {
                 .build();
     }
 
-    public String generateCertificationToken() {
+    public String generateExpiredValidationToken() {
         long now = (new Date()).getTime();
 
+        return generateToken(
+                new Date(now + CERTIFICATION_TOKEN_EXPIRE_TIME), null,
+                "certification", "certification token"
+        );
+    }
+
+    public String generateToken(final Date expiration, final String subject,
+                                final String claimKey, final Object claimValue) {
         return Jwts.builder()
-                .setExpiration(new Date(now + CERTIFICATION_TOKEN_EXPIRE_TIME))
-                .signWith(key, SignatureAlgorithm.ES256)
+                .setExpiration(expiration)
+                .setSubject(subject)
+                .claim(claimKey, claimValue)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 

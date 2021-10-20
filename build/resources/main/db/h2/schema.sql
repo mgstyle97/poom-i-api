@@ -6,7 +6,6 @@ DROP TABLE IF EXISTS member_authority CASCADE;
 DROP TABLE IF EXISTS child CASCADE;
 DROP TABLE IF EXISTS sms_certification CASCADE;
 DROP TABLE IF EXISTS email_certification CASCADE;
-DROP TABLE IF EXISTS refresh_token CASCADE;
 DROP TABLE IF EXISTS child_care_group CASCADE;
 DROP TABLE IF EXISTS board_image CASCADE;
 DROP TABLE IF EXISTS group_board CASCADE;
@@ -37,19 +36,15 @@ CREATE TABLE image(
 CREATE TABLE sms_certification(
     id integer primary key,
     phone_number varchar not null,
-    certification_number varchar not null
+    certification_number varchar not null,
+    expiration_token varchar not null
 );
 
 CREATE TABLE email_certification(
     id integer primary key,
     email varchar not null,
-    certification_number varchar not null
-);
-
-CREATE TABLE refresh_token (
-    id integer primary key,
-    member_email varchar not null,
-    refresh_token varchar not null
+    certification_number varchar not null,
+    expiration_token varchar not null
 );
 
 CREATE TABLE address_tag (
