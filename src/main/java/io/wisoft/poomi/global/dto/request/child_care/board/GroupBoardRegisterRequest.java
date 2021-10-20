@@ -23,7 +23,6 @@ public class GroupBoardRegisterRequest {
     @NotBlank(message = "게시글의 내용을 입력해주세요.")
     private String contents;
 
-    @JsonProperty("images")
-    private List<String> images;
+    private String image;
 
 }

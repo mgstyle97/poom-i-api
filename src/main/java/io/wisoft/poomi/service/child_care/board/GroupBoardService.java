@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -69,7 +70,7 @@ public class GroupBoardService {
         childCareGroup.addBoard(board);
         log.info("Save board through request id: {}", board.getId());
 
-        saveImages(board, registerRequest.getImages(), domainInfo);
+        saveImages(board, registerRequest.getImage(), domainInfo);
 
         return new GroupBoardRegisterResponse(board);
     }
@@ -118,22 +119,17 @@ public class GroupBoardService {
         return board;
     }
 
-    private void saveImages(final GroupBoard board, final List<String> imageDataList, final String domainInfo) {
-        Optional<List<String>> optionalStrings = Optional.ofNullable(imageDataList);
+    private void saveImages(final GroupBoard board, final String imageData, final String domainInfo) {
+        Optional<String> optionalImageData = Optional.ofNullable(imageData);
 
-        if (optionalStrings.isPresent()) {
-            Set<UploadFile> savedImages = optionalStrings.get().stream()
-                    .map(uploadFileUtils::saveFileAndConvertImage)
-                    .collect(Collectors.toSet());
+        if (optionalImageData.isPresent()) {
+            UploadFile image  = uploadFileUtils.saveFileAndConvertImage(optionalImageData.get());
 
-            if (!CollectionUtils.isEmpty(savedImages)) {
-                uploadFileRepository.saveAll(savedImages);
-                savedImages.forEach(image -> {
-                    final BoardImage boardImage = board.addImage(image);
-                    boardImageRepository.save(boardImage);
-                });
+            if (!ObjectUtils.isEmpty(image)) {
+                uploadFileRepository.save(image);
+                boardImageRepository.save(board.addImage(image));
+                log.info("Save images and set in board");
             }
-            log.info("Save images and set in board");
         }
 
     }
@@ -164,9 +160,9 @@ public class GroupBoardService {
                     }));
         });
 
-        Optional.ofNullable(modifyRequest.getImageDataList()).ifPresent(imageDataList -> {
-            saveImages(board, imageDataList, domainInfo);
-        });
+//        Optional.ofNullable(modifyRequest.getImageDataList()).ifPresent(imageDataList -> {
+//            saveImages(board, imageDataList, domainInfo);
+//        });
 
     }
 
