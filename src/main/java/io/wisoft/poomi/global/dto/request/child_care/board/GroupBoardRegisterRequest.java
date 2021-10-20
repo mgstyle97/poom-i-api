@@ -24,6 +24,6 @@ public class GroupBoardRegisterRequest {
     private String contents;
 
     @JsonProperty("images")
-    private List<String> images;
+    private String[] images;
 
 }
