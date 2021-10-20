@@ -11,6 +11,7 @@ import io.wisoft.poomi.global.dto.response.child_care.board.GroupBoardRegisterRe
 import io.wisoft.poomi.global.utils.DomainUtils;
 import io.wisoft.poomi.service.child_care.board.GroupBoardService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/board")
@@ -37,6 +39,8 @@ public class GroupBoardController {
     public ApiResponse<GroupBoardRegisterResponse> registerGroupBoard(
             @RequestBody @Valid final GroupBoardRegisterRequest registerRequest,
             @SignInMember final Member member, final HttpServletRequest request) {
+        log.info("Received Request DTO: {}", registerRequest);
+
         return ApiResponse.succeed(HttpStatus.CREATED,
                 groupBoardService
                         .registerGroupBoard(
