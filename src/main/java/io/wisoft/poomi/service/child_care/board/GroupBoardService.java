@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -70,7 +69,7 @@ public class GroupBoardService {
         childCareGroup.addBoard(board);
         log.info("Save board through request id: {}", board.getId());
 
-        saveImages(board, Arrays.asList(registerRequest.getImages()), domainInfo);
+        saveImages(board, registerRequest.getImages(), domainInfo);
 
         return new GroupBoardRegisterResponse(board);
     }
