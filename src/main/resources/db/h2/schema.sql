@@ -102,6 +102,7 @@ CREATE TABLE residence_certification(
     certification_status varchar not null default 'UN_APPROVED',
     member_id integer not null,
     residence_file_id integer not null,
+    expired_validation_token varchar not null,
     foreign key (member_id) references member(id),
     foreign key (residence_file_id) references upload_file(id)
 );

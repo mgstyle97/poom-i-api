@@ -13,9 +13,6 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public class BaseCertificationEntity {
 
-    @Column(name = "certification_number")
-    private String certificationNumber;
-
     @Column(name = "expired_validation_token")
     private String expiredValidationToken;
 
