@@ -27,7 +27,7 @@ public class UploadFileUtils {
     private File saveFile(final String fileMetaData, final String extension) {
         final byte[] fileData = Base64Utils.decodeFromString(getFileMetaData(fileMetaData));
         final UUID uuid = UUID.randomUUID();
-        final String fileName = uuid + "." + extension;
+        final String fileName = uuid + extension;
         final File targetFile = new File(fileName);
         try {
             FileUtils.writeByteArrayToFile(targetFile, fileData);

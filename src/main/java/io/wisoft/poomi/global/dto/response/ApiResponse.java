@@ -3,9 +3,11 @@ package io.wisoft.poomi.global.dto.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.poomi.configures.security.jwt.JwtToken;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+@ToString
 @Getter
 public class ApiResponse<T> extends ResponseEntity<T> {
 

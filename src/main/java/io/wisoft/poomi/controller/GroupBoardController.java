@@ -41,12 +41,15 @@ public class GroupBoardController {
             @SignInMember final Member member, final HttpServletRequest request) {
         log.info("Received Request DTO: {}", registerRequest);
 
-        return ApiResponse.succeed(HttpStatus.CREATED,
+        ApiResponse<GroupBoardRegisterResponse> response = ApiResponse.succeed(HttpStatus.CREATED,
                 groupBoardService
                         .registerGroupBoard(
                                 member, registerRequest,
                                 DomainUtils.generateDomainByRequest(request)
                         ));
+        log.info(response.toString());
+
+        return response;
     }
 
     @PatchMapping("/{board-id}")

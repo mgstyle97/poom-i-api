@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS authority CASCADE;
 DROP TABLE IF EXISTS address_tag CASCADE;
 DROP TABLE IF EXISTS address CASCADE;
 DROP TABLE IF EXISTS member_authority CASCADE;
+DROP TABLE IF EXISTS residence_certification CASCADE;
 DROP TABLE IF EXISTS child CASCADE;
 DROP TABLE IF EXISTS sms_certification CASCADE;
 DROP TABLE IF EXISTS email_certification CASCADE;
@@ -24,6 +25,10 @@ DROP TABLE IF EXISTS playground_search CASCADE;
 DROP TABLE IF EXISTS playground_vote CASCADE;
 DROP TABLE IF EXISTS playground_vote_image CASCADE;
 DROP TABLE IF EXISTS playground_voter CASCADE;
+DROP TABLE IF EXISTS chat_room CASCADE;
+DROP TABLE IF EXISTS chat_message CASCADE;
+DROP TABLE IF EXISTS room_participating_member CASCADE;
+DROP TABLE IF EXISTS notice CASCADE;
 
 CREATE TABLE upload_file(
     id integer primary key,
@@ -92,10 +97,14 @@ CREATE TABLE member_authority(
     foreign key (authority_id) references authority(id)
 );
 
--- CREATE TABLE residence_certification(
---     id integer primary key,
---     member_id
--- )
+CREATE TABLE residence_certification(
+    id integer primary key,
+    certification_status varchar not null default 'UN_APPROVED',
+    member_id integer not null,
+    residence_file_id integer not null,
+    foreign key (member_id) references member(id),
+    foreign key (residence_file_id) references upload_file(id)
+);
 
 CREATE TABLE child_care_group(
     id integer primary key,
@@ -281,4 +290,34 @@ CREATE TABLE playground_voter(
     vote_type varchar not null,
     vote_id integer not null,
     foreign key (vote_id) references playground_vote(id)
+);
+
+CREATE TABLE chat_room(
+    id integer primary key
+);
+
+CREATE TABLE chat_message(
+    id integer primary key,
+    message CLOB not null,
+    reading_status varchar not null default 'NOT_READ',
+    sender_id integer not null,
+    room_id integer not null,
+    foreign key (sender_id) references member(id),
+    foreign key (room_id) references chat_room(id)
+);
+
+CREATE TABLE room_participating_member(
+    id integer primary key,
+    member_id integer not null,
+    room_id integer not null,
+    foreign key (member_id) references member(id),
+    foreign key (room_id) references chat_room(id)
+);
+
+CREATE TABLE notice(
+    id integer primary key,
+    contents CLOB not null,
+    reading_status varchar not null default 'NOT_READ',
+    receiver_id integer not null,
+    foreign key (receiver_id) references member(id)
 );
