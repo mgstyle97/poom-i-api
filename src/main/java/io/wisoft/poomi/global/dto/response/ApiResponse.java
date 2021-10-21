@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.poomi.configures.security.jwt.JwtToken;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 @ToString
@@ -16,9 +18,9 @@ public class ApiResponse<T> extends ResponseEntity<T> {
 
     private final JwtToken tokenInfo;
 
-    public ApiResponse(final HttpStatus httpStatus, final T data, final T error,
+    public ApiResponse(final HttpStatus httpStatus, HttpHeaders headers, final T data, final T error,
                        final JwtToken tokenInfo) {
-        super((T) Body.of(data, error, tokenInfo), httpStatus);
+        super((T) Body.of(data, error, tokenInfo), headers, httpStatus);
         this.data = data;
         this.error = error;
         this.tokenInfo = tokenInfo;
@@ -39,7 +41,10 @@ public class ApiResponse<T> extends ResponseEntity<T> {
 
     private static <T> ApiResponse<T> createResponse(final HttpStatus httpStatus, final T data, final T error,
                                                      final JwtToken accessToken) {
-        return new ApiResponse<>(httpStatus, data, error, accessToken);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        return new ApiResponse<>(httpStatus, headers, data, error, accessToken);
     }
 
     @Getter
