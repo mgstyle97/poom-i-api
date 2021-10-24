@@ -1,7 +1,7 @@
 package io.wisoft.poomi.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.wisoft.poomi.service.certification.CertificationService;
+import io.wisoft.poomi.service.auth.certification.CertificationService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

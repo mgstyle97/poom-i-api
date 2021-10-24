@@ -10,7 +10,7 @@ import io.wisoft.poomi.global.dto.request.auth.MailSendRequest;
 import io.wisoft.poomi.global.dto.request.auth.MailVerifyRequest;
 import io.wisoft.poomi.global.dto.request.auth.SmsSendRequest;
 import io.wisoft.poomi.global.dto.request.auth.SmsVerifyRequest;
-import io.wisoft.poomi.service.certification.CertificationService;
+import io.wisoft.poomi.service.auth.certification.CertificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

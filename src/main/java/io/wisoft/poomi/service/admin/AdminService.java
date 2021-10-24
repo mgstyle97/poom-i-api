@@ -4,7 +4,7 @@ import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.MemberRepository;
 import io.wisoft.poomi.domain.member.authority.AuthorityRepository;
 import io.wisoft.poomi.global.dto.request.admin.ApproveSignupMemberRequest;
-import io.wisoft.poomi.service.certification.CertificationService;
+import io.wisoft.poomi.service.auth.certification.CertificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

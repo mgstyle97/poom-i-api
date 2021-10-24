@@ -47,6 +47,8 @@ public class ResidenceCertification extends BaseCertificationEntity {
     )
     private UploadFile residenceFile;
 
+    public ResidenceCertification() {this(null, null, null);}
+
     @Builder
     public ResidenceCertification(final Member member,
                                   final UploadFile residenceFile,

@@ -3,6 +3,7 @@ package io.wisoft.poomi.domain.member;
 import io.wisoft.poomi.domain.child_care.expert.apply.ChildCareExpertApply;
 import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
 import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMember;
+import io.wisoft.poomi.domain.common.ApprovalStatus;
 import io.wisoft.poomi.domain.file.UploadFile;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
 import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;

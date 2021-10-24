@@ -17,6 +17,9 @@ import java.util.stream.Collectors;
 @Setter
 public class GroupBoardLookupResponse {
 
+    @JsonProperty("board_id")
+    private Long boardId;
+
     private String title;
 
     private String writer;
@@ -47,6 +50,7 @@ public class GroupBoardLookupResponse {
 
     @Builder
     public GroupBoardLookupResponse(final GroupBoard board) {
+        this.boardId = board.getId();
         this.title = board.getChildCareGroup().getName();
         this.writer = board.getWriter().getNick();
         this.recruitmentStatus = board.getChildCareGroup().getRecruitmentStatus();

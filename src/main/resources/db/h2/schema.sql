@@ -102,7 +102,7 @@ CREATE TABLE residence_certification(
     certification_status varchar not null default 'UN_APPROVED',
     member_id integer not null,
     residence_file_id integer not null,
-    expired_validation_token varchar not null,
+    expired_validation_token varchar,
     foreign key (member_id) references member(id),
     foreign key (residence_file_id) references upload_file(id)
 );
@@ -271,9 +271,12 @@ CREATE TABLE playground_search(
 CREATE TABLE playground_vote(
     id integer primary key,
     purpose_using varchar not null,
+    approval_status varchar not null default 'UN_APPROVED',
     expired_status varchar not null,
     address_id integer not null,
-    foreign key (address_id) references address(id)
+    registrant_id integer not null,
+    foreign key (address_id) references address(id),
+    foreign key (registrant_id) references member(id)
 );
 
 CREATE TABLE playground_vote_image(
