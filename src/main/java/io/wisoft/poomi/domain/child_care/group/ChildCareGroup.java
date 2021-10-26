@@ -4,8 +4,7 @@ import io.wisoft.poomi.domain.child_care.RecruitmentStatus;
 import io.wisoft.poomi.domain.child_care.group.apply.GroupApply;
 import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
 import io.wisoft.poomi.domain.file.UploadFile;
-import io.wisoft.poomi.domain.child_care.group.participating.child.GroupParticipatingChild;
-import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMember;
+import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupModifiedRequest;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupRegisterRequest;
 import io.wisoft.poomi.domain.member.Member;
@@ -59,11 +58,21 @@ public class ChildCareGroup extends BaseChildCareEntity {
     )
     private UploadFile profileImage;
 
-    @OneToMany(mappedBy = "childCareGroup")
-    private Set<GroupParticipatingMember> participatingMembers;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "group_participating_member",
+            joinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "member_id", referencedColumnName = "id")}
+    )
+    private Set<Member> participatingMembers;
 
-    @OneToMany(mappedBy = "childCareGroup")
-    private Set<GroupParticipatingChild> participatingChildren;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "group_participating_child",
+            joinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "child_id", referencedColumnName = "id")}
+    )
+    private Set<Child> participatingChildren;
 
     @OneToMany(mappedBy = "childCareGroup", fetch = FetchType.LAZY)
     private Set<GroupApply> applies;
@@ -101,7 +110,7 @@ public class ChildCareGroup extends BaseChildCareEntity {
         return childCareGroup;
     }
 
-    public void addParticipatingMember(final GroupParticipatingMember participatingMember) {
+    public void addParticipatingMember(final Member participatingMember) {
         this.participatingMembers.add(participatingMember);
     }
 
@@ -131,11 +140,12 @@ public class ChildCareGroup extends BaseChildCareEntity {
 
     public void resetAssociated() {
         getWriter().withdrawFromGroup(this);
+        this.participatingMembers.forEach(member -> member.withdrawFromGroup(this));
+        this.participatingChildren.forEach(child -> child.withdrawFromGroup(this));
     }
 
     public void validateMemberIsParticipating(final Member member) {
         boolean isMemberParticipating = this.participatingMembers.stream()
-                .map(GroupParticipatingMember::getMember)
                 .anyMatch(participatingMember -> participatingMember.equals(member));
 
         if (!isMemberParticipating) {

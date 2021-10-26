@@ -223,20 +223,19 @@ CREATE TABLE group_apply(
 );
 
 CREATE TABLE group_participating_member(
-    id integer primary key,
-    participating_type varchar not null,
     member_id integer not null,
     group_id integer not null,
     foreign key (member_id) references member(id),
-    foreign key (group_id) references child_care_group(id)
+    foreign key (group_id) references child_care_group(id),
+    primary key (member_id, group_id)
 );
 
 CREATE TABLE group_participating_child(
-    id integer primary key,
     child_id integer not null,
     group_id integer not null,
     foreign key (child_id) references child(id),
-    foreign key (group_id) references child_care_group(id)
+    foreign key (group_id) references child_care_group(id),
+    primary key (child_id, group_id)
 );
 
 CREATE TABLE child_care_playground(
@@ -275,23 +274,26 @@ CREATE TABLE playground_vote(
     expired_status varchar not null,
     address_id integer not null,
     registrant_id integer not null,
+    created_at date,
+    modified_at date,
     foreign key (address_id) references address(id),
     foreign key (registrant_id) references member(id)
 );
 
 CREATE TABLE playground_vote_image(
-    id integer primary key,
     vote_id integer not null,
     image_id integer not null,
     foreign key (vote_id) references playground_vote(id),
-    foreign key (image_id) references upload_file(id)
+    foreign key (image_id) references upload_file(id),
+    primary key (vote_id, image_id)
 );
 
 CREATE TABLE playground_voter(
     id integer primary key,
     dong varchar,
     ho varchar not null,
-    vote_type varchar not null,
+    vote_type varchar not null default 'NOT_YET',
+    expired_validation_token varchar,
     vote_id integer not null,
     foreign key (vote_id) references playground_vote(id)
 );

@@ -2,10 +2,6 @@ package io.wisoft.poomi.service.child_care.group;
 
 import io.wisoft.poomi.domain.child_care.group.apply.GroupApply;
 import io.wisoft.poomi.domain.child_care.group.apply.GroupApplyRepository;
-import io.wisoft.poomi.domain.child_care.group.participating.child.GroupParticipatingChildRepository;
-import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMember;
-import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMemberRepository;
-import io.wisoft.poomi.domain.child_care.group.participating.member.ParticipatingType;
 import io.wisoft.poomi.domain.file.UploadFile;
 import io.wisoft.poomi.domain.file.UploadFileRepository;
 import io.wisoft.poomi.domain.member.child.Child;
@@ -22,15 +18,18 @@ import io.wisoft.poomi.domain.child_care.group.ChildCareGroupRepository;
 import io.wisoft.poomi.global.exception.exceptions.NotFoundEntityDataException;
 import io.wisoft.poomi.global.utils.UploadFileUtils;
 import io.wisoft.poomi.service.child_care.ContentPermissionVerifier;
+import io.wisoft.poomi.service.child_care.board.GroupBoardService;
 import io.wisoft.poomi.service.file.S3FileHandler;
 import io.wisoft.poomi.service.member.ChildService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -39,14 +38,13 @@ import java.util.stream.Collectors;
 public class ChildCareGroupService {
 
     private final ChildCareGroupRepository childCareGroupRepository;
-    private final GroupParticipatingMemberRepository groupParticipatingMemberRepository;
-    private final GroupParticipatingChildRepository groupParticipatingChildRepository;
     private final GroupApplyRepository groupApplyRepository;
     private final UploadFileRepository uploadFileRepository;
     private final S3FileHandler s3FileHandler;
     private final UploadFileUtils uploadFileUtils;
 
     private final ChildService childService;
+    private final GroupBoardService groupBoardService;
 
     @NoAccessCheck
     @Transactional(readOnly = true)
@@ -70,31 +68,23 @@ public class ChildCareGroupService {
     @Transactional
     public ChildCareGroupRegisterResponse registerChildCareGroup(
             final Member member,
-            final ChildCareGroupRegisterRequest childCareGroupRegisterRequest,
-            final String domainInfo) {
+            final ChildCareGroupRegisterRequest childCareGroupRegisterRequest) {
         validateGroupName(childCareGroupRegisterRequest.getName());
-
 
         ChildCareGroup group = ChildCareGroup.of(member, childCareGroupRegisterRequest);
         log.info("Generate child care group title: {}", group.getName());
 
-        UploadFile profileImage = uploadFileUtils.saveFileAndConvertImage(childCareGroupRegisterRequest.getMetaData());
+        UploadFile profileImage = uploadFileUtils
+                .saveFileAndConvertImage(childCareGroupRegisterRequest.getProfileImage());
         uploadFileRepository.save(profileImage);
 
         group.setProfileImage(profileImage);
         childCareGroupRepository.save(group);
         log.info("Save child care group id: {}", group.getId());
 
-        GroupParticipatingMember groupParticipatingMember = GroupParticipatingMember.builder()
-                .participatingType(ParticipatingType.MANAGE)
-                .member(member)
-                .childCareGroup(group)
-                .build();
-        groupParticipatingMemberRepository.save(groupParticipatingMember);
+        member.addParticipatingGroup(group);
+        group.addParticipatingMember(member);
         log.info("Save participating group with writer id: {}", member.getId());
-
-        member.addParticipatingGroup(groupParticipatingMember);
-        group.addParticipatingMember(groupParticipatingMember);
 
         return ChildCareGroupRegisterResponse.from(group);
     }
@@ -182,13 +172,38 @@ public class ChildCareGroupService {
                              final ChildCareGroupModifiedRequest childCareGroupModifiedRequest) {
         childCareGroup.modifiedFor(childCareGroupModifiedRequest);
         childCareGroupRepository.save(childCareGroup);
+
+        changeProfileImage(childCareGroupModifiedRequest.getProfileImageData(), childCareGroup);
+
         log.info("Update child care group entity id: {}", childCareGroup.getId());
     }
 
-    private void deleteGroup(final ChildCareGroup childCareGroup, final Member member) {
-        childCareGroup.resetAssociated();
-        childCareGroupRepository.delete(childCareGroup);
-        log.info("Delete child care group id: {}", childCareGroup.getId());
+    private void changeProfileImage(final String profileImageData, final ChildCareGroup group) {
+        if (StringUtils.hasText(profileImageData)) {
+            Optional<UploadFile> optionalUploadFile = Optional.ofNullable(group.getProfileImage());
+            optionalUploadFile.ifPresent(profileImage -> {
+                uploadFileRepository.delete(profileImage);
+                uploadFileUtils.removeImage(profileImage);
+            });
+
+            UploadFile profileImage = uploadFileUtils.saveFileAndConvertImage(profileImageData);
+            uploadFileRepository.save(profileImage);
+
+            group.setProfileImage(profileImage);
+            childCareGroupRepository.save(group);
+        }
+    }
+
+    private void deleteGroup(final ChildCareGroup group, final Member member) {
+        group.resetAssociated();
+
+        Set<GroupApply> applies = group.getApplies();
+        groupApplyRepository.deleteAll(applies);
+
+        group.getBoards().forEach(groupBoardService::removeBoard);
+
+        childCareGroupRepository.delete(group);
+        log.info("Delete child care group id: {}", group.getId());
     }
 
 }

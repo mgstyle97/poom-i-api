@@ -38,14 +38,13 @@ public class GroupBoardController {
     @PostMapping
     public ApiResponse<GroupBoardRegisterResponse> registerGroupBoard(
             @RequestBody @Valid final GroupBoardRegisterRequest registerRequest,
-            @SignInMember final Member member, final HttpServletRequest request) {
+            @SignInMember final Member member) {
         log.info("Received Request DTO: {}", registerRequest);
 
         ApiResponse<GroupBoardRegisterResponse> response = ApiResponse.succeed(HttpStatus.CREATED,
                 groupBoardService
                         .registerGroupBoard(
-                                member, registerRequest,
-                                DomainUtils.generateDomainByRequest(request)
+                                member, registerRequest
                         ));
         log.info(response.toString());
 
@@ -56,10 +55,9 @@ public class GroupBoardController {
     public void modifyGroupBoard(
             @PathVariable("board-id") @Valid final Long boardId,
             @RequestBody @Valid final GroupBoardModifyRequest modifyRequest,
-            @SignInMember final Member member,
-            final HttpServletRequest request) {
+            @SignInMember final Member member) {
         groupBoardService
-                .modifyGroupBoard(boardId, member, modifyRequest, DomainUtils.generateDomainByRequest(request));
+                .modifyGroupBoard(boardId, member, modifyRequest);
     }
 
     @DeleteMapping("/{board-id}")

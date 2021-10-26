@@ -30,15 +30,15 @@ INSERT INTO child_care_group(id, name, regular_meeting_day, main_activity, descr
 VALUES (1, '숲이 조아', '매월 둘째, 넷째 주 토요일 오후 2~5시', '숲 속 체험', '안녕하세요~ 자연과 품앗이의 대표 준이맘입니다\n저희는 품앗이 이름처럼 자연과 함께 할 수 있는 활동으로 진행하고 있습니다.\n 자연과 함께 뛰놀 아이와 부모님 함께 해요~',
 now(), now(), 'RECRUITING', 1, 1);
 
-INSERT INTO group_participating_member(id, participating_type, member_id, group_id)
-VALUES (1, 'MANAGE', 1, 1);
+INSERT INTO group_participating_member(member_id, group_id)
+VALUES (1, 1);
 
 INSERT INTO child_care_group(id, name, regular_meeting_day, main_activity, description, created_at, modified_at, recruitment_status, writer_id, address_tag_id)
 VALUES (2, '우리동네 품앗이', '매월 첫째, 셋째 주 토요일 오후 2~5시', '숲 속 체험', '안녕하세요~ 자연과 품앗이의 대표 준이맘입니다\n저희는 품앗이 이름처럼 자연과 함께 할 수 있는 활동으로 진행하고 있습니다.\n 자연과 함께 뛰놀 아이와 부모님 함께 해요~',
 now(), now(), 'CLOSED', 1, 1);
 
-INSERT INTO group_participating_member(id, participating_type, member_id, group_id)
-VALUES (2, 'MANAGE', 1, 2);
+INSERT INTO group_participating_member(member_id, group_id)
+VALUES (1, 2);
 
 -- INSERT INTO address_tag
 -- VALUES (1, '한밭아파트'),

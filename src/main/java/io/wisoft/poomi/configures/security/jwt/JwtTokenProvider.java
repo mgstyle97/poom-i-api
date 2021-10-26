@@ -30,7 +30,7 @@ public class JwtTokenProvider {
 
     // 토근 유효시간
     private static final long ACCESS_EXPIRE_TIME = 24 * 60 * 60 * 1000L;
-    private static final long REFRESH_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;
+    private static final long ONE_WEEK_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;
     private static final long PROPERTY_VALIDATION_EXPIRE_TIME = 3 * 60 * 1000L;
     private static final long RESIDENCE_CERTIFICATION_EXPIRE_TIME = 6 * 30 * 24 * 60 * 60 * 1000L;
 
@@ -50,7 +50,7 @@ public class JwtTokenProvider {
                 .collect(Collectors.joining(","));
         long now = getNow();
 
-        Date refreshTokenExpiration = new Date(now + REFRESH_EXPIRE_TIME);
+        Date refreshTokenExpiration = new Date(now + ONE_WEEK_EXPIRE_TIME);
         final String refreshToken = generateToken(
                 refreshTokenExpiration, null,
                 "refresh", "refresh token"
@@ -85,6 +85,15 @@ public class JwtTokenProvider {
         return generateToken(
                 new Date(now + RESIDENCE_CERTIFICATION_EXPIRE_TIME), null,
                 "residence", "residence token"
+        );
+    }
+
+    public String generateVoteExpiredToken() {
+        long now = getNow();
+
+        return generateToken(
+                new Date(now + ONE_WEEK_EXPIRE_TIME), null,
+                "vote", "vote token"
         );
     }
 

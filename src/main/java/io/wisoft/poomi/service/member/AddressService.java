@@ -26,7 +26,7 @@ public class AddressService {
     @Transactional
     public AddressResponse registerAddress(final Member member, final AddressRegisterRequest addressRegisterRequest) {
         AddressTag addressTag = addressTagRepository
-                .getAddressTagByExtraAddress(addressRegisterRequest.getExtraAddress());
+                .saveAddressTagWithExtraAddress(addressRegisterRequest.getExtraAddress());
         log.info("Generate address tag: {}", addressTag.getExtraAddress());
 
         Address address = generateAddressAndSave(addressRegisterRequest, addressTag);

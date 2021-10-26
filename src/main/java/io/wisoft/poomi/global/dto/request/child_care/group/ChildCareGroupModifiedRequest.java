@@ -23,6 +23,9 @@ public class ChildCareGroupModifiedRequest {
     @JsonProperty("recruitment_status")
     private RecruitmentStatus recruitmentStatus;
 
+    @JsonProperty("profile_image")
+    private String profileImageData;
+
     public void setRecruitmentStatus(final String recruitmentStatus) {
         if (StringUtils.hasText(recruitmentStatus)) {
             this.recruitmentStatus = RecruitmentStatus.valueOf(recruitmentStatus);

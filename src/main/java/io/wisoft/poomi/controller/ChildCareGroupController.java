@@ -36,16 +36,14 @@ public class ChildCareGroupController {
 
     @PostMapping
     public ApiResponse<ChildCareGroupRegisterResponse> registerChildCareGroup(
-            @RequestPart("data") @Valid final ChildCareGroupRegisterRequest childCareGroupRegisterRequest,
-            @SignInMember final Member member,
-            final HttpServletRequest request) {
+            @RequestBody @Valid final ChildCareGroupRegisterRequest childCareGroupRegisterRequest,
+            @SignInMember final Member member) {
         return ApiResponse
                 .succeed(
                         HttpStatus.CREATED,
                         childCareGroupService
                                 .registerChildCareGroup(
-                                        member, childCareGroupRegisterRequest,
-                                        DomainUtils.generateDomainByRequest(request)
+                                        member, childCareGroupRegisterRequest
                                 )
                 );
     }

@@ -1,7 +1,7 @@
 package io.wisoft.poomi.domain.member.child;
 
 import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
-import io.wisoft.poomi.domain.child_care.group.participating.child.GroupParticipatingChild;
+import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
 import io.wisoft.poomi.global.dto.request.member.ChildAddRequest;
 import io.wisoft.poomi.domain.member.Member;
 import lombok.Builder;
@@ -52,8 +52,8 @@ public class Child {
     )
     private Member parent;
 
-    @OneToMany(mappedBy = "child")
-    private Set<GroupParticipatingChild> participatingGroups;
+    @ManyToMany(mappedBy = "participatingChildren")
+    private Set<ChildCareGroup> participatingGroups;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "caringChild")
     private ChildCareExpert caredExpertContent;
@@ -95,6 +95,14 @@ public class Child {
 
     public void removeExpertContent(final ChildCareExpert childCareExpert) {
         this.caredExpertContent = null;
+    }
+
+    public void addParticipatingGroup(final ChildCareGroup group) {
+        this.participatingGroups.add(group);
+    }
+
+    public void withdrawFromGroup(final ChildCareGroup group) {
+        this.participatingGroups.remove(group);
     }
 
 }

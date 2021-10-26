@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -45,7 +46,9 @@ public class MemberService {
 
         log.info("Generate member: {}", member.getEmail());
 
-        signupRequest.getFiles().forEach(uploadFileUtils::saveFileAndConvertImage);
+        Optional<List<String>> optionalFiles = Optional.ofNullable(signupRequest.getFiles());
+        optionalFiles.ifPresent(fileData -> fileData
+                .forEach(uploadFileUtils::saveFileAndConvertImage));
 
         return SignupResponse.of(member);
     }

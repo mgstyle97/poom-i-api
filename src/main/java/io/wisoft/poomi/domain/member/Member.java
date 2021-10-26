@@ -2,7 +2,7 @@ package io.wisoft.poomi.domain.member;
 
 import io.wisoft.poomi.domain.child_care.expert.apply.ChildCareExpertApply;
 import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
-import io.wisoft.poomi.domain.child_care.group.participating.member.GroupParticipatingMember;
+import io.wisoft.poomi.domain.child_care.playground.vote.PlaygroundVote;
 import io.wisoft.poomi.domain.common.ApprovalStatus;
 import io.wisoft.poomi.domain.file.UploadFile;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
@@ -126,6 +126,9 @@ public class Member {
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "manager")
     private ChildCareExpert managedExpertContent;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "registrant")
+    private Set<PlaygroundVote> registeredPlaygroundVotes;
+
     @Override
     public int hashCode() {
         return this.id.intValue();
@@ -155,6 +158,7 @@ public class Member {
         this.writtenExpertContents = new HashSet<>();
         this.expertApplies = new HashSet<>();
         this.likedExpertContents = new HashSet<>();
+        this.registeredPlaygroundVotes = new HashSet<>();
     }
 
     public static Member of(final SignupRequest signupRequest,
@@ -232,13 +236,12 @@ public class Member {
         return this.address.getAddressTag();
     }
 
-    public void addParticipatingGroup(final GroupParticipatingMember participatingGroup) {
-        Set<GroupParticipatingMember> participatingGroups = this.childCareGroupProperties.getParticipatingGroups();
-        participatingGroups.add(participatingGroup);
+    public void addParticipatingGroup(final ChildCareGroup participatingGroup) {
+        this.childCareGroupProperties.getParticipatingGroups().add(participatingGroup);
     }
 
-    public void withdrawFromGroup(final ChildCareGroup childCareGroup) {
-        this.childCareGroupProperties.getParticipatingGroups();
+    public void withdrawFromGroup(final ChildCareGroup group) {
+        this.childCareGroupProperties.getParticipatingGroups().remove(group);
     }
 
     public void addWrittenExpertContent(final ChildCareExpert expertContent) {

@@ -29,8 +29,8 @@ public class ChildCareGroupRegisterRequest {
     @JsonProperty("recruitment_status")
     private RecruitmentStatus recruitmentStatus;
 
-    @JsonProperty("meta_data")
-    private String metaData;
+    @JsonProperty("profile_image")
+    private String profileImage;
 
     public void setRecruitmentStatus(final String recruitmentStatus) {
         if (StringUtils.hasText(recruitmentStatus)) {

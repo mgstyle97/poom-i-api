@@ -41,7 +41,6 @@ public class GroupBoardService {
     private final UploadFileRepository uploadFileRepository;
     private final UploadFileUtils uploadFileUtils;
 
-    private final ChildCareGroupService childCareGroupService;
     private final CommentService commentService;
 
     @Transactional(readOnly = true)
@@ -58,9 +57,8 @@ public class GroupBoardService {
 
     @Transactional
     public GroupBoardRegisterResponse registerGroupBoard(final Member member,
-                                                         final GroupBoardRegisterRequest registerRequest,
-                                                         final String domainInfo) {
-        ChildCareGroup childCareGroup = childCareGroupService.generateChildCareGroupById(registerRequest.getGroupId());
+                                                         final GroupBoardRegisterRequest registerRequest) {
+        ChildCareGroup childCareGroup = generateChildCareGroupById(registerRequest.getGroupId());
 
         childCareGroup.validateMemberIsParticipating(member);
         log.info("Check member is participating in group");
@@ -70,20 +68,19 @@ public class GroupBoardService {
         childCareGroup.addBoard(board);
         log.info("Save board through request id: {}", board.getId());
 
-        saveImages(board, registerRequest.getImage(), domainInfo);
+        saveImages(board, registerRequest.getImage());
 
         return new GroupBoardRegisterResponse(board);
     }
 
     @Transactional
     public void modifyGroupBoard(final Long boardId, final Member member,
-                                 final GroupBoardModifyRequest modifyRequest,
-                                 final String domainInfo) {
+                                 final GroupBoardModifyRequest modifyRequest) {
         GroupBoard board = generateGroupBoard(boardId);
 
         ContentPermissionVerifier.verifyModifyPermission(board.getWriter(), member);
 
-        modifyBoard(board, modifyRequest, domainInfo);
+        modifyBoard(board, modifyRequest);
         groupBoardRepository.save(board);
 
     }
@@ -112,6 +109,10 @@ public class GroupBoardService {
         board.removeLikeMember(member);
     }
 
+    private ChildCareGroup generateChildCareGroupById(final Long groupId) {
+        return childCareGroupRepository.getById(groupId);
+    }
+
     private GroupBoard generateGroupBoard(final Long boardId) {
         GroupBoard board = groupBoardRepository.getBoardById(boardId);
         log.info("Generate group board id: {}", boardId);
@@ -119,7 +120,7 @@ public class GroupBoardService {
         return board;
     }
 
-    private void saveImages(final GroupBoard board, final String imageData, final String domainInfo) {
+    private void saveImages(final GroupBoard board, final String imageData) {
         Optional<String> optionalImageData = Optional.ofNullable(imageData);
 
         if (optionalImageData.isPresent()) {
@@ -141,8 +142,7 @@ public class GroupBoardService {
     }
 
     private void modifyBoard(final GroupBoard board,
-                             final GroupBoardModifyRequest modifyRequest,
-                             final String domainInfo) {
+                             final GroupBoardModifyRequest modifyRequest) {
         Optional.ofNullable(modifyRequest.getGroupId()).ifPresent(groupId -> {
             Optional<ChildCareGroup> optionalGroup = childCareGroupRepository.findById(groupId);
             optionalGroup.ifPresent(board::changeGroup);
@@ -160,13 +160,13 @@ public class GroupBoardService {
                     }));
         });
 
-//        Optional.ofNullable(modifyRequest.getImageDataList()).ifPresent(imageDataList -> {
-//            saveImages(board, imageDataList, domainInfo);
-//        });
+        Optional.ofNullable(modifyRequest.getImageDataList()).ifPresent(imageDataList -> {
+            imageDataList.forEach(imageData -> this.saveImages(board, imageData));
+        });
 
     }
 
-    private void removeBoard(final GroupBoard board) {
+    public void removeBoard(final GroupBoard board) {
         board.resetAssociated();
 
         Set<UploadFile> images = board.getImages();

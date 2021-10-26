@@ -37,6 +37,7 @@ public class S3FileHandler {
             log.error("파일 읽기 실패 File name: {}", fileName);
             throw new FileNotReadableException();
         } catch (AmazonS3Exception e) {
+            log.error(e.getMessage());
             log.error("존재하지 않는 파일에 대한 요청 File name: {}", fileName);
             throw new FileNotFoundException();
         }
@@ -59,7 +60,7 @@ public class S3FileHandler {
 
     public void deleteFile(final String fileName) {
         try {
-            amazonS3.deleteObject(s3Bucket.getBucket(), fileName);
+            amazonS3.deleteObject(new DeleteObjectRequest(s3Bucket.getBucket(), fileName));
         } catch (AmazonS3Exception e) {
             log.error("존재하지 않는 파일에 대한 요청 File name: {}", fileName);
             throw new FileNotFoundException();
