@@ -46,9 +46,14 @@ public class MemberService {
 
         log.info("Generate member: {}", member.getEmail());
 
-        Optional<List<String>> optionalFiles = Optional.ofNullable(signupRequest.getFiles());
-        optionalFiles.ifPresent(fileData -> fileData
-                .forEach(uploadFileUtils::saveFileAndConvertImage));
+        Optional<String> optionalAddressCertification = Optional
+                .ofNullable(signupRequest.getAddressCertificationFileData());
+        optionalAddressCertification.ifPresent(uploadFileUtils::saveFileAndConvertImage);
+
+        Optional<String> optionalFamilyCertification = Optional
+                .ofNullable(signupRequest.getFamilyCertificateFileData());
+        optionalFamilyCertification.ifPresent(uploadFileUtils::saveFileAndConvertImage);
+
 
         return SignupResponse.of(member);
     }

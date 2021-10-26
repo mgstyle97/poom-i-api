@@ -54,8 +54,12 @@ public class SignupRequest {
     private String extraAddress;
 
     @SignUpFile
-    @JsonProperty("files")
-    private List<String> files;
+    @JsonProperty("address_certification_file")
+    private String addressCertificationFileData;
+
+    @SignUpFile
+    @JsonProperty("family_certificate_file")
+    private String familyCertificateFileData;
 
     @JsonProperty("children")
     private List<ChildAddRequest> children;
