@@ -57,7 +57,6 @@ public class SignupRequest {
     @JsonProperty("address_certification_file")
     private String addressCertificationFileData;
 
-    @SignUpFile
     @JsonProperty("family_certificate_file")
     private String familyCertificateFileData;
 
