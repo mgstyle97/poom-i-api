@@ -53,7 +53,6 @@ public class SignupRequest {
     @NotBlank(message = "부가 주소를 입력해야 합니다.")
     private String extraAddress;
 
-    @SignUpFile
     @JsonProperty("address_certification_file")
     private String addressCertificationFileData;
 
