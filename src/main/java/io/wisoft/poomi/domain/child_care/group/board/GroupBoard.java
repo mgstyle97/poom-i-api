@@ -3,7 +3,6 @@ package io.wisoft.poomi.domain.child_care.group.board;
 import io.wisoft.poomi.domain.child_care.BaseTimeEntity;
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
 import io.wisoft.poomi.domain.child_care.group.comment.Comment;
-import io.wisoft.poomi.domain.child_care.group.board.image.BoardImage;
 import io.wisoft.poomi.domain.file.UploadFile;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.global.dto.request.child_care.board.GroupBoardRegisterRequest;
@@ -58,8 +57,13 @@ public class GroupBoard extends BaseTimeEntity {
     )
     private Member writer;
 
-    @OneToMany(mappedBy = "board")
-    private Set<BoardImage> images;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "board_image",
+            joinColumns = {@JoinColumn(name = "board_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "image_id", referencedColumnName = "id")}
+    )
+    private Set<UploadFile> images;
 
     @OneToMany(mappedBy = "board")
     private Set<Comment> comments;
@@ -98,33 +102,17 @@ public class GroupBoard extends BaseTimeEntity {
                 .build();
     }
 
-    public Set<BoardImage> getBoardImages() {
-        return this.images;
-    }
-
-    public Set<UploadFile> getImages() {
-        return this.images.stream()
-                .map(BoardImage::getImage)
-                .collect(Collectors.toSet());
-    }
-
     public List<String> getImageURIs() {
         return this.images.stream()
-                .map(BoardImage::getImage)
                 .map(UploadFile::getFileAccessURI)
                 .collect(Collectors.toList());
     }
 
-    public BoardImage addImage(final UploadFile uploadFile) {
-        final BoardImage boardImage = BoardImage.builder()
-                .board(this)
-                .image(uploadFile)
-                .build();
+    public void addImage(final UploadFile uploadFile) {
         this.images.add(
-                boardImage
+                uploadFile
         );
 
-        return boardImage;
     }
 
     public void addComment(final Comment comment) {

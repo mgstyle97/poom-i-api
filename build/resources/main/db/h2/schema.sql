@@ -136,11 +136,11 @@ CREATE TABLE group_board(
 );
 
 CREATE TABLE board_image(
-    id integer primary key,
     board_id integer not null,
     image_id integer not null,
     foreign key (board_id) references group_board(id),
-    foreign key (image_id) references upload_file(id)
+    foreign key (image_id) references upload_file(id),
+    primary key (board_id, image_id)
 );
 
 CREATE TABLE board_likes(

@@ -1,7 +1,7 @@
 cloud:
   aws:
     s3:
-      bucket: migni-springboot-build
+      bucket: poomi-storage-service
     region:
       static: ap-northeast-2
     stack:

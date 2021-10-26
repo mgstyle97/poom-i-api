@@ -5,8 +5,6 @@ import io.wisoft.poomi.domain.child_care.group.ChildCareGroupRepository;
 import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
 import io.wisoft.poomi.domain.child_care.group.board.GroupBoardRepository;
 import io.wisoft.poomi.domain.child_care.group.comment.Comment;
-import io.wisoft.poomi.domain.child_care.group.board.image.BoardImage;
-import io.wisoft.poomi.domain.child_care.group.board.image.BoardImageRepository;
 import io.wisoft.poomi.domain.file.UploadFile;
 import io.wisoft.poomi.domain.file.UploadFileRepository;
 import io.wisoft.poomi.domain.member.Member;
@@ -17,12 +15,10 @@ import io.wisoft.poomi.global.dto.response.child_care.board.GroupBoardRegisterRe
 import io.wisoft.poomi.global.utils.UploadFileUtils;
 import io.wisoft.poomi.service.child_care.ContentPermissionVerifier;
 import io.wisoft.poomi.service.child_care.comment.CommentService;
-import io.wisoft.poomi.service.child_care.group.ChildCareGroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
@@ -37,7 +33,6 @@ public class GroupBoardService {
 
     private final ChildCareGroupRepository childCareGroupRepository;
     private final GroupBoardRepository groupBoardRepository;
-    private final BoardImageRepository boardImageRepository;
     private final UploadFileRepository uploadFileRepository;
     private final UploadFileUtils uploadFileUtils;
 
@@ -128,7 +123,7 @@ public class GroupBoardService {
 
             if (!ObjectUtils.isEmpty(image)) {
                 uploadFileRepository.save(image);
-                boardImageRepository.save(board.addImage(image));
+                board.addImage(image);
                 log.info("Save images and set in board");
             }
         }
@@ -170,8 +165,6 @@ public class GroupBoardService {
         board.resetAssociated();
 
         Set<UploadFile> images = board.getImages();
-        Set<BoardImage> boardImages = board.getBoardImages();
-        boardImageRepository.deleteAll(boardImages);
         uploadFileUtils.removeBoardImages(images);
         uploadFileRepository.deleteAll(images);
 
