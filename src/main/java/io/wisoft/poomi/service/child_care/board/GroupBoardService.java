@@ -165,8 +165,8 @@ public class GroupBoardService {
         board.resetAssociated();
 
         Set<UploadFile> images = board.getImages();
-        uploadFileUtils.removeBoardImages(images);
         uploadFileRepository.deleteAll(images);
+        uploadFileUtils.removeBoardImages(images);
 
         Set<Comment> comments = board.getComments();
         commentService.deleteAll(comments, board.getId());

@@ -14,7 +14,7 @@ public class AddressSearchResponse {
 
     @Getter
     @Setter
-    private static class Results {
+    public static class Results {
         private Common common;
         @JsonProperty("juso")
         private List<Juso> jusos;
@@ -22,7 +22,7 @@ public class AddressSearchResponse {
 
     @Getter
     @Setter
-    private static class Common {
+    public static class Common {
         private String errorMessage;
         private String errorCode;
         private Integer totalCount;
@@ -32,7 +32,7 @@ public class AddressSearchResponse {
 
     @Getter
     @Setter
-    private static class Juso {
+    public static class Juso {
         private String roadAddr;
         private String roadAddrPart1;
         private String roadAddrPart2;

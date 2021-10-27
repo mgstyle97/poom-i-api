@@ -18,7 +18,7 @@ public class AdminService {
     private final AuthorityRepository authorityRepository;
 
     private CertificationService certificationService;
-    private PlaygroundVoteService playgroundVoteService;
+    private final PlaygroundVoteService playgroundVoteService;
 
     @Transactional
     public void approveSignupAccount(final ApproveSignupMemberRequest approveSignupMemberRequest) {
@@ -30,7 +30,7 @@ public class AdminService {
     }
 
     public void approvePlaygroundVote(final Long voteId) {
-
+        playgroundVoteService.approvePlaygroundVote(voteId);
     }
 
 }

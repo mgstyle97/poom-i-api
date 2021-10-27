@@ -274,6 +274,7 @@ CREATE TABLE playground_vote(
     expired_status varchar not null,
     address_id integer not null,
     registrant_id integer not null,
+    expired_validation_token varchar,
     created_at date,
     modified_at date,
     foreign key (address_id) references address(id),
@@ -293,7 +294,6 @@ CREATE TABLE playground_voter(
     dong varchar,
     ho varchar not null,
     vote_type varchar not null default 'NOT_YET',
-    expired_validation_token varchar,
     vote_id integer not null,
     foreign key (vote_id) references playground_vote(id)
 );

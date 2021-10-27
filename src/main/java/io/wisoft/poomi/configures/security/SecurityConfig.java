@@ -102,7 +102,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private String[] permitAllPatterns() {
         return new String[] {
-                "/image/**", "/api/signup", "/api/signin/**", "/favicon.ico/**",
+                "/image/**", "/api/vote/**", "/api/signup", "/api/signin/**", "/favicon.ico/**",
                 "/api/sms-certification/**", "/api/mail-certification/**",
                 "/api/oauth2/**", "/api/image/**", "/api/profile-image/**", "/hello"
         };

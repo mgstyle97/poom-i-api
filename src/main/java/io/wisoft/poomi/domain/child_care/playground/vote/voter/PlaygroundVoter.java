@@ -1,9 +1,15 @@
 package io.wisoft.poomi.domain.child_care.playground.vote.voter;
 
 import io.wisoft.poomi.domain.child_care.playground.vote.PlaygroundVote;
+import io.wisoft.poomi.global.dto.response.child_care.playground.vote.AddressDetailResponse;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Getter
+@NoArgsConstructor
 @Entity
 @SequenceGenerator(
         name = "playground_voter_sequence_generator",
@@ -26,6 +32,7 @@ public class PlaygroundVoter {
 
     private String ho;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "vote_type")
     private VoteType voteType;
 
@@ -35,5 +42,27 @@ public class PlaygroundVoter {
             referencedColumnName = "id"
     )
     private PlaygroundVote playgroundVote;
+
+    @Builder
+    public PlaygroundVoter(final String dong, final String ho,
+                           final PlaygroundVote playgroundVote) {
+        this.dong = dong;
+        this.ho = ho;
+        this.voteType = VoteType.NOT_YET;
+        this.playgroundVote = playgroundVote;
+    }
+
+    public static PlaygroundVoter of(final AddressDetailResponse.Juso juso,
+                                     final PlaygroundVote playgroundVote) {
+        return PlaygroundVoter.builder()
+                .dong(juso.getDongNm())
+                .ho(juso.getHoNm())
+                .playgroundVote(playgroundVote)
+                .build();
+    }
+
+    public void setVoteType(final VoteType voteType) {
+        this.voteType = voteType;
+    }
 
 }

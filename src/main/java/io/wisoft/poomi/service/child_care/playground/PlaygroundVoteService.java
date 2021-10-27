@@ -3,6 +3,8 @@ package io.wisoft.poomi.service.child_care.playground;
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.domain.child_care.playground.vote.PlaygroundVote;
 import io.wisoft.poomi.domain.child_care.playground.vote.PlaygroundVoteRepository;
+import io.wisoft.poomi.domain.child_care.playground.vote.voter.PlaygroundVoter;
+import io.wisoft.poomi.domain.child_care.playground.vote.voter.PlaygroundVoterRepository;
 import io.wisoft.poomi.domain.file.UploadFile;
 import io.wisoft.poomi.domain.file.UploadFileRepository;
 import io.wisoft.poomi.domain.member.Member;
@@ -11,6 +13,9 @@ import io.wisoft.poomi.domain.member.address.AddressRepository;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.member.address.AddressTagRepository;
 import io.wisoft.poomi.global.dto.request.child_care.playground.PlaygroundVoteRegisterRequest;
+import io.wisoft.poomi.global.dto.request.child_care.playground.PlaygroundVoteVotingRequest;
+import io.wisoft.poomi.global.dto.response.child_care.playground.vote.PlaygroundVoteLookupResponse;
+import io.wisoft.poomi.global.dto.response.child_care.playground.vote.PlaygroundVoteRealtimeInfoResponse;
 import io.wisoft.poomi.global.exception.exceptions.NotFoundEntityDataException;
 import io.wisoft.poomi.global.utils.UploadFileUtils;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +36,7 @@ public class PlaygroundVoteService {
     private final AddressTagRepository addressTagRepository;
     private final UploadFileRepository uploadFileRepository;
     private final PlaygroundVoteRepository playgroundVoteRepository;
+    private final PlaygroundVoterRepository playgroundVoterRepository;
 
     private final UploadFileUtils uploadFileUtils;
     private final JwtTokenProvider jwtTokenProvider;
@@ -51,6 +57,17 @@ public class PlaygroundVoteService {
 
         Set<UploadFile> images = generateImages(registerRequest.getImages());
         playgroundVote.setImages(images);
+
+        member.addPlaygroundVote(playgroundVote);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PlaygroundVoteRealtimeInfoResponse> lookupPlaygroundVoteList(final Member member) {
+        Set<PlaygroundVote> votes = member.getRegisteredPlaygroundVotes();
+
+        return votes.stream()
+                .map(PlaygroundVoteRealtimeInfoResponse::of)
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -61,6 +78,25 @@ public class PlaygroundVoteService {
         playgroundVoteRepository.save(playgroundVote);
 
         playgroundVoterService.loadVoterInfoAndSave(playgroundVote);
+    }
+
+    @Transactional(readOnly = true)
+    public PlaygroundVoteLookupResponse lookupPlaygroundVote(final Long voteId) {
+        PlaygroundVote playgroundVote = generatePlaygroundVote(voteId);
+        playgroundVote.checkApprovalStatus();
+
+        return PlaygroundVoteLookupResponse.of(
+                playgroundVote, jwtTokenProvider.getExpirationDateFromToken(playgroundVote.getExpiredValidationToken())
+        );
+    }
+
+    @Transactional
+    public void votingPlaygroundVote(final Long voteId, final PlaygroundVoteVotingRequest votingRequest) {
+        PlaygroundVote playgroundVote = generatePlaygroundVote(voteId);
+        PlaygroundVoter voter = playgroundVote
+                .getVoterByDongAndHo(votingRequest.getDong(), votingRequest.getHo());
+        voter.setVoteType(votingRequest.getVoteType());
+        playgroundVoterRepository.save(voter);
     }
 
     private Address generateAddress(final PlaygroundVoteRegisterRequest registerRequest) {

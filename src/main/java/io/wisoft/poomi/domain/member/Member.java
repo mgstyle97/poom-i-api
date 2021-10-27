@@ -280,4 +280,7 @@ public class Member {
         this.childCareGroupProperties.getLikeBoards().remove(board);
     }
 
+    public void addPlaygroundVote(final PlaygroundVote playgroundVote) {
+        this.registeredPlaygroundVotes.add(playgroundVote);
+    }
 }

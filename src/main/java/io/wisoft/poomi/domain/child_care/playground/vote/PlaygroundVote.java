@@ -1,16 +1,23 @@
 package io.wisoft.poomi.domain.child_care.playground.vote;
 
 import io.wisoft.poomi.domain.child_care.BaseTimeEntity;
+import io.wisoft.poomi.domain.child_care.playground.vote.voter.PlaygroundVoter;
+import io.wisoft.poomi.domain.child_care.playground.vote.voter.VoteType;
 import io.wisoft.poomi.domain.common.ApprovalStatus;
 import io.wisoft.poomi.domain.file.UploadFile;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.address.Address;
+import io.wisoft.poomi.global.exception.exceptions.NoPermissionOfContentException;
+import io.wisoft.poomi.global.exception.exceptions.NotApprovedVoteException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Getter
@@ -68,6 +75,14 @@ public class PlaygroundVote extends BaseTimeEntity {
     )
     private Member registrant;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "playgroundVote")
+    private Set<PlaygroundVoter> voters;
+
+    @Override
+    public int hashCode() {
+        return this.id.intValue();
+    }
+
     @Builder
     public PlaygroundVote(final String purposeUsing,
                           final Address address, final Member registrant) {
@@ -76,16 +91,76 @@ public class PlaygroundVote extends BaseTimeEntity {
         this.expiredStatus = ExpiredStatus.CLOSED;
         this.address = address;
         this.registrant = registrant;
+        this.voters = new HashSet<>();
     }
 
     public void setImages(final Set<UploadFile> images) {
         this.images = images;
     }
 
+    public void checkApprovalStatus() {
+        if (this.approvalStatus.equals(ApprovalStatus.UN_APPROVED)) {
+            throw new NotApprovedVoteException();
+        }
+    }
+
     public void approveState(final String expiredValidationToken) {
         this.approvalStatus = ApprovalStatus.APPROVED;
         this.expiredStatus = ExpiredStatus.VOTING;
         this.expiredValidationToken = expiredValidationToken;
+    }
+
+    public void setVoters(final Set<PlaygroundVoter> voters) {
+        this.voters = voters;
+    }
+
+    public PlaygroundVoter getVoterByDongAndHo(final String dong, final String ho) {
+        return this.voters.stream()
+                .filter(voter ->
+                        voter.getDong().equals(dong) && voter.getHo().equals(ho)
+                ).findFirst().orElseThrow(NoPermissionOfContentException::new);
+    }
+
+    public Double calculateVotingRate() {
+        double notVotingCount = getVotersNotVoting().size();
+
+        return notVotingCount / this.voters.size() * 100;
+    }
+
+    public Double calculateAgreeRate() {
+        double agreeVotingCount = getVoterAgree().size();
+
+        return agreeVotingCount / this.voters.size() * 100;
+    }
+
+    public Double calculateDisagreeRate() {
+        double disagreeVotingCount = getVoterDisagree().size();
+
+        return disagreeVotingCount / this.voters.size() * 100;
+    }
+
+    public List<String> getVoterDongList() {
+        return this.voters.stream()
+                .map(PlaygroundVoter::getDong)
+                .collect(Collectors.toList());
+    }
+
+    public Set<PlaygroundVoter> getVoterAgree() {
+        return this.voters.stream()
+                .filter(voter -> voter.getVoteType().equals(VoteType.AGREE))
+                .collect(Collectors.toSet());
+    }
+
+    public Set<PlaygroundVoter> getVoterDisagree() {
+        return this.voters.stream()
+                .filter(voter -> voter.getVoteType().equals(VoteType.DISAGREE))
+                .collect(Collectors.toSet());
+    }
+
+    public Set<PlaygroundVoter> getVotersNotVoting() {
+        return this.voters.stream()
+                .filter(voter -> voter.getVoteType().equals(VoteType.NOT_YET))
+                .collect(Collectors.toSet());
     }
 
 }
