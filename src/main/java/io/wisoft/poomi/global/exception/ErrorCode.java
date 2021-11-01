@@ -1,6 +1,7 @@
 package io.wisoft.poomi.global.exception;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public enum ErrorCode {
@@ -82,6 +83,13 @@ public enum ErrorCode {
         notHandlingFileType.setMessage(message);
 
         return notHandlingFileType;
+    }
+
+    public static ErrorCode internalServerError(final String message) {
+        ErrorCode internalServerError = INTERNAL_SERVER_ERROR;
+        internalServerError.setMessage(message);
+
+        return internalServerError;
     }
 
 }

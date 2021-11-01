@@ -17,14 +17,9 @@ public class ErrorResponse {
 
     @Builder
     public ErrorResponse(final ErrorCode errorCode) {
-        this(errorCode, errorCode.getMessage());
-    }
-
-    @Builder
-    public ErrorResponse(final ErrorCode errorCode, final String message) {
         this.errorCode = errorCode;
         this.statusCode = errorCode.getStatusCode();
-        this.message = message;
+        this.message = errorCode.getMessage();
     }
 
 }
