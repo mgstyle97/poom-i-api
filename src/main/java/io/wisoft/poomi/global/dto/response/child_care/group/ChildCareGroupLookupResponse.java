@@ -30,6 +30,9 @@ public class ChildCareGroupLookupResponse {
     @JsonProperty("including_members")
     private Integer includingMembers;
 
+    @JsonProperty("profile_image_uri")
+    private String profileImageURI;
+
     @JsonProperty("created_at")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date createdAt;
@@ -45,6 +48,7 @@ public class ChildCareGroupLookupResponse {
         this.regularMeetingDay = childCareGroup.getRegularMeetingDay();
         this.mainActivity = childCareGroup.getMainActivity();
         this.includingMembers = childCareGroup.getParticipatingMembers().size();
+        this.profileImageURI = childCareGroup.getProfileImage().getFileAccessURI();
         this.createdAt = LocalDateTimeUtils.toDate(childCareGroup.getCreatedAt());
         this.requestedAt = new Date();
     }

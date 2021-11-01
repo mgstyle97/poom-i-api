@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Getter
@@ -112,6 +113,12 @@ public class ChildCareGroup extends BaseChildCareEntity {
 
     public void addParticipatingMember(final Member participatingMember) {
         this.participatingMembers.add(participatingMember);
+        participatingMember.addParticipatingGroup(this);
+    }
+
+    public void addParticipatingChild(final Child participatingChild) {
+        this.participatingChildren.add(participatingChild);
+        participatingChild.addParticipatingGroup(this);
     }
 
     public void setProfileImage(final UploadFile profileUploadFile) {
@@ -160,7 +167,9 @@ public class ChildCareGroup extends BaseChildCareEntity {
     }
 
     public void approveGroupApply(final GroupApply groupApply) {
-
+        Optional<Child> childOptional = Optional.ofNullable(groupApply.getChild());
+        childOptional.ifPresent(this::addParticipatingChild);
+        addParticipatingMember(groupApply.getWriter());
     }
 
     private void changeTitle(final String title) {

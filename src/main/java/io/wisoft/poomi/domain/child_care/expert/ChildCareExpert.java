@@ -156,7 +156,7 @@ public class ChildCareExpert extends BaseChildCareEntity {
     public void resetAssociated() {
         this.likes.forEach(like -> like.removeLikedExpertContent(this));
         this.applications.forEach(ChildCareExpertApply::reset);
-        this.caringChild.cancelExpertContent();
+        cancelExpertOfChild();
         getWriter().removeWrittenExpertContent(this);
     }
 
@@ -214,6 +214,12 @@ public class ChildCareExpert extends BaseChildCareEntity {
         }
 
         this.endTime = endTime;
+    }
+
+    private void cancelExpertOfChild() {
+        if (this.caringChild != null) {
+            this.caringChild.cancelExpertContent();
+        }
     }
 
 }

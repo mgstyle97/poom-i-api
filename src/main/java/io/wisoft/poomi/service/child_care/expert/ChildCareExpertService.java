@@ -189,6 +189,7 @@ public class ChildCareExpertService {
         childCareExpert.checkApplyIncluded(expertApply);
 
         childCareExpert.approveApply(expertApply);
+        childCareExpertApplyRepository.delete(expertApply);
     }
 
     private ChildCareExpert generateChildCareExpertById(final Long expertId) {

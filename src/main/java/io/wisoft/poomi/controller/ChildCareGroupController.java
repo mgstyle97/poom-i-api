@@ -41,10 +41,7 @@ public class ChildCareGroupController {
         return ApiResponse
                 .succeed(
                         HttpStatus.CREATED,
-                        childCareGroupService
-                                .registerChildCareGroup(
-                                        member, childCareGroupRegisterRequest
-                                )
+                        childCareGroupService.registerChildCareGroup(member, childCareGroupRegisterRequest)
                 );
     }
 

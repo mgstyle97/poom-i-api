@@ -76,7 +76,6 @@ public class GroupBoardService {
         ContentPermissionVerifier.verifyModifyPermission(board.getWriter(), member);
 
         modifyBoard(board, modifyRequest);
-        groupBoardRepository.save(board);
 
     }
 

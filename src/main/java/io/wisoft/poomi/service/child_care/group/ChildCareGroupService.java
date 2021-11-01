@@ -10,7 +10,7 @@ import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupApplyRe
 import io.wisoft.poomi.global.dto.response.child_care.group.*;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupModifiedRequest;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupRegisterRequest;
-import io.wisoft.poomi.global.exception.exceptions.AlreadyExistsGroupTitleException;
+import io.wisoft.poomi.global.exception.exceptions.AlreadyExistsGroupNameException;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
@@ -92,12 +92,12 @@ public class ChildCareGroupService {
     @Transactional
     public ChildCareGroupModifiedResponse modifiedChildCareGroup(final Long groupId,
                                                                  final Member member,
-                                                                 final ChildCareGroupModifiedRequest childCareGroupModifiedRequest) {
+                                                                 final ChildCareGroupModifiedRequest modifiedRequest) {
         ChildCareGroup childCareGroup = generateChildCareGroupById(groupId);
 
         ContentPermissionVerifier.verifyModifyPermission(childCareGroup.getWriter(), member);
 
-        modifyGroup(childCareGroup, childCareGroupModifiedRequest);
+        modifyGroup(childCareGroup, modifiedRequest);
 
         return ChildCareGroupModifiedResponse.of(groupId);
     }
@@ -144,11 +144,13 @@ public class ChildCareGroupService {
         GroupApply groupApply = groupApplyRepository.getById(applyId);
         group.checkApplyIncluding(groupApply);
 
-        approveApply(group, groupApply);
+        group.approveGroupApply(groupApply);
+        groupApplyRepository.delete(groupApply);
 
     }
 
     @NoAccessCheck
+    @Transactional(readOnly = true)
     public ChildCareGroup generateChildCareGroupById(final Long id) {
         ChildCareGroup childCareGroup = childCareGroupRepository.getById(id);
         log.info("Generate child care group id: {}", id);
@@ -156,41 +158,34 @@ public class ChildCareGroupService {
         return childCareGroup;
     }
 
-    private void approveApply(final ChildCareGroup group, final GroupApply apply) {
-        Optional.ofNullable(apply.getChild()).ifPresent(child -> {
-
-        });
-    }
-
     private void validateGroupName(final String name) {
         if (childCareGroupRepository.existsByName(name)) {
-            throw new AlreadyExistsGroupTitleException();
+            throw new AlreadyExistsGroupNameException();
         }
     }
 
     private void modifyGroup(final ChildCareGroup childCareGroup,
                              final ChildCareGroupModifiedRequest childCareGroupModifiedRequest) {
         childCareGroup.modifiedFor(childCareGroupModifiedRequest);
-        childCareGroupRepository.save(childCareGroup);
-
         changeProfileImage(childCareGroupModifiedRequest.getProfileImageData(), childCareGroup);
+        childCareGroupRepository.save(childCareGroup);
 
         log.info("Update child care group entity id: {}", childCareGroup.getId());
     }
 
     private void changeProfileImage(final String profileImageData, final ChildCareGroup group) {
         if (StringUtils.hasText(profileImageData)) {
-            Optional<UploadFile> optionalUploadFile = Optional.ofNullable(group.getProfileImage());
-            optionalUploadFile.ifPresent(profileImage -> {
-                uploadFileRepository.delete(profileImage);
-                uploadFileUtils.removeImage(profileImage);
+            Optional<UploadFile> optionalPrevProfileImage = Optional.ofNullable(group.getProfileImage());
+            optionalPrevProfileImage.ifPresent(prevProfileImage -> {
+                uploadFileRepository.delete(prevProfileImage);
+                uploadFileUtils.removeImage(prevProfileImage);
+                log.info("Delete previous profile image id: {}", prevProfileImage.getId());
             });
 
             UploadFile profileImage = uploadFileUtils.saveFileAndConvertImage(profileImageData);
             uploadFileRepository.save(profileImage);
 
             group.setProfileImage(profileImage);
-            childCareGroupRepository.save(group);
         }
     }
 
