@@ -15,6 +15,7 @@ public class ErrorResponse {
 
     private String message;
 
+    @Builder
     public ErrorResponse(final ErrorCode errorCode) {
         this(errorCode, errorCode.getMessage());
     }

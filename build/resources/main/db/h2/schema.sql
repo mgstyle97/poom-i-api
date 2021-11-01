@@ -284,7 +284,7 @@ CREATE TABLE playground_vote(
 
 CREATE TABLE playground_vote_image(
     vote_id integer not null,
-    image_id integer unique not null,
+    image_id integer not null,
     foreign key (vote_id) references playground_vote(id),
     foreign key (image_id) references upload_file(id),
     primary key (vote_id, image_id)
