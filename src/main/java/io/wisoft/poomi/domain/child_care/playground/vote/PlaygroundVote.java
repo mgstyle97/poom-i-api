@@ -7,6 +7,7 @@ import io.wisoft.poomi.domain.common.ApprovalStatus;
 import io.wisoft.poomi.domain.file.UploadFile;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.address.Address;
+import io.wisoft.poomi.global.exception.exceptions.ExpiredVoteException;
 import io.wisoft.poomi.global.exception.exceptions.NoPermissionOfContentException;
 import io.wisoft.poomi.global.exception.exceptions.NotApprovedVoteException;
 import lombok.Builder;
@@ -175,6 +176,16 @@ public class PlaygroundVote extends BaseTimeEntity {
         });
 
         return votingYetList;
+    }
+
+    public void expired() {
+        this.expiredStatus = ExpiredStatus.CLOSED;
+    }
+
+    public void checkAccessToExpiredVote() {
+        if (this.expiredStatus.equals(ExpiredStatus.CLOSED)) {
+            throw new ExpiredVoteException();
+        }
     }
 
 }

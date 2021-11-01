@@ -94,7 +94,8 @@ CREATE TABLE member_authority(
     member_id integer not null ,
     authority_id integer not null,
     foreign key (member_id) references member(id),
-    foreign key (authority_id) references authority(id)
+    foreign key (authority_id) references authority(id),
+    primary key (member_id, authority_id)
 );
 
 CREATE TABLE residence_certification(
@@ -144,11 +145,11 @@ CREATE TABLE board_image(
 );
 
 CREATE TABLE board_likes(
-    id integer primary key,
     board_id integer not null,
     member_id integer not null,
     foreign key(board_id) references group_board(id),
-    foreign key(member_id) references member(id)
+    foreign key(member_id) references member(id),
+    primary key (board_id, member_id)
 );
 
 CREATE TABLE comment(
@@ -252,19 +253,19 @@ CREATE TABLE child_care_playground(
 );
 
 CREATE TABLE playground_image(
-    id integer primary key,
     playground_id integer not null,
     image_id integer not null,
     foreign key (playground_id) references child_care_playground(id),
-    foreign key (image_id) references upload_file(id)
+    foreign key (image_id) references upload_file(id),
+    primary key (playground_id, image_id)
 );
 
 CREATE TABLE playground_search(
-    id integer primary key,
     playground_id integer not null,
     address_tag_id integer not null,
     foreign key (playground_id) references child_care_playground(id),
-    foreign key (address_tag_id) references address_tag(id)
+    foreign key (address_tag_id) references address_tag(id),
+    primary key (playground_id, address_tag_id)
 );
 
 CREATE TABLE playground_vote(

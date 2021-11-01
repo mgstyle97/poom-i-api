@@ -1,5 +1,6 @@
 package io.wisoft.poomi.service.child_care.playground;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.domain.child_care.playground.vote.PlaygroundVote;
 import io.wisoft.poomi.domain.child_care.playground.vote.PlaygroundVoteRepository;
@@ -64,6 +65,9 @@ public class PlaygroundVoteService {
     @Transactional(readOnly = true)
     public List<PlaygroundVoteRealtimeInfoResponse> lookupPlaygroundVoteList(final Member member) {
         Set<PlaygroundVote> votes = member.getRegisteredPlaygroundVotes();
+        votes.stream()
+                .filter(vote -> vote.getNotVotingDongAndHo().size() == 0)
+                .forEach(PlaygroundVote::expired);
 
         return votes.stream()
                 .map(PlaygroundVoteRealtimeInfoResponse::of)
@@ -83,7 +87,7 @@ public class PlaygroundVoteService {
     @Transactional(readOnly = true)
     public PlaygroundVoteLookupResponse lookupPlaygroundVote(final Long voteId) {
         PlaygroundVote playgroundVote = generatePlaygroundVote(voteId);
-        playgroundVote.checkApprovalStatus();
+        playgroundVote.checkAccessToExpiredVote();
 
         return PlaygroundVoteLookupResponse.of(
                 playgroundVote, jwtTokenProvider.getExpirationDateFromToken(playgroundVote.getExpiredValidationToken())
@@ -93,6 +97,8 @@ public class PlaygroundVoteService {
     @Transactional
     public void votingPlaygroundVote(final Long voteId, final PlaygroundVoteVotingRequest votingRequest) {
         PlaygroundVote playgroundVote = generatePlaygroundVote(voteId);
+        playgroundVote.checkAccessToExpiredVote();
+
         PlaygroundVoter voter = playgroundVote
                 .getVoterByDongAndHo(votingRequest.getDong(), votingRequest.getHo());
         voter.setVoteType(votingRequest.getVoteType());
@@ -128,9 +134,28 @@ public class PlaygroundVoteService {
 
     private PlaygroundVote generatePlaygroundVote(final Long voteId) {
         try {
-            return playgroundVoteRepository.getById(voteId);
+            PlaygroundVote vote = playgroundVoteRepository.getById(voteId);
+            checkVoteExpired(vote);
+            vote.checkApprovalStatus();
+
+            return vote;
         } catch (EntityNotFoundException e) {
             throw new NotFoundEntityDataException("vote id: "+ voteId + "에 관한 데이터를 찾지 못했습니다.");
+        }
+    }
+
+    private void checkVoteExpired(final PlaygroundVote vote) {
+        if (vote.getNotVotingDongAndHo().size() == 0) {
+            vote.expired();
+        } else {
+            try {
+                Optional
+                        .ofNullable(vote.getExpiredValidationToken())
+                        .ifPresent(jwtTokenProvider::validateToken);
+            } catch (ExpiredJwtException e) {
+                vote.expired();
+            }
+
         }
     }
 

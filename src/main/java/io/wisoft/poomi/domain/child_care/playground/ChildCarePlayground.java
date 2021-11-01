@@ -1,11 +1,13 @@
 package io.wisoft.poomi.domain.child_care.playground;
 
+import io.wisoft.poomi.domain.file.UploadFile;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.address.Address;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
@@ -53,5 +55,14 @@ public class ChildCarePlayground {
             referencedColumnName = "id"
     )
     private Member registrant;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "playground_image",
+            joinColumns = {@JoinColumn(name = "playground_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "image_id", referencedColumnName = "id")}
+    )
+    private Set<UploadFile> images;
+
 
 }
