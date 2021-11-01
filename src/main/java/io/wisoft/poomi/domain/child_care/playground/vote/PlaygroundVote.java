@@ -14,9 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor
@@ -161,6 +159,22 @@ public class PlaygroundVote extends BaseTimeEntity {
         return this.voters.stream()
                 .filter(voter -> voter.getVoteType().equals(VoteType.NOT_YET))
                 .collect(Collectors.toSet());
+    }
+
+    public Map<String, List<String>> getNotVotingDongAndHo() {
+        List<String> dongList = getVoterDongList();
+
+        Map<String, List<String>> votingYetList = new HashMap<>();
+        Set<PlaygroundVoter> notVotingVoters = getVotersNotVoting();
+        dongList.forEach(dong -> {
+            List<String> hoList = notVotingVoters.stream()
+                    .filter(voter -> voter.getDong().equals(dong))
+                    .map(PlaygroundVoter::getHo)
+                    .collect(Collectors.toList());
+            votingYetList.put(dong, hoList);
+        });
+
+        return votingYetList;
     }
 
 }

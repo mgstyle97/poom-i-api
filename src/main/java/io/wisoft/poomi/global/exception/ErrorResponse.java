@@ -15,11 +15,15 @@ public class ErrorResponse {
 
     private String message;
 
-    @Builder
     public ErrorResponse(final ErrorCode errorCode) {
+        this(errorCode, errorCode.getMessage());
+    }
+
+    @Builder
+    public ErrorResponse(final ErrorCode errorCode, final String message) {
         this.errorCode = errorCode;
         this.statusCode = errorCode.getStatusCode();
-        this.message = errorCode.getMessage();
+        this.message = message;
     }
 
 }

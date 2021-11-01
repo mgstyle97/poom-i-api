@@ -39,7 +39,8 @@ public class PlaygroundVoteController {
     }
 
     @GetMapping("/vote/{vote-id}")
-    public ApiResponse<PlaygroundVoteLookupResponse> lookupPlaygroundVote(@PathVariable("vote-id") @Valid final Long voteId) {
+    public ApiResponse<PlaygroundVoteLookupResponse> lookupPlaygroundVote(
+            @PathVariable("vote-id") @Valid final Long voteId) {
         return ApiResponse.succeed(
                 HttpStatus.OK,
                 playgroundVoteService.lookupPlaygroundVote(voteId)

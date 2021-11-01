@@ -11,6 +11,7 @@ import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -43,11 +44,15 @@ public class PlaygroundVoteLookupResponse {
     @JsonProperty("image_uris")
     private List<String> imageURIs;
 
+    @JsonProperty("voting_yet_list")
+    Map<String, List<String>> notVotingList;
+
     @Builder
     public PlaygroundVoteLookupResponse(final Long voteId,
                                         final String purposeUsing, final String address, final String detailAddress,
                                         final Date expiredAt, final ExpiredStatus expiredStatus,
-                                        final Set<UploadFile> images, final String registrant) {
+                                        final Set<UploadFile> images, final String registrant,
+                                        final Map<String, List<String>> notVotingList) {
         this.voteId = voteId;
         this.purposeUsing = purposeUsing;
         this.address = address;
@@ -58,6 +63,7 @@ public class PlaygroundVoteLookupResponse {
                 .map(UploadFile::getFileAccessURI)
                 .collect(Collectors.toList());
         this.registrant = registrant;
+        this.notVotingList = notVotingList;
     }
 
     public static PlaygroundVoteLookupResponse of(final PlaygroundVote playgroundVote, final Date expiredAt) {
@@ -70,6 +76,7 @@ public class PlaygroundVoteLookupResponse {
                 .expiredStatus(playgroundVote.getExpiredStatus())
                 .images(playgroundVote.getImages())
                 .registrant(playgroundVote.getRegistrant().getNick())
+                .notVotingList(playgroundVote.getNotVotingDongAndHo())
                 .build();
     }
 

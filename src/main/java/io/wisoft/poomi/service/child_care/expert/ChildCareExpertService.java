@@ -1,5 +1,6 @@
 package io.wisoft.poomi.service.child_care.expert;
 
+import io.wisoft.poomi.domain.child_care.expert.RecruitType;
 import io.wisoft.poomi.domain.child_care.expert.apply.ChildCareExpertApply;
 import io.wisoft.poomi.domain.child_care.expert.apply.ChildCareExpertApplyRepository;
 import io.wisoft.poomi.domain.member.MemberRepository;
@@ -64,15 +65,14 @@ public class ChildCareExpertService {
                 childCareExpertRegisterRequest.getEndTime()
         );
 
-        Child child = childService.checkChildId(member, Optional.ofNullable(childCareExpertRegisterRequest.getChildId()));
+        Child child = childService
+                .checkChildId(member, Optional.ofNullable(childCareExpertRegisterRequest.getChildId()));
 
         ChildCareExpert childCareExpert = ChildCareExpert.of(childCareExpertRegisterRequest, member, child);
         log.info("Generate child care expert entity");
 
         childCareExpertRepository.save(childCareExpert);
         log.info("Save child care expert id: {}", childCareExpert.getId());
-
-        childRepository.save(child);
 
         return ChildCareExpertRegisterResponse.of(childCareExpert);
     }
@@ -104,6 +104,7 @@ public class ChildCareExpertService {
         return ChildCareExpertModifiedResponse.of(childCareExpert);
     }
 
+    @Transactional
     public void removeChildCareExpert(final Long expertId, final Member member) {
         ChildCareExpert childCareExpert = generateChildCareExpertById(expertId);
 
@@ -122,21 +123,16 @@ public class ChildCareExpertService {
         childCareExpert.isAlreadyApplier(member);
         log.info("Check member to make a request id: {}", member.getId());
 
-        Child child = childService.checkChildId(member, Optional.ofNullable(childCareExpertApplyRequest.getChildId()));
-
-        ChildCareExpertApply expertApply =
-                ChildCareExpertApply.of(childCareExpertApplyRequest, childCareExpert, member, child);
+        ChildCareExpertApply expertApply = generateExpertApply(childCareExpert, childCareExpertApplyRequest, member);
         log.info("Generate child care expert apply through request");
 
         childCareExpertApplyRepository.save(expertApply);
         log.info("Save child care expert apply id: {}", expertApply.getId());
 
         member.addExpertApply(expertApply);
-        memberRepository.save(member);
         log.info("Add apply to member entity and update member");
 
-        childCareExpert.addApplication(expertApply);
-        childCareExpertRepository.save(childCareExpert);
+        childCareExpert.addApply(expertApply);
         log.info("Add application to expert entity and update child care expert");
     }
 
@@ -145,9 +141,7 @@ public class ChildCareExpertService {
             final Long expertId, final Member member) {
         ChildCareExpert childCareExpert = generateChildCareExpertById(expertId);
 
-        Set<ChildCareExpertApply> applications = childCareExpert.getApplications();
-
-        return applications.stream()
+        return childCareExpert.getApplications().stream()
                 .map(ChildCareExpertApplyLookupResponse::of)
                 .collect(Collectors.toList());
     }
@@ -161,7 +155,7 @@ public class ChildCareExpertService {
 
         validateWriterOfApply(expertApply, member);
 
-        Child child = childService.checkChildId(member, Optional.ofNullable(applyModifiedRequest.getChildId()));
+        Child child = validateChildId(childCareExpert, applyModifiedRequest.getChildId(), member);
         expertApply.modifiedByRequest(applyModifiedRequest.getContents(), child);
         childCareExpertApplyRepository.save(expertApply);
     }
@@ -225,13 +219,28 @@ public class ChildCareExpertService {
     private void deleteChildCareExpert(final ChildCareExpert childCareExpert,
                                        final Member member) {
         childCareExpert.resetAssociated();
-        Child child = childCareExpert.getCaringChild();
-        childRepository.save(child);
 
-        member.removeWrittenExpertContent(childCareExpert);
         childCareExpertApplyRepository.deleteAll(childCareExpert.getApplications());
         childCareExpertRepository.delete(childCareExpert);
         log.info("Delete child care expert content id: {}", childCareExpert.getId());
+    }
+
+    private ChildCareExpertApply generateExpertApply(final ChildCareExpert childCareExpert,
+                                                     final ChildCareExpertApplyRequest applyRequest,
+                                                     final Member member) {
+        Child child = validateChildId(childCareExpert, applyRequest.getChildId(), member);
+
+        return ChildCareExpertApply.of(applyRequest, childCareExpert, member, child);
+    }
+
+    private Child validateChildId(final ChildCareExpert childCareExpert,
+                                  final Long childId,
+                                  final Member member) {
+        if (childCareExpert.getRecruitType().equals(RecruitType.VOLUNTEER) && childId == null) {
+            throw new IllegalArgumentException("품앗이꾼에게 도움을 요청할 때는 자식 정보를 제공해야 합니다.");
+        }
+
+        return childService.checkChildId(member, Optional.ofNullable(childId));
     }
 
     private ChildCareExpertApply checkApplyIncludedInExpert(final ChildCareExpert childCareExpert, final Long applyId) {

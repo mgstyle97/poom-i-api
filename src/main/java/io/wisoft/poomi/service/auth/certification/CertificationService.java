@@ -141,6 +141,7 @@ public class CertificationService {
         sendMessageByEmail(account, "[POOM-i] 회원가입 안내", approvedMessage);
     }
 
+    @Transactional
     public void registerResidenceCertification(
             final Member member,
             final ResidenceCertificationRegisterRequest registerRequest) {

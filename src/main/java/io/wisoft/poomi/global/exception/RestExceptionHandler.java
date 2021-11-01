@@ -191,4 +191,17 @@ public class RestExceptionHandler {
         );
     }
 
+    @ExceptionHandler(Exception.class)
+    public ApiResponse<ErrorResponse> allException(final Exception e) {
+        log.error("서버 측 에러");
+        log.error("Error message: {}", e.getMessage());
+
+        return ApiResponse.failure(HttpStatus.INTERNAL_SERVER_ERROR,
+                ErrorResponse.builder()
+                        .errorCode(ErrorCode.INTERNAL_SERVER_ERROR)
+                        .message(e.getMessage())
+                        .build()
+        );
+    }
+
 }

@@ -54,6 +54,7 @@ public class SignupRequest {
     private String extraAddress;
 
     @JsonProperty("address_certification_file")
+    @NotBlank(message = "거주지를 인증할 서류를 첨부해야 합니다.")
     private String addressCertificationFileData;
 
     @JsonProperty("family_certificate_file")

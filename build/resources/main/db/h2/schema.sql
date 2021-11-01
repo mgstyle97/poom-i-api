@@ -204,11 +204,11 @@ CREATE TABLE expert_apply(
 );
 
 CREATE TABLE expert_likes(
-    id integer primary key,
     member_id integer not null,
     expert_id integer not null,
     foreign key(member_id) references member(id),
-    foreign key(expert_id) references child_care_expert(id)
+    foreign key(expert_id) references child_care_expert(id),
+    primary key (member_id, expert_id)
 );
 
 CREATE TABLE group_apply(

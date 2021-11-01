@@ -2,17 +2,12 @@ package io.wisoft.poomi.global.dto.response.child_care.playground.vote;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.poomi.domain.child_care.playground.vote.PlaygroundVote;
-import io.wisoft.poomi.domain.child_care.playground.vote.voter.PlaygroundVoter;
-import io.wisoft.poomi.domain.child_care.playground.vote.voter.VoteType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -71,24 +66,8 @@ public class PlaygroundVoteRealtimeInfoResponse {
                 .votingRate(String.format("%.2f", playgroundVote.calculateVotingRate()))
                 .agreeRate(String.format("%.2f", playgroundVote.calculateAgreeRate()))
                 .disagreeRate(String.format("%.2f", playgroundVote.calculateDisagreeRate()))
-                .votingYetList(generateVotingYetList(playgroundVote))
+                .votingYetList(playgroundVote.getNotVotingDongAndHo())
                 .build();
-    }
-
-    private static Map<String, List<String>> generateVotingYetList(final PlaygroundVote playgroundVote) {
-        List<String> dongList = playgroundVote.getVoterDongList();
-
-        Map<String, List<String>> votingYetList = new HashMap<>();
-        Set<PlaygroundVoter> notVotingVoters = playgroundVote.getVotersNotVoting();
-        dongList.forEach(dong -> {
-            List<String> hoList = notVotingVoters.stream()
-                    .filter(voter -> voter.getDong().equals(dong))
-                    .map(PlaygroundVoter::getHo)
-                    .collect(Collectors.toList());
-            votingYetList.put(dong, hoList);
-        });
-
-        return votingYetList;
     }
 
 }

@@ -144,10 +144,7 @@ public class ChildCareExpert extends BaseChildCareEntity {
         }
     }
 
-    public void addApplication(final ChildCareExpertApply childCareExpertApply) {
-        if (this.recruitType.equals(RecruitType.VOLUNTEER) && childCareExpertApply.getChild() != null) {
-            throw new IllegalArgumentException("품앗이꾼에게 요청하기 위해서는 자식의 정보가 필요합니다.");
-        }
+    public void addApply(final ChildCareExpertApply childCareExpertApply) {
         this.applications.add(childCareExpertApply);
     }
 
@@ -160,6 +157,7 @@ public class ChildCareExpert extends BaseChildCareEntity {
         this.likes.forEach(like -> like.removeLikedExpertContent(this));
         this.applications.forEach(ChildCareExpertApply::reset);
         this.caringChild.cancelExpertContent();
+        getWriter().removeWrittenExpertContent(this);
     }
 
     public void checkApplyIncluded(final ChildCareExpertApply expertApply) {

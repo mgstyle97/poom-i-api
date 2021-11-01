@@ -53,6 +53,7 @@ public class ChildService {
     public Child checkChildId(
             final Member member,
             final Optional<Long> optionalChildId) {
+
         if (optionalChildId.isPresent()) {
             Child child = childRepository.getById(optionalChildId.get());
             member.checkChildInChildren(child);
