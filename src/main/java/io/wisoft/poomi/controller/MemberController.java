@@ -9,6 +9,7 @@ import io.wisoft.poomi.global.dto.response.member.*;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
 import io.wisoft.poomi.configures.web.resolver.SignInMember;
 import io.wisoft.poomi.domain.member.Member;
+import io.wisoft.poomi.global.dto.response.oauth.OAuthUserPropertiesResponse;
 import io.wisoft.poomi.global.dto.response.oauth.OAuthUserResultResponse;
 import io.wisoft.poomi.service.member.MemberService;
 import io.wisoft.poomi.service.auth.OAuth2Service;
@@ -60,7 +61,7 @@ public class MemberController {
     }
 
     @GetMapping("/oauth2/{social}")
-    public ApiResponse<OAuthUserResultResponse> oauthCodeToUserInfo(
+    public ApiResponse<OAuthUserPropertiesResponse> oauthCodeToUserInfo(
             @PathVariable("social") @Valid final Social social,
             @RequestParam("code") @Valid final String code) {
 
@@ -69,21 +70,22 @@ public class MemberController {
         return generateApiResponseHasAccessToken(userResultResponse);
     }
 
-    private ApiResponse<OAuthUserResultResponse> generateApiResponseHasAccessToken(final OAuthUserResultResponse userResultResponse) {
+    private ApiResponse<OAuthUserPropertiesResponse> generateApiResponseHasAccessToken(
+            final OAuthUserResultResponse userResultResponse) {
         if (!ObjectUtils.isEmpty(userResultResponse.getTokenInfo())) {
             final JwtToken tokenInfo = userResultResponse.getTokenInfo();
             userResultResponse.setTokenInfo(null);
 
             return ApiResponse.succeedWithAccessToken(
                     HttpStatus.OK,
-                    userResultResponse,
+                    userResultResponse.getUserProperties(),
                     tokenInfo
             );
         }
 
         return ApiResponse.succeed(
                 HttpStatus.OK,
-                userResultResponse
+                userResultResponse.getUserProperties()
         );
     }
 

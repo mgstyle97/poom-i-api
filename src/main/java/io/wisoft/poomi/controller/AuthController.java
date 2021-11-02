@@ -3,6 +3,8 @@ package io.wisoft.poomi.controller;
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.global.dto.request.auth.SigninRequest;
 import io.wisoft.poomi.global.dto.response.ApiResponse;
+import io.wisoft.poomi.global.dto.response.member.SignInResultResponse;
+import io.wisoft.poomi.global.dto.response.member.SigninResponse;
 import io.wisoft.poomi.global.utils.CookieUtils;
 import io.wisoft.poomi.service.auth.AuthService;
 import io.wisoft.poomi.service.auth.OAuth2Service;
@@ -18,18 +20,21 @@ import javax.validation.Valid;
 @RequestMapping("/api")
 public class AuthController {
 
-    private final CookieUtils cookieUtils;
     private final AuthService authService;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final OAuth2Service oAuth2Service;
 
     @PostMapping("/signin")
     public ApiResponse<?> signin(
-            @RequestBody @Valid final SigninRequest signinRequest, final HttpServletResponse response) {
+            @RequestBody @Valid final SigninRequest signinRequest) {
+        return response(authService.signin(signinRequest));
+    }
 
 
+
+    private ApiResponse<SigninResponse> response(final SignInResultResponse result) {
         return ApiResponse.succeedWithAccessToken(
-                HttpStatus.OK, null, authService.signin(signinRequest)
+                HttpStatus.OK,
+                result.getSigninResponse(),
+                result.getJwtToken()
         );
     }
 
