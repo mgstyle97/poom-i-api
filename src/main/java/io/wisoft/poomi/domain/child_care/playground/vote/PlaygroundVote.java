@@ -10,6 +10,7 @@ import io.wisoft.poomi.domain.member.address.Address;
 import io.wisoft.poomi.global.exception.exceptions.ExpiredVoteException;
 import io.wisoft.poomi.global.exception.exceptions.NoPermissionOfContentException;
 import io.wisoft.poomi.global.exception.exceptions.NotApprovedVoteException;
+import io.wisoft.poomi.global.exception.exceptions.NotExpiredVoteException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -185,6 +186,12 @@ public class PlaygroundVote extends BaseTimeEntity {
     public void checkAccessToExpiredVote() {
         if (this.expiredStatus.equals(ExpiredStatus.CLOSED)) {
             throw new ExpiredVoteException();
+        }
+    }
+
+    public void checkAccessToNotExpiredVote() {
+        if (this.expiredStatus.equals(ExpiredStatus.VOTING)) {
+            throw new NotExpiredVoteException();
         }
     }
 

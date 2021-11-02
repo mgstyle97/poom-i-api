@@ -132,7 +132,7 @@ public class PlaygroundVoteService {
         return null;
     }
 
-    private PlaygroundVote generatePlaygroundVote(final Long voteId) {
+    public PlaygroundVote generatePlaygroundVote(final Long voteId) {
         try {
             PlaygroundVote vote = playgroundVoteRepository.getById(voteId);
             checkVoteExpired(vote);

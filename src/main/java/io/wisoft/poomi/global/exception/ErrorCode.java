@@ -15,6 +15,7 @@ public enum ErrorCode {
     CERTIFICATION_TOKEN_EXPIRED(400, "인증가능한 시간이 만료되었습니다."),
     NOT_APPROVED_VOTE(400, "아직 승인되지 않은 투표입니다."),
     EXPIRED_VOTE(400, "만료된 품앗이터 투표입니다."),
+    NOT_EXPIRED_VOTE(400, "아직 투표가 진행중입니다."),
     NO_PERMISSION(403, "컨텐츠에 대한 요청 접근 권한이 없습니다."),
 
     ILLEGAL_ARGUMENT(400),

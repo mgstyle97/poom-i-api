@@ -55,8 +55,6 @@ public class SlackNotificationAspect {
     private void sendErrorInfo2Slack(final String errorMessage) throws JsonProcessingException {
         final HttpServletRequest request =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        final Map<String, String[]> requestBody = request.getParameterMap();
-        log.info(mapper.writeValueAsString(request.getParameter("name")));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + slackToken);
@@ -71,8 +69,7 @@ public class SlackNotificationAspect {
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(messageBody, headers);
 
-
-        ResponseEntity<String> response = restTemplate.exchange(slackUrl, HttpMethod.POST, entity, String.class);
+        restTemplate.exchange(slackUrl, HttpMethod.POST, entity, String.class);
 
     }
 

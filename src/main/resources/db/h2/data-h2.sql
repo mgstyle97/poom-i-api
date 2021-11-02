@@ -40,6 +40,9 @@ now(), now(), 'CLOSED', 1, 1);
 INSERT INTO group_participating_member(member_id, group_id)
 VALUES (1, 2);
 
+INSERT INTO playground_vote(id, purpose_using, approval_status, expired_status, address_id, registrant_id, created_at, modified_at)
+VALUES (1, '아이들 놀이터', 'APPROVED', 'CLOSED', 1, 1, now(), now());
+
 -- INSERT INTO address_tag
 -- VALUES (1, '한밭아파트'),
 --        (2, '오투 그란데'),
