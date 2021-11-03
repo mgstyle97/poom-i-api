@@ -17,7 +17,6 @@ public class GroupBoardModifyRequest {
             value = 1,
             message = "수정할 품앗이반의 정보가 부적절합니다."
     )
-    @NotNull(message = "수정할 품앗이반의 정보를 입력해주세요.")
     private Long groupId;
 
     private String contents;
