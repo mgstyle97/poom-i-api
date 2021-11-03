@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
+import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
@@ -32,6 +33,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
+
+    @Bean
+    public RequestContextListener requestContextListener() {
+        return new RequestContextListener();
+    }
 
     @Bean
     public MultipartResolver multipartResolver() {
