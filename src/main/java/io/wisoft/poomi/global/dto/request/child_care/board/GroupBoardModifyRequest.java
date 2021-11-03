@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -11,6 +13,11 @@ import java.util.List;
 public class GroupBoardModifyRequest {
 
     @JsonProperty("group_id")
+    @Min(
+            value = 1,
+            message = "수정할 품앗이반의 정보가 부적절합니다."
+    )
+    @NotNull(message = "수정할 품앗이반의 정보를 입력해주세요.")
     private Long groupId;
 
     private String contents;

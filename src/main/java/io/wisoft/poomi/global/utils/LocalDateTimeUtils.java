@@ -8,11 +8,10 @@ import java.util.Date;
 
 public class LocalDateTimeUtils {
 
-    public static void checkChildCareContentActivityTime(final LocalDateTime startTime, final LocalDateTime endTime) {
+    public static boolean checkChildCareContentActivityTime(final LocalDateTime startTime, final LocalDateTime endTime) {
         LocalDateTime currentTime = LocalDateTime.now();
-        if (!currentTime.isBefore(startTime) || !currentTime.isBefore(endTime) || endTime.isBefore(startTime)) {
-            throw new IllegalArgumentException("품앗이의 활동 시간이 올바르지 않습니다.");
-        }
+
+        return currentTime.isBefore(startTime) && currentTime.isBefore(endTime) && startTime.isBefore(endTime);
     }
 
     public static Date toDate(final LocalDateTime localDateTime) {

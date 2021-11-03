@@ -60,10 +60,6 @@ public class ChildCareExpertService {
     public ChildCareExpertRegisterResponse registerChildCareExpert(
             final ChildCareExpertRegisterRequest childCareExpertRegisterRequest,
             final Member member) {
-        checkExpertActivityTime(
-                childCareExpertRegisterRequest.getStartTime(),
-                childCareExpertRegisterRequest.getEndTime()
-        );
 
         Child child = childService
                 .checkChildId(member, Optional.ofNullable(childCareExpertRegisterRequest.getChildId()));
@@ -89,11 +85,6 @@ public class ChildCareExpertService {
             final Long expertId,
             final ChildCareExpertModifiedRequest childCareExpertModifiedRequest,
             final Member member) {
-
-        checkExpertActivityTime(
-                childCareExpertModifiedRequest.getStartTime(),
-                childCareExpertModifiedRequest.getEndTime()
-        );
 
         ChildCareExpert childCareExpert = generateChildCareExpertById(expertId);
 
@@ -197,15 +188,6 @@ public class ChildCareExpertService {
         log.info("Generate child care expert id: {}", expertId);
 
         return childCareExpert;
-    }
-
-    private void checkExpertActivityTime(final LocalDateTime startTime, final LocalDateTime endTime) {
-        LocalDateTimeUtils
-                .checkChildCareContentActivityTime(
-                        startTime,
-                        endTime
-                );
-        log.info("Check child care expert activity time through request");
     }
 
     private void modifyChildCareExpert(final ChildCareExpert childCareExpert,

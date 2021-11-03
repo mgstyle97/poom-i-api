@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 @Setter
 public class SigninRequest {
 
-    @JsonProperty("email")
     @Email(message = "로그인할 이메일 형식이 부적절합니다.")
     @NotBlank(message = "로그인할 이메일을 입력해주세요.")
     private String email;

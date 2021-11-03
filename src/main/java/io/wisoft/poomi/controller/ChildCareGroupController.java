@@ -1,6 +1,5 @@
 package io.wisoft.poomi.controller;
 
-import io.wisoft.poomi.configures.web.validator.image.Image;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupApplyRequest;
 import io.wisoft.poomi.global.dto.response.ApiResponse;
 import io.wisoft.poomi.global.dto.response.child_care.group.*;
@@ -8,13 +7,11 @@ import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupModifie
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupRegisterRequest;
 import io.wisoft.poomi.configures.web.resolver.SignInMember;
 import io.wisoft.poomi.domain.member.Member;
-import io.wisoft.poomi.global.utils.DomainUtils;
 import io.wisoft.poomi.service.child_care.group.ChildCareGroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 

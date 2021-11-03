@@ -15,7 +15,10 @@ public class ChildCareGroupApplyRequest {
     @NotBlank(message = "품앗이반에 지원하기 위한 포부를 적어주세요.")
     private String contents;
 
-    @Min(1)
+    @Min(
+            value = 1,
+            message = "자식 정보가 부적절합니다."
+    )
     @JsonProperty("child_id")
     private Long childId;
 

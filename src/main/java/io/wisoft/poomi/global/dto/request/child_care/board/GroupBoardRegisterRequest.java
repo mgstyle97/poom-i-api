@@ -5,18 +5,21 @@ import io.wisoft.poomi.configures.web.validator.image.Image;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import java.util.List;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
 @ToString
 public class GroupBoardRegisterRequest {
 
-    @Min(1)
+    @Min(
+            value = 1,
+            message = "게시글과 연관된 품앗이반의 정보가 부적절합니다."
+    )
+    @NotNull(message = "품앗이반의 정보를 입력해주세요.")
     @JsonProperty("group_id")
     private Long groupId;
 
