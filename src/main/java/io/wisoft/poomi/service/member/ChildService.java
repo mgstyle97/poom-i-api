@@ -1,8 +1,8 @@
 package io.wisoft.poomi.service.member;
 
-import io.wisoft.poomi.global.dto.response.member.ChildSimpleDataResponse;
-import io.wisoft.poomi.global.dto.response.member.ChildAddResponse;
-import io.wisoft.poomi.global.dto.response.member.ChildDeleteResponse;
+import io.wisoft.poomi.global.dto.response.member.child.ChildSimpleDataResponse;
+import io.wisoft.poomi.global.dto.response.member.child.ChildAddResponse;
+import io.wisoft.poomi.global.dto.response.member.child.ChildDeleteResponse;
 import io.wisoft.poomi.global.dto.request.member.ChildAddRequest;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.child.Child;

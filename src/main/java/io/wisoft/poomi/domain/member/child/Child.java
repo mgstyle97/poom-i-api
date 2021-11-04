@@ -46,7 +46,7 @@ public class Child {
     @Column(name = "special_note")
     private String specialNote;
 
-    @Column(name = "gender")
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @ManyToOne(fetch = FetchType.EAGER)
