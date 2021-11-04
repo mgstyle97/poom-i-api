@@ -2,6 +2,7 @@ package io.wisoft.poomi.global.dto.response.member.child;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.wisoft.poomi.domain.child_care.group.participating.GroupParticipatingMember;
 import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.global.dto.response.child_care.expert.ChildDoingExpertResponse;
 import io.wisoft.poomi.global.dto.response.child_care.group.ChildCareGroupSimpleResponse;
@@ -21,6 +22,9 @@ public class ChildDetailResponse {
     @JsonProperty("child_id")
     private Long childId;
 
+    @JsonProperty("child_name")
+    private String childName;
+
     @JsonFormat(pattern = "yyyy.MM.dd")
     private Date birthday;
 
@@ -36,12 +40,13 @@ public class ChildDetailResponse {
     private List<ChildCareGroupSimpleResponse> groupInfo;
 
     @Builder
-    public ChildDetailResponse(final Long childId,
+    public ChildDetailResponse(final Long childId, final String childName,
                                final Date birthday, final String school,
                                final String specialNote,
                                final ChildDoingExpertResponse expertInfo,
                                final List<ChildCareGroupSimpleResponse> groupInfo) {
         this.childId = childId;
+        this.childName = childName;
         this.birthday = birthday;
         this.school = school;
         this.specialNote = specialNote;
@@ -56,6 +61,7 @@ public class ChildDetailResponse {
 
         return ChildDetailResponse.builder()
                 .childId(child.getId())
+                .childName(child.getName())
                 .birthday(child.getBirthday())
                 .school(child.getSchool())
                 .specialNote(child.getSpecialNote())
@@ -75,6 +81,7 @@ public class ChildDetailResponse {
 
     private static List<ChildCareGroupSimpleResponse> generateGroupInfo(final Child child) {
         return child.getParticipatingGroups().stream()
+                .map(GroupParticipatingMember::getGroup)
                 .map(ChildCareGroupSimpleResponse::of)
                 .collect(Collectors.toList());
     }

@@ -2,6 +2,7 @@ package io.wisoft.poomi.global.dto.response.child_care.group;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.wisoft.poomi.domain.child_care.group.participating.GroupParticipatingMember;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.child.Child;
 import lombok.Builder;
@@ -9,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -40,21 +42,14 @@ public class MemberParticipatingGroupResponse {
         this.childBirthday = childBirthday;
     }
 
-    public static MemberParticipatingGroupResponse of(final Child participatingChild) {
-        return MemberParticipatingGroupResponse.builder()
-                .memberId(participatingChild.getParent().getId())
-                .memberNick(participatingChild.getParent().getNick())
-                .childId(participatingChild.getId())
-                .childName(participatingChild.getName())
-                .childBirthday(participatingChild.getBirthday())
+    public static MemberParticipatingGroupResponse of(final GroupParticipatingMember groupParticipatingMember) {
+        MemberParticipatingGroupResponse participatingGroup = MemberParticipatingGroupResponse.builder()
+                .memberId(groupParticipatingMember.getMember().getId())
+                .memberNick(groupParticipatingMember.getMember().getNick())
                 .build();
-    }
+        Optional.ofNullable(groupParticipatingMember.getChild()).ifPresent(participatingGroup::setChild);
 
-    public static MemberParticipatingGroupResponse ofMember(final Member participatingMember) {
-        return MemberParticipatingGroupResponse.builder()
-                .memberId(participatingMember.getId())
-                .memberNick(participatingMember.getNick())
-                .build();
+        return participatingGroup;
     }
 
     public void setChild(final Child child) {

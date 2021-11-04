@@ -225,20 +225,23 @@ CREATE TABLE group_apply(
 );
 
 CREATE TABLE group_participating_member(
+    id integer primary key,
     member_id integer not null,
+    child_id integer,
     group_id integer not null,
+    participation_type varchar not null,
     foreign key (member_id) references member(id),
-    foreign key (group_id) references child_care_group(id),
-    primary key (member_id, group_id)
+    foreign key (child_id) references child(id),
+    foreign key (group_id) references child_care_group(id)
 );
 
-CREATE TABLE group_participating_child(
-    child_id integer not null,
-    group_id integer not null,
-    foreign key (child_id) references child(id),
-    foreign key (group_id) references child_care_group(id),
-    primary key (child_id, group_id)
-);
+-- CREATE TABLE group_participating_child(
+--     child_id integer not null,
+--     group_id integer not null,
+--     foreign key (child_id) references child(id),
+--     foreign key (group_id) references child_care_group(id),
+--     primary key (child_id, group_id)
+-- );
 
 CREATE TABLE child_care_playground(
     id integer primary key,

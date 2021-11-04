@@ -2,6 +2,8 @@ package io.wisoft.poomi.service.child_care.group;
 
 import io.wisoft.poomi.domain.child_care.group.apply.GroupApply;
 import io.wisoft.poomi.domain.child_care.group.apply.GroupApplyRepository;
+import io.wisoft.poomi.domain.child_care.group.participating.GroupParticipatingMember;
+import io.wisoft.poomi.domain.child_care.group.participating.GroupParticipatingMemberRepository;
 import io.wisoft.poomi.domain.file.UploadFile;
 import io.wisoft.poomi.domain.file.UploadFileRepository;
 import io.wisoft.poomi.domain.member.child.Child;
@@ -39,6 +41,7 @@ import java.util.stream.Collectors;
 public class ChildCareGroupService {
 
     private final ChildCareGroupRepository childCareGroupRepository;
+    private final GroupParticipatingMemberRepository groupParticipatingMemberRepository;
     private final GroupApplyRepository groupApplyRepository;
     private final UploadFileRepository uploadFileRepository;
     private final S3FileHandler s3FileHandler;
@@ -50,7 +53,9 @@ public class ChildCareGroupService {
     @NoAccessCheck
     @Transactional(readOnly = true)
     public List<ChildCareGroupSimpleDataResponse> groupSimpleList(final Member member) {
-        Set<ChildCareGroup> participatingGroups = member.getChildCareGroupProperties().getParticipatingGroups();
+        Set<ChildCareGroup> participatingGroups = member.getChildCareGroupProperties().getParticipatingGroups().stream()
+                .map(GroupParticipatingMember::getGroup)
+                .collect(Collectors.toSet());
 
         return participatingGroups.stream()
                 .map(ChildCareGroupSimpleDataResponse::of)
@@ -93,8 +98,13 @@ public class ChildCareGroupService {
         childCareGroupRepository.save(group);
         log.info("Save child care group id: {}", group.getId());
 
-        member.addParticipatingGroup(group);
-        group.addParticipatingMember(member);
+        GroupParticipatingMember participatingMember = GroupParticipatingMember.builder()
+                .member(member)
+                .group(group)
+                .participationType(ParticipationType.MANAGE)
+                .build();
+        groupParticipatingMemberRepository.save(participatingMember);
+        group.addParticipatingMember(participatingMember);
         log.info("Save participating group with writer id: {}", member.getId());
 
         return ChildCareGroupRegisterResponse.from(group);
@@ -155,7 +165,7 @@ public class ChildCareGroupService {
         GroupApply groupApply = groupApplyRepository.getById(applyId);
         group.checkApplyIncluding(groupApply);
 
-        group.approveGroupApply(groupApply);
+        approveGroupApply(group, groupApply);
         groupApplyRepository.delete(groupApply);
 
     }
@@ -200,11 +210,21 @@ public class ChildCareGroupService {
         }
     }
 
+    private void approveGroupApply(final ChildCareGroup group, final GroupApply apply) {
+        GroupParticipatingMember groupParticipatingMember = GroupParticipatingMember
+                .of(apply, ParticipationType.PARTICIPATION);
+        groupParticipatingMemberRepository.save(groupParticipatingMember);
+
+        group.addParticipatingMember(groupParticipatingMember);
+    }
+
     private void deleteGroup(final ChildCareGroup group, final Member member) {
         group.resetAssociated();
 
         Set<GroupApply> applies = group.getApplies();
         groupApplyRepository.deleteAll(applies);
+
+        groupParticipatingMemberRepository.deleteAll(group.getParticipatingMembers());
 
         group.getBoards().forEach(groupBoardService::removeBoard);
 

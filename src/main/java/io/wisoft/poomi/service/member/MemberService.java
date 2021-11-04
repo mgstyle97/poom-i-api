@@ -70,7 +70,7 @@ public class MemberService {
 
     @Transactional
     public ChildAndPoomiResponse childAndPoomi(final Member member) {
-        return null;
+        return ChildAndPoomiResponse.of(member);
     }
 
     private Member saveMember(final SignupRequest signupRequest) {

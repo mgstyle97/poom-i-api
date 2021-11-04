@@ -2,6 +2,7 @@ package io.wisoft.poomi.domain.member;
 
 import io.wisoft.poomi.domain.child_care.expert.apply.ChildCareExpertApply;
 import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
+import io.wisoft.poomi.domain.child_care.group.participating.GroupParticipatingMember;
 import io.wisoft.poomi.domain.child_care.playground.vote.PlaygroundVote;
 import io.wisoft.poomi.domain.common.ApprovalStatus;
 import io.wisoft.poomi.domain.file.UploadFile;
@@ -236,12 +237,17 @@ public class Member {
         return this.address.getAddressTag();
     }
 
-    public void addParticipatingGroup(final ChildCareGroup participatingGroup) {
+    public void addParticipatingGroup(final GroupParticipatingMember participatingGroup) {
         this.childCareGroupProperties.getParticipatingGroups().add(participatingGroup);
     }
 
     public void withdrawFromGroup(final ChildCareGroup group) {
-        this.childCareGroupProperties.getParticipatingGroups().remove(group);
+        this.childCareGroupProperties.getParticipatingGroups().stream()
+                .filter(groupParticipatingMember -> groupParticipatingMember.getGroup().equals(group))
+                .collect(Collectors.toList())
+                .forEach(groupParticipatingMember -> {
+                    this.childCareGroupProperties.getParticipatingGroups().remove(groupParticipatingMember);
+                });
     }
 
     public void addWrittenExpertContent(final ChildCareExpert expertContent) {

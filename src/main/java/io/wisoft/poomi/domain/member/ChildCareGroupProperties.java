@@ -2,6 +2,7 @@ package io.wisoft.poomi.domain.member;
 
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
 import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
+import io.wisoft.poomi.domain.child_care.group.participating.GroupParticipatingMember;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -12,11 +13,11 @@ import java.util.Set;
 @Embeddable
 public class ChildCareGroupProperties {
 
-    @ManyToMany(
-            mappedBy = "participatingMembers",
+    @OneToMany(
+            mappedBy = "member",
             fetch = FetchType.LAZY
     )
-    private Set<ChildCareGroup> participatingGroups;
+    private Set<GroupParticipatingMember> participatingGroups;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "likes")
     private Set<GroupBoard> likeBoards;
