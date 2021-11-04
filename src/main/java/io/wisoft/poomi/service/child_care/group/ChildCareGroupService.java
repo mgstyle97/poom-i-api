@@ -7,6 +7,7 @@ import io.wisoft.poomi.domain.file.UploadFileRepository;
 import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.global.aop.child_care.NoAccessCheck;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupApplyRequest;
+import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupSimpleDataResponse;
 import io.wisoft.poomi.global.dto.response.child_care.group.*;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupModifiedRequest;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupRegisterRequest;
@@ -45,6 +46,16 @@ public class ChildCareGroupService {
 
     private final ChildService childService;
     private final GroupBoardService groupBoardService;
+
+    @NoAccessCheck
+    @Transactional(readOnly = true)
+    public List<ChildCareGroupSimpleDataResponse> groupSimpleList(final Member member) {
+        Set<ChildCareGroup> participatingGroups = member.getChildCareGroupProperties().getParticipatingGroups();
+
+        return participatingGroups.stream()
+                .map(ChildCareGroupSimpleDataResponse::of)
+                .collect(Collectors.toList());
+    }
 
     @NoAccessCheck
     @Transactional(readOnly = true)

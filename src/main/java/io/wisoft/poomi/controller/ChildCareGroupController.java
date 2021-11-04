@@ -1,6 +1,7 @@
 package io.wisoft.poomi.controller;
 
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupApplyRequest;
+import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupSimpleDataResponse;
 import io.wisoft.poomi.global.dto.response.ApiResponse;
 import io.wisoft.poomi.global.dto.response.child_care.group.*;
 import io.wisoft.poomi.global.dto.request.child_care.group.ChildCareGroupModifiedRequest;
@@ -23,6 +24,14 @@ public class ChildCareGroupController {
     private final ChildCareGroupService childCareGroupService;
 
     @GetMapping
+    public ApiResponse<List<ChildCareGroupSimpleDataResponse>> groupSimpleList(@SignInMember final Member member) {
+        return ApiResponse.succeed(
+                HttpStatus.OK,
+                childCareGroupService.groupSimpleList(member)
+        );
+    }
+
+    @GetMapping("/detail")
     public ApiResponse<List<ChildCareGroupLookupResponse>> lookupAllChildCareGroup(@SignInMember final Member member) {
         return ApiResponse
                 .succeed(

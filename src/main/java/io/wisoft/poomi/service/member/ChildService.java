@@ -1,5 +1,6 @@
 package io.wisoft.poomi.service.member;
 
+import io.wisoft.poomi.global.dto.request.member.ChildSimpleDataResponse;
 import io.wisoft.poomi.global.dto.response.member.ChildAddResponse;
 import io.wisoft.poomi.global.dto.response.member.ChildDeleteResponse;
 import io.wisoft.poomi.global.dto.request.member.ChildAddRequest;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -21,6 +23,15 @@ import java.util.stream.Collectors;
 public class ChildService {
 
     private final ChildRepository childRepository;
+
+    @Transactional(readOnly = true)
+    public List<ChildSimpleDataResponse> childSimpleList(final Member member) {
+        Set<Child> children = member.getChildren();
+
+        return children.stream()
+                .map(ChildSimpleDataResponse::of)
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public List<ChildAddResponse> updateChildren(final Member member, final List<ChildAddRequest> childAddRequests) {

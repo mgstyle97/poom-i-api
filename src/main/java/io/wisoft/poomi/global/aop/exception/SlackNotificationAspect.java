@@ -45,14 +45,15 @@ public class SlackNotificationAspect {
             value = "execution(* io.wisoft.poomi.global.exception.RestExceptionHandler.*(..))",
             returning = "errorResponse"
     )
-    public ApiResponse<ErrorResponse> notify(final JoinPoint joinPoint, final ApiResponse<ErrorResponse> errorResponse)
-            throws JsonProcessingException {
+    public ApiResponse<ErrorResponse> notify(
+            final JoinPoint joinPoint,
+            final ApiResponse<ErrorResponse> errorResponse) {
         sendErrorInfo2Slack(errorResponse.getError().getMessage());
 
         return errorResponse;
     }
 
-    private void sendErrorInfo2Slack(final String errorMessage) throws JsonProcessingException {
+    private void sendErrorInfo2Slack(final String errorMessage) {
         final HttpServletRequest request =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 
@@ -64,6 +65,8 @@ public class SlackNotificationAspect {
         messageBody.put("channel", slackChannel);
         messageBody.put("text",
                 "[Poom-i]\n" + getCurrentTime() + "\n" + "error_message: " + errorMessage +
+                        "\nauthorization: " + request.getHeader("AUTHORIZATION") +
+                        "\nhttp_method: " + request.getMethod() +
                         "\nrequest_url: " + request.getRequestURL() +
                         "\nclient_ip: " + getClientIP(request));
 
