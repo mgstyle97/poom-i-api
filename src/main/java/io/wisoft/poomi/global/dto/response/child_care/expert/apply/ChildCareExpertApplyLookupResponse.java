@@ -11,6 +11,9 @@ import java.util.Date;
 @Getter
 public class ChildCareExpertApplyLookupResponse {
 
+    @JsonProperty("apply_id")
+    private Long applyId;
+
     private String applier;
 
     @JsonProperty("writer_score")
@@ -24,6 +27,7 @@ public class ChildCareExpertApplyLookupResponse {
 
     @Builder
     private ChildCareExpertApplyLookupResponse(final ChildCareExpertApply application) {
+        this.applyId = application.getId();
         this.applier = application.getWriter().getNick();
         this.writerScore = application.getWriter().getScore();
         this.contents = application.getContents();

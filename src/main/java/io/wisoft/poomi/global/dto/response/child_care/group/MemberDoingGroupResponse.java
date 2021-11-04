@@ -1,6 +1,7 @@
 package io.wisoft.poomi.global.dto.response.child_care.group;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.wisoft.poomi.global.dto.response.child_care.group.apply.GroupApplyDetailResponse;
 import lombok.Getter;
 import lombok.Setter;
 

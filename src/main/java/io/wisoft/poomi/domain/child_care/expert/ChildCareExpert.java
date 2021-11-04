@@ -66,7 +66,7 @@ public class ChildCareExpert extends BaseChildCareEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(
-            name = "apply_id",
+            name = "child_id",
             referencedColumnName = "id"
     )
     private Child caringChild;
