@@ -31,7 +31,7 @@ public class ChildCareExpertController {
             @SignInMember final Member member) {
         return ApiResponse.succeed(
                 HttpStatus.OK,
-                childCareExpertService.lookupAllChildCareExpert(member.getAddressTag())
+                childCareExpertService.lookupAllChildCareExpert(member)
         );
     }
 

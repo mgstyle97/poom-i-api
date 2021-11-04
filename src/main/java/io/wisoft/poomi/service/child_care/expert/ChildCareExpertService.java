@@ -47,11 +47,11 @@ public class ChildCareExpertService {
 
     @NoAccessCheck
     @Transactional(readOnly = true)
-    public List<ChildCareExpertLookupResponse> lookupAllChildCareExpert(final AddressTag addressTag) {
+    public List<ChildCareExpertLookupResponse> lookupAllChildCareExpert(final Member member) {
         List<ChildCareExpert> childCareExpertList = childCareExpertRepository
-                .findAllByAddressTag(addressTag);
+                .findAllByAddressTag(member.getAddressTag());
         return childCareExpertList.stream()
-                .map(ChildCareExpertLookupResponse::of)
+                .map(expert -> ChildCareExpertLookupResponse.of(expert, member))
                 .collect(Collectors.toList());
     }
 
@@ -77,7 +77,7 @@ public class ChildCareExpertService {
     public ChildCareExpertLookupResponse lookupChildCareExpert(final Long expertId, final Member member) {
         ChildCareExpert childCareExpert = generateChildCareExpertById(expertId);
 
-        return ChildCareExpertLookupResponse.of(childCareExpert);
+        return ChildCareExpertLookupResponse.of(childCareExpert, member);
     }
 
     @Transactional
