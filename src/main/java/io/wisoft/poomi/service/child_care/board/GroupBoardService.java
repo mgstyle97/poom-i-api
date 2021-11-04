@@ -46,7 +46,7 @@ public class GroupBoardService {
         List<GroupBoard> boards = mergeBoards(boardsList);
 
         return boards.stream()
-                .map(GroupBoardLookupResponse::of)
+                .map(board-> GroupBoardLookupResponse.of(board, member))
                 .collect(Collectors.toList());
     }
 

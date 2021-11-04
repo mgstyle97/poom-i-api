@@ -6,6 +6,7 @@ import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
 import io.wisoft.poomi.domain.child_care.expert.RecruitType;
 import io.wisoft.poomi.domain.child_care.expert.apply.ChildCareExpertApply;
 import io.wisoft.poomi.domain.member.Member;
+import io.wisoft.poomi.global.dto.response.child_care.LikeStatus;
 import io.wisoft.poomi.global.utils.LocalDateTimeUtils;
 import lombok.Builder;
 import lombok.Getter;
@@ -58,6 +59,9 @@ public class ChildCareExpertLookupResponse {
     @JsonProperty("apply_status")
     private ApplyStatus applyStatus;
 
+    @JsonProperty("like_status")
+    private LikeStatus likeStatus;
+
     @JsonProperty("requested_at")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date requestedAt;
@@ -81,6 +85,7 @@ public class ChildCareExpertLookupResponse {
         this.endDate = LocalDateTimeUtils.getDateToString(childCareExpert.getEndTime());
         this.endTime = LocalDateTimeUtils.getTimeToString(childCareExpert.getEndTime());
         this.applyStatus = getApplyStatus(childCareExpert, member);
+        this.likeStatus = LikeStatus.generateLikeStatue(childCareExpert.getLikes(), member);
         this.requestedAt = new Date();
     }
 

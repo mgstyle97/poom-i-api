@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.poomi.domain.child_care.RecruitmentStatus;
 import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
+import io.wisoft.poomi.domain.member.Member;
+import io.wisoft.poomi.global.dto.response.child_care.LikeStatus;
 import io.wisoft.poomi.global.utils.LocalDateTimeUtils;
 import lombok.Builder;
 import lombok.Getter;
@@ -44,12 +46,15 @@ public class GroupBoardLookupResponse {
     @JsonProperty("comment_count")
     private Integer commentCount;
 
+    @JsonProperty("like_status")
+    private LikeStatus likeStatus;
+
     @JsonProperty("requested_at")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date requestedAt;
 
     @Builder
-    public GroupBoardLookupResponse(final GroupBoard board) {
+    public GroupBoardLookupResponse(final GroupBoard board, final Member member) {
         this.boardId = board.getId();
         this.title = board.getChildCareGroup().getName();
         this.writer = board.getWriter().getNick();
@@ -62,11 +67,14 @@ public class GroupBoardLookupResponse {
         this.createdAt = LocalDateTimeUtils.getDateToString(board.getCreatedAt());
         this.likesCount = board.getLikes().size();
         this.commentCount = board.getComments().size();
+        this.likeStatus = LikeStatus.generateLikeStatue(board.getLikes(), member);
+        this.requestedAt = new Date();
     }
 
-    public static GroupBoardLookupResponse of(final GroupBoard board) {
+    public static GroupBoardLookupResponse of(final GroupBoard board, final Member member) {
         return GroupBoardLookupResponse.builder()
                 .board(board)
+                .member(member)
                 .build();
     }
 

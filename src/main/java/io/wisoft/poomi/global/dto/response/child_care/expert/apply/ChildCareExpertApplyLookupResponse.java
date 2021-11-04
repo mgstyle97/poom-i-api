@@ -1,4 +1,4 @@
-package io.wisoft.poomi.global.dto.response.child_care.expert;
+package io.wisoft.poomi.global.dto.response.child_care.expert.apply;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -4,22 +4,21 @@ import io.wisoft.poomi.domain.child_care.expert.RecruitType;
 import io.wisoft.poomi.domain.child_care.expert.apply.ChildCareExpertApply;
 import io.wisoft.poomi.domain.child_care.expert.apply.ChildCareExpertApplyRepository;
 import io.wisoft.poomi.domain.member.MemberRepository;
-import io.wisoft.poomi.domain.member.address.AddressTag;
 import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.domain.member.child.ChildRepository;
 import io.wisoft.poomi.global.aop.child_care.NoAccessCheck;
 import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertApplyModifiedRequest;
 import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertApplyRequest;
-import io.wisoft.poomi.global.dto.response.child_care.expert.ChildCareExpertApplyLookupResponse;
+import io.wisoft.poomi.global.dto.response.child_care.expert.apply.ChildCareExpertApplyLookupResponse;
 import io.wisoft.poomi.global.dto.response.child_care.expert.ChildCareExpertLookupResponse;
 import io.wisoft.poomi.global.dto.response.child_care.expert.ChildCareExpertModifiedResponse;
 import io.wisoft.poomi.global.dto.response.child_care.expert.ChildCareExpertRegisterResponse;
 import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertModifiedRequest;
 import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertRegisterRequest;
-import io.wisoft.poomi.global.utils.LocalDateTimeUtils;
 import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
 import io.wisoft.poomi.domain.child_care.expert.ChildCareExpertRepository;
 import io.wisoft.poomi.domain.member.Member;
+import io.wisoft.poomi.global.dto.response.child_care.expert.apply.ChildCareExpertApplyRegisterResponse;
 import io.wisoft.poomi.service.child_care.ContentPermissionVerifier;
 import io.wisoft.poomi.service.member.ChildService;
 import lombok.RequiredArgsConstructor;
@@ -27,10 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -105,9 +102,9 @@ public class ChildCareExpertService {
     }
 
     @Transactional
-    public void applyChildCareExpert(final Long expertId,
-                                     final Member member,
-                                     final ChildCareExpertApplyRequest childCareExpertApplyRequest) {
+    public ChildCareExpertApplyRegisterResponse applyChildCareExpert(final Long expertId,
+                                                                     final Member member,
+                                                                     final ChildCareExpertApplyRequest childCareExpertApplyRequest) {
         ChildCareExpert childCareExpert = generateChildCareExpertById(expertId);
 
         childCareExpert.isWriter(member);
@@ -125,6 +122,8 @@ public class ChildCareExpertService {
 
         childCareExpert.addApply(expertApply);
         log.info("Add application to expert entity and update child care expert");
+
+        return ChildCareExpertApplyRegisterResponse.of(expertApply);
     }
 
     @Transactional(readOnly = true)

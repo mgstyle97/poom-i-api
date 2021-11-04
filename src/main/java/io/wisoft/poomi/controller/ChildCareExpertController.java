@@ -3,7 +3,7 @@ package io.wisoft.poomi.controller;
 import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertApplyModifiedRequest;
 import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertApplyRequest;
 import io.wisoft.poomi.global.dto.response.ApiResponse;
-import io.wisoft.poomi.global.dto.response.child_care.expert.ChildCareExpertApplyLookupResponse;
+import io.wisoft.poomi.global.dto.response.child_care.expert.apply.ChildCareExpertApplyLookupResponse;
 import io.wisoft.poomi.global.dto.response.child_care.expert.ChildCareExpertLookupResponse;
 import io.wisoft.poomi.global.dto.response.child_care.expert.ChildCareExpertModifiedResponse;
 import io.wisoft.poomi.global.dto.response.child_care.expert.ChildCareExpertRegisterResponse;
@@ -11,6 +11,7 @@ import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertModif
 import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertRegisterRequest;
 import io.wisoft.poomi.configures.web.resolver.SignInMember;
 import io.wisoft.poomi.domain.member.Member;
+import io.wisoft.poomi.global.dto.response.child_care.expert.apply.ChildCareExpertApplyRegisterResponse;
 import io.wisoft.poomi.service.child_care.expert.ChildCareExpertService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -77,11 +78,15 @@ public class ChildCareExpertController {
     }
 
     @PostMapping("/{expert-id}/apply")
-    public void applyChildCareExpert(
+    public ApiResponse<ChildCareExpertApplyRegisterResponse> applyChildCareExpert(
             @PathVariable("expert-id") @Valid final Long expertId,
             @RequestBody @Valid final ChildCareExpertApplyRequest childCareExpertApplyRequest,
             @SignInMember final Member member) {
-        childCareExpertService.applyChildCareExpert(expertId, member, childCareExpertApplyRequest);
+
+        return ApiResponse.succeed(
+                HttpStatus.CREATED,
+                childCareExpertService.applyChildCareExpert(expertId, member, childCareExpertApplyRequest)
+        );
     }
 
     @GetMapping("/{expert-id}/apply")
