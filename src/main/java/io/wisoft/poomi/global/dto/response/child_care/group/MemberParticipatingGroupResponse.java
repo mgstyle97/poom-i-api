@@ -3,7 +3,6 @@ package io.wisoft.poomi.global.dto.response.child_care.group;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.poomi.domain.child_care.group.participating.GroupParticipatingMember;
-import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.child.Child;
 import lombok.Builder;
 import lombok.Getter;

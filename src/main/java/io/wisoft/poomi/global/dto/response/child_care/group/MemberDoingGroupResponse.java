@@ -2,6 +2,7 @@ package io.wisoft.poomi.global.dto.response.child_care.group;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
+import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.global.dto.response.child_care.group.apply.GroupApplyDetailResponse;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,8 +27,8 @@ public class MemberDoingGroupResponse {
     @JsonProperty("participation_type")
     private ParticipationType participationType;
 
-    @JsonProperty("participating_groups")
-    private List<MemberParticipatingGroupResponse> participatingGroups;
+    @JsonProperty("participating_members")
+    private List<MemberParticipatingGroupResponse> participatingMembers;
 
     @JsonProperty("apply_info")
     private List<GroupApplyDetailResponse> applyInfo;
@@ -36,29 +37,32 @@ public class MemberDoingGroupResponse {
     public MemberDoingGroupResponse(final Long groupId,
                                     final String groupName, final String activityTime,
                                     final ParticipationType participationType,
-                                    final List<MemberParticipatingGroupResponse> participatingGroups,
+                                    final List<MemberParticipatingGroupResponse> participatingMembers,
                                     final List<GroupApplyDetailResponse> applyInfo) {
         this.groupId = groupId;
         this.groupName = groupName;
         this.activityTime = activityTime;
         this.participationType = participationType;
-        this.participatingGroups = participatingGroups;
+        this.participatingMembers = participatingMembers;
         this.applyInfo = applyInfo;
     }
 
-    public static MemberDoingGroupResponse of(final ChildCareGroup group, final ParticipationType participationType) {
+    public static MemberDoingGroupResponse of(final ChildCareGroup group, final Member member,
+                                              final ParticipationType participationType) {
         return MemberDoingGroupResponse.builder()
                 .groupId(group.getId())
                 .groupName(group.getName())
                 .activityTime(group.getRegularMeetingDay())
                 .participationType(participationType)
-                .participatingGroups(generateParticipatingGroups(group))
+                .participatingMembers(generateParticipatingMembers(group, member))
                 .applyInfo(generateApplyInfo(group))
                 .build();
     }
 
-    private static List<MemberParticipatingGroupResponse> generateParticipatingGroups(final ChildCareGroup group) {
+    private static List<MemberParticipatingGroupResponse> generateParticipatingMembers(final ChildCareGroup group,
+                                                                                       final Member member) {
         return group.getParticipatingMembers().stream()
+                .filter(groupParticipatingMember -> !groupParticipatingMember.getMember().equals(member))
                 .map(MemberParticipatingGroupResponse::of)
                 .collect(Collectors.toList());
     }

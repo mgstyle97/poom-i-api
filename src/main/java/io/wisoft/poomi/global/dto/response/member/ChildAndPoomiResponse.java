@@ -49,7 +49,7 @@ public class ChildAndPoomiResponse {
                 .groupInfo(
                         member.getChildCareGroupProperties().getParticipatingGroups().stream()
                                 .map(groupParticipatingMember -> MemberDoingGroupResponse.of(
-                                        groupParticipatingMember.getGroup(),
+                                        groupParticipatingMember.getGroup(), member,
                                         groupParticipatingMember.getParticipationType()
                                 ))
                                 .collect(Collectors.toList())
