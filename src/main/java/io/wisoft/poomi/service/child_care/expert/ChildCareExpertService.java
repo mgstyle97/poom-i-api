@@ -167,7 +167,13 @@ public class ChildCareExpertService {
         ChildCareExpert childCareExpert = generateChildCareExpertById(expertId);
 
         childCareExpert.addLikes(member);
-        memberRepository.save(member);
+    }
+
+    @Transactional
+    public void removeLikeChildCareExpert(final Long expertId, final Member member) {
+        ChildCareExpert expert = generateChildCareExpertById(expertId);
+
+        expert.removeLike(member);
     }
 
     @Transactional

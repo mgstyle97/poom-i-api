@@ -31,6 +31,7 @@ public class SignupRequest {
     @NotBlank(message = "닉네임을 입력해야 합니다.")
     private String nick;
 
+    @NotNull(message = "성별을 선택해주세요.")
     private Gender gender;
 
     @Min(value = 20, message = "19세 이하는 가입할 수 없습니다.")

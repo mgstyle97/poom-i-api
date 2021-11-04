@@ -170,6 +170,7 @@ CREATE TABLE child(
     birthday date not null,
     school varchar not null,
     special_note varchar,
+    gender varchar not null,
     member_id integer not null,
     foreign key(member_id) references member(id)
 );

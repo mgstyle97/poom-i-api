@@ -46,6 +46,14 @@ public class MemberController {
         return ApiResponse.succeed(HttpStatus.OK, MyPageResponse.of(member));
     }
 
+    @GetMapping("/member/poomi")
+    public ApiResponse<ChildAndPoomiResponse> childAndPoomi(@SignInMember final Member member) {
+        return ApiResponse.succeed(
+                HttpStatus.OK,
+                memberService.childAndPoomi(member)
+        );
+    }
+
     @PostMapping("/member/profile-image")
     public void registerProfileImage(
             @RequestBody @Valid final ProfileImageUploadRequest profileImage,

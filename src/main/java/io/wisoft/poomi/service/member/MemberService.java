@@ -4,6 +4,7 @@ import io.wisoft.poomi.domain.file.UploadFile;
 import io.wisoft.poomi.domain.file.UploadFileRepository;
 import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.global.dto.request.member.ProfileImageUploadRequest;
+import io.wisoft.poomi.global.dto.response.member.ChildAndPoomiResponse;
 import io.wisoft.poomi.global.dto.response.member.SignupResponse;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
 import io.wisoft.poomi.global.utils.UploadFileUtils;
@@ -65,6 +66,11 @@ public class MemberService {
         member.saveProfileImage(profileImage);
 
         memberRepository.save(member);
+    }
+
+    @Transactional
+    public ChildAndPoomiResponse childAndPoomi(final Member member) {
+        return null;
     }
 
     private Member saveMember(final SignupRequest signupRequest) {

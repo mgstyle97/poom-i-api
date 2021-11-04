@@ -119,6 +119,13 @@ public class ChildCareExpertController {
         childCareExpertService.likeChildCareExpert(expertId, member);
     }
 
+    @DeleteMapping("/{expert-id}/like")
+    public void removeLikeChildCareExpert(
+            @PathVariable("expert-id") @Valid final Long expertId,
+            @SignInMember final Member member) {
+        childCareExpertService.removeLikeChildCareExpert(expertId, member);
+    }
+
     @PostMapping("/{expert-id}/approve/{apply-id}")
     public void approveExpertApply(
             @PathVariable("expert-id") @Valid final Long expertId,

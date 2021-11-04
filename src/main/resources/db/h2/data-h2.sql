@@ -21,10 +21,10 @@ VALUES (1, 2),
        (2, 1),
        (3, 1);
 
-INSERT INTO child(id, name, birthday, school, special_note, member_id)
-VALUES (1, '철수', '2000-10-20', '월평초등학교', null, 3),
-       (2, '지수', '2002-09-03', '월평초등학교', null, 3),
-       (3, '민정', '2005-05-10', '갈마초등학교', null, 1);
+INSERT INTO child(id, name, birthday, school, special_note, gender, member_id)
+VALUES (1, '철수', '2000-10-20', '월평초등학교', null, 'MALE', 3),
+       (2, '지수', '2002-09-03', '월평초등학교', null, 'FEMALE', 3),
+       (3, '민정', '2005-05-10', '갈마초등학교', null, 'FEMALE', 1);
 
 INSERT INTO child_care_group(id, name, regular_meeting_day, main_activity, description, created_at, modified_at, recruitment_status, writer_id, address_tag_id)
 VALUES (1, '숲이 조아', '매월 둘째, 넷째 주 토요일 오후 2~5시', '숲 속 체험', '안녕하세요~ 자연과 품앗이의 대표 준이맘입니다\n저희는 품앗이 이름처럼 자연과 함께 할 수 있는 활동으로 진행하고 있습니다.\n 자연과 함께 뛰놀 아이와 부모님 함께 해요~',

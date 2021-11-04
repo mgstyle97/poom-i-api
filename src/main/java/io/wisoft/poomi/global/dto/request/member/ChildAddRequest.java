@@ -1,6 +1,7 @@
 package io.wisoft.poomi.global.dto.request.member;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.wisoft.poomi.domain.member.Gender;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,5 +24,15 @@ public class ChildAddRequest {
 
     @JsonProperty("special_note")
     private String specialNote;
+
+    private Gender gender;
+
+    public void setGender(final String gender) {
+        this.gender = Gender.valueOf(gender);
+    }
+
+    public Gender getGender() {
+        return this.gender;
+    }
 
 }

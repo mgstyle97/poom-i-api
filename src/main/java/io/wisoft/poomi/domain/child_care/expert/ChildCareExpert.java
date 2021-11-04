@@ -153,6 +153,11 @@ public class ChildCareExpert extends BaseChildCareEntity {
         member.addLikedExpertContent(this);
     }
 
+    public void removeLike(final Member member) {
+        this.likes.remove(member);
+        member.removeLikedExpertContent(this);
+    }
+
     public void resetAssociated() {
         this.likes.forEach(like -> like.removeLikedExpertContent(this));
         this.applications.forEach(ChildCareExpertApply::reset);

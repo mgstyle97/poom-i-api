@@ -2,6 +2,7 @@ package io.wisoft.poomi.domain.member.child;
 
 import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
+import io.wisoft.poomi.domain.member.Gender;
 import io.wisoft.poomi.global.dto.request.member.ChildAddRequest;
 import io.wisoft.poomi.domain.member.Member;
 import lombok.Builder;
@@ -45,6 +46,9 @@ public class Child {
     @Column(name = "special_note")
     private String specialNote;
 
+    @Column(name = "gender")
+    private Gender gender;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(
             name = "member_id",
@@ -66,11 +70,12 @@ public class Child {
     @Builder
     public Child(final String name, final Date birthday,
                  final String school, final String specialNote,
-                 final Member parent) {
+                 final Gender gender, final Member parent) {
         this.name = name;
         this.birthday = birthday;
         this.school = school;
         this.specialNote = specialNote;
+        this.gender = gender;
         this.parent = parent;
         this.participatingGroups = new HashSet<>();
     }
@@ -81,6 +86,7 @@ public class Child {
                 .birthday(childAddRequest.getBirthday())
                 .school(childAddRequest.getSchool())
                 .specialNote(childAddRequest.getSpecialNote())
+                .gender(childAddRequest.getGender())
                 .parent(parent)
                 .build();
     }
