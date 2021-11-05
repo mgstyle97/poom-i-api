@@ -2,6 +2,7 @@ package io.wisoft.poomi.global.dto.response.child_care.playground.vote;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.poomi.domain.child_care.playground.vote.PlaygroundVote;
+import io.wisoft.poomi.domain.child_care.playground.vote.voter.VoteType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -64,8 +65,8 @@ public class PlaygroundVoteRealtimeInfoResponse {
                 .detailAddress(playgroundVote.getAddress().getDetailAddress())
                 .expiredStatus(playgroundVote.getExpiredStatus().toString())
                 .votingRate(String.format("%.2f", playgroundVote.calculateVotingRate()))
-                .agreeRate(String.format("%.2f", playgroundVote.calculateAgreeRate()))
-                .disagreeRate(String.format("%.2f", playgroundVote.calculateDisagreeRate()))
+                .agreeRate(String.format("%.2f", playgroundVote.calculateRateByVoteType(VoteType.AGREE)))
+                .disagreeRate(String.format("%.2f", playgroundVote.calculateRateByVoteType(VoteType.DISAGREE)))
                 .votingYetList(playgroundVote.getNotVotingDongAndHo())
                 .build();
     }

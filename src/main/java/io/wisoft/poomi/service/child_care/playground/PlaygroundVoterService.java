@@ -86,6 +86,7 @@ public class PlaygroundVoterService {
     private List<AddressDetailResponse.Juso> loadFloorAddressDetail(final AddressDetailResponse addressDetailResponse) {
         List<AddressDetailResponse.Juso> result = new ArrayList<>();
         addressDetailResponse.getResults().getJusoList().stream()
+                .filter(juso -> juso.getDongNm().matches(".*\\d.*"))
                 .map(this::requestFloorDetail)
                 .forEach(result::addAll);
 

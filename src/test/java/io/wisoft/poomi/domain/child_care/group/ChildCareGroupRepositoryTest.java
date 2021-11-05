@@ -81,7 +81,6 @@ class ChildCareGroupRepositoryTest {
     void creation_class_program() {
         // given
         ChildCareGroup childCareGroup = ChildCareGroup.builder()
-                        .title("테스트")
                         .recruitmentStatus(RecruitmentStatus.RECRUITING)
                         .writer(member)
                         .build();
@@ -101,7 +100,6 @@ class ChildCareGroupRepositoryTest {
     @DisplayName("클래스 프로그램 삭제 테스트")
     void delete_class_program() {
         ChildCareGroup childCareGroup = ChildCareGroup.builder()
-                .title("테스트")
                 .recruitmentStatus(RecruitmentStatus.RECRUITING)
                 .writer(member)
                 .build();

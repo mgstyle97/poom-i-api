@@ -25,8 +25,6 @@ import java.util.stream.Collectors;
 public class ChildCarePlaygroundService {
 
     private final ChildCarePlaygroundRepository childCarePlaygroundRepository;
-    private final AddressRepository addressRepository;
-    private final AddressTagRepository addressTagRepository;
     private final UploadFileRepository uploadFileRepository;
 
     private final PlaygroundVoteService playgroundVoteService;

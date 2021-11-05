@@ -74,13 +74,11 @@ class ChildCareGroupServiceTest {
         memberRepository.save(member);
 
         ChildCareGroup childCareGroup = ChildCareGroup.builder()
-                .title("테스트")
                 .recruitmentStatus(RecruitmentStatus.RECRUITING)
                 .writer(member)
                 .build();
 
         ChildCareGroup childCareGroup2 = ChildCareGroup.builder()
-                .title("테스트2")
                 .recruitmentStatus(RecruitmentStatus.RECRUITING)
                 .writer(member)
                 .build();

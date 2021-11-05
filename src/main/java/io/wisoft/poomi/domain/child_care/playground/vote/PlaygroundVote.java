@@ -122,21 +122,28 @@ public class PlaygroundVote extends BaseTimeEntity {
     }
 
     public Double calculateVotingRate() {
+        double votingCount = getVotersVoting().size();
+
+        return votingCount / this.voters.size() * 100;
+    }
+
+    public Double calculateNotVotingRate() {
         double notVotingCount = getVotersNotVoting().size();
 
         return notVotingCount / this.voters.size() * 100;
     }
 
-    public Double calculateAgreeRate() {
-        double agreeVotingCount = getVoterAgree().size();
+    public Double calculateRateByVoteType(final VoteType voteType) {
+        Set<PlaygroundVoter> voters = getVotersVoting();
+        if (voters.size() != 0) {
+            double votersCountByVoterType = voters.stream()
+                    .filter(voter -> voter.getVoteType().equals(voteType))
+                    .count();
 
-        return agreeVotingCount / this.voters.size() * 100;
-    }
+            return votersCountByVoterType / voters.size() * 100;
+        }
 
-    public Double calculateDisagreeRate() {
-        double disagreeVotingCount = getVoterDisagree().size();
-
-        return disagreeVotingCount / this.voters.size() * 100;
+        return 0.0;
     }
 
     public List<String> getVoterDongList() {
@@ -145,15 +152,9 @@ public class PlaygroundVote extends BaseTimeEntity {
                 .collect(Collectors.toList());
     }
 
-    public Set<PlaygroundVoter> getVoterAgree() {
+    public Set<PlaygroundVoter> getVotersVoting() {
         return this.voters.stream()
-                .filter(voter -> voter.getVoteType().equals(VoteType.AGREE))
-                .collect(Collectors.toSet());
-    }
-
-    public Set<PlaygroundVoter> getVoterDisagree() {
-        return this.voters.stream()
-                .filter(voter -> voter.getVoteType().equals(VoteType.DISAGREE))
+                .filter(voter -> !voter.getVoteType().equals(VoteType.NOT_YET))
                 .collect(Collectors.toSet());
     }
 
