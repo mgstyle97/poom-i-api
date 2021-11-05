@@ -20,7 +20,7 @@ import java.util.Set;
 @SequenceGenerator(
         name = "playground_sequence_generator",
         sequenceName = "playground_sequence",
-        initialValue = 2,
+        initialValue = 3,
         allocationSize = 1
 )
 @Table(name = "child_care_playground")

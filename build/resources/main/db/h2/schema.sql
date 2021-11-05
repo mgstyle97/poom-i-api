@@ -13,7 +13,6 @@ DROP TABLE IF EXISTS group_board CASCADE;
 DROP TABLE IF EXISTS board_likes CASCADE;
 DROP TABLE IF EXISTS group_apply CASCADE;
 DROP TABLE IF EXISTS group_participating_member CASCADE;
-DROP TABLE IF EXISTS group_participating_child CASCADE;
 DROP TABLE IF EXISTS comment CASCADE;
 DROP TABLE IF EXISTS upload_file CASCADE;
 DROP TABLE IF EXISTS child_care_expert CASCADE;
@@ -234,14 +233,6 @@ CREATE TABLE group_participating_member(
     foreign key (child_id) references child(id),
     foreign key (group_id) references child_care_group(id)
 );
-
--- CREATE TABLE group_participating_child(
---     child_id integer not null,
---     group_id integer not null,
---     foreign key (child_id) references child(id),
---     foreign key (group_id) references child_care_group(id),
---     primary key (child_id, group_id)
--- );
 
 CREATE TABLE child_care_playground(
     id integer primary key,

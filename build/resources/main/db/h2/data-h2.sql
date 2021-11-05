@@ -9,7 +9,9 @@ VALUES (1, '(월평동, 전원아파트)');
 INSERT INTO address(id, post_code, address, detail_address, address_tag_id)
 VALUES (1, '35217', '대전 서구 월평중로 50', '월평동 전원아파트 102동 602호', 1),
        (2, '35217', '대전 서구 월평중로 50', '월평동 전원아파트 102동 403호', 1),
-       (3, '35217', '대전 서구 월평중로 50', '월평동 전원아파트 102동 705호', 1);
+       (3, '35217', '대전 서구 월평중로 50', '월평동 전원아파트 102동 705호', 1),
+       (4, '35217', '대전 서구 월평중로 50', '월평동 전원아파트 101동 101호', 1),
+       (5, '35217', '대전 서구 월평중로 50', '월평동 전원아파트 103동 101호', 1);
 
 INSERT INTO member(id, name, phone_number, email, password, nick, gender, age, address_id, score, approval_status)
 VALUES (1, 'admin', '01075976959', 'admin@test.com', '{bcrypt}$2a$10$uUooeQNjjnw3JqLaKqqKoO9sv/ZqkoRAVOcayqWH1tJe7FF4LN5em', 'admin', 'MALE', 25, 1, 5, 'APPROVED'),
@@ -42,6 +44,36 @@ VALUES (2, 1, 2, 'MANAGE');
 
 INSERT INTO playground_vote(id, purpose_using, approval_status, expired_status, address_id, registrant_id, created_at, modified_at)
 VALUES (1, '아이들 놀이터', 'APPROVED', 'CLOSED', 1, 1, now(), now());
+
+INSERT INTO upload_file(id, file_name, file_access_uri, file_download_uri, content_type)
+VALUES (
+1, '1dfe5783-67cf-45d8-990d-53732442e0ee.png',
+'https://poomi-storage-service.s3.ap-northeast-2.amazonaws.com/1dfe5783-67cf-45d8-990d-53732442e0ee.png',
+'/api/download?image=1dfe5783-67cf-45d8-990d-53732442e0ee.png', 'image/png');
+
+INSERT INTO child_care_playground(id, name, operating_hours, holiday, call_number, features, address_id, registrant_id)
+VALUES (
+    1, 'WS APT 101동 101호', '09:00~21:00', '월요일 휴무', '042-000-0000', '무료 이용, 팀당 보호자 1인 필수',
+    4, 1
+);
+
+INSERT INTO playground_image(playground_id, image_id)
+VALUES (1, 1);
+
+INSERT INTO playground_search(playground_id, address_tag_id)
+VALUES (1, 1);
+
+INSERT INTO child_care_playground(id, name, operating_hours, holiday, call_number, features, address_id, registrant_id)
+VALUES (
+    2, 'WS APT 103동 101호', '10:00~18:00', '화요일, 수요일 휴무', '042-111-1111', '무료 이용, 점심 간식 제공',
+    5, 1
+);
+
+INSERT INTO playground_image(playground_id, image_id)
+VALUES (2, 1);
+
+INSERT INTO playground_search(playground_id, address_tag_id)
+VALUES (2, 1);
 
 -- INSERT INTO address_tag
 -- VALUES (1, '한밭아파트'),
