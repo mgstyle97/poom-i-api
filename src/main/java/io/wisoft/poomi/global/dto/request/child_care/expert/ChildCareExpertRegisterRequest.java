@@ -35,6 +35,10 @@ public class ChildCareExpertRegisterRequest {
     private RecruitType recruitType;
 
     @JsonProperty("child_id")
+    @Min(
+            value = 1,
+            message = "자식 정보가 부적절합니다."
+    )
     private Long childId;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
