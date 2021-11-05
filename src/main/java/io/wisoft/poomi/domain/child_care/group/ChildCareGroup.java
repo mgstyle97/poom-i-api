@@ -151,7 +151,7 @@ public class ChildCareGroup extends BaseChildCareEntity {
 
     public void validateMemberIsParticipating(final Member member) {
         boolean isMemberParticipating = this.participatingMembers.stream()
-                .anyMatch(participatingMember -> participatingMember.equals(member));
+                .anyMatch(participatingMember -> participatingMember.getMember().equals(member));
 
         if (!isMemberParticipating) {
             throw new NoPermissionOfContentException();
