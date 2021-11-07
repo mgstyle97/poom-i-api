@@ -56,8 +56,7 @@ public class PlaygroundVoteService {
                 .build();
         playgroundVoteRepository.save(playgroundVote);
 
-        Set<UploadFile> images = generateImages(registerRequest.getImages());
-        playgroundVote.setImages(images);
+        playgroundVote.addImage(generateImages(registerRequest.getImages()));
 
         member.addPlaygroundVote(playgroundVote);
     }
@@ -118,14 +117,12 @@ public class PlaygroundVoteService {
         return addressRepository.save(address);
     }
 
-    private Set<UploadFile> generateImages(final List<String> imageDataList) {
-        Optional<List<String>> optionalImageDataList = Optional.ofNullable(imageDataList);
+    private UploadFile generateImages(final String imageData) {
+        Optional<String> optionalImageDataList = Optional.ofNullable(imageData);
         if (optionalImageDataList.isPresent()) {
-            Set<UploadFile> images = optionalImageDataList.get().stream()
-                    .map(uploadFileUtils::saveFileAndConvertImage)
-                    .collect(Collectors.toSet());
-            if (!images.isEmpty()) {
-                uploadFileRepository.saveAll(images);
+            UploadFile images = uploadFileUtils.saveFileAndConvertImage(optionalImageDataList.get());
+            if (images != null) {
+                uploadFileRepository.save(images);
                 return images;
             }
         }

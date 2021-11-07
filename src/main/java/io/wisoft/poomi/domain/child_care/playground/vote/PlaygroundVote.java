@@ -90,12 +90,17 @@ public class PlaygroundVote extends BaseTimeEntity {
         this.approvalStatus = ApprovalStatus.UN_APPROVED;
         this.expiredStatus = ExpiredStatus.CLOSED;
         this.address = address;
+        this.images = new HashSet<>();
         this.registrant = registrant;
         this.voters = new HashSet<>();
     }
 
     public void setImages(final Set<UploadFile> images) {
         this.images = images;
+    }
+
+    public void addImage(final UploadFile image) {
+        this.images.add(image);
     }
 
     public void checkApprovalStatus() {

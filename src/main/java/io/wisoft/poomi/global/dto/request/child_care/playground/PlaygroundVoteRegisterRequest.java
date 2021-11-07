@@ -32,6 +32,6 @@ public class PlaygroundVoteRegisterRequest {
     private String purposeUsing;
 
     @JsonProperty("images")
-    private List<String> images;
+    private String images;
 
 }
