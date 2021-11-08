@@ -15,16 +15,22 @@ public class MemberSimpleAddressResponse {
 
     private String address;
 
+    @JsonProperty("detail_address")
+    private String detailAddress;
+
     @Builder
-    public MemberSimpleAddressResponse(final Long memberId, final String address) {
+    public MemberSimpleAddressResponse(final Long memberId,
+                                       final String address, final String detailAddress) {
         this.memberId = memberId;
         this.address = address;
+        this.detailAddress = detailAddress;
     }
 
     public static MemberSimpleAddressResponse of(final Member member) {
         return MemberSimpleAddressResponse.builder()
                 .memberId(member.getId())
                 .address(member.getAddress().getAddress())
+                .detailAddress(member.getAddress().getDetailAddress())
                 .build();
     }
 
