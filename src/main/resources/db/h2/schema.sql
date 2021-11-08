@@ -85,8 +85,7 @@ CREATE TABLE member(
     approval_status varchar not null default 'UN_APPROVED',
     address_id integer,
     foreign key (address_id) references address(id),
-    foreign key (profile_image_id) references upload_file(id),
-    CONSTRAINT approval_value CHECK approval_status in ('APPROVED', 'UN_APPROVED')
+    foreign key (profile_image_id) references upload_file(id)
 );
 
 CREATE TABLE member_authority(
@@ -126,7 +125,7 @@ CREATE TABLE child_care_group(
 
 CREATE TABLE group_board(
     id integer primary key,
-    contents CLOB not null,
+    contents TEXT not null,
     created_at date,
     modified_at date,
     group_id integer not null,
@@ -153,7 +152,7 @@ CREATE TABLE board_likes(
 
 CREATE TABLE comment(
     id integer primary key,
-    contents CLOB not null,
+    contents TEXT not null,
     created_at date,
     modified_at date,
     board_id integer not null,
@@ -176,7 +175,7 @@ CREATE TABLE child(
 
 CREATE TABLE child_care_expert(
     id integer primary key,
-    contents CLOB not null,
+    contents TEXT not null,
     recruit_type varchar not null,
     created_at date,
     modified_at date,
@@ -240,7 +239,7 @@ CREATE TABLE child_care_playground(
     operating_hours varchar not null,
     holiday varchar not null,
     call_number varchar not null,
-    features CLOB,
+    features TEXT,
     address_id integer not null,
     registrant_id integer not null,
     foreign key (address_id) references address(id),
@@ -300,7 +299,7 @@ CREATE TABLE chat_room(
 
 CREATE TABLE chat_message(
     id integer primary key,
-    message CLOB not null,
+    message TEXT not null,
     reading_status varchar not null default 'NOT_READ',
     sender_id integer not null,
     room_id integer not null,
@@ -318,7 +317,7 @@ CREATE TABLE room_participating_member(
 
 CREATE TABLE notice(
     id integer primary key,
-    contents CLOB not null,
+    contents TEXT not null,
     reading_status varchar not null default 'NOT_READ',
     receiver_id integer not null,
     foreign key (receiver_id) references member(id)

@@ -8,6 +8,7 @@ import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.address.AddressRepository;
 import io.wisoft.poomi.domain.member.address.AddressTagRepository;
 import io.wisoft.poomi.domain.member.MemberRepository;
+import io.wisoft.poomi.global.dto.response.member.MemberSimpleAddressResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,11 @@ public class AddressService {
     private final MemberRepository memberRepository;
     private final AddressRepository addressRepository;
     private final AddressTagRepository addressTagRepository;
+
+    @Transactional(readOnly = true)
+    public MemberSimpleAddressResponse simpleAddress(final Member member) {
+        return MemberSimpleAddressResponse.of(member);
+    }
 
     @Transactional
     public AddressResponse registerAddress(final Member member, final AddressRegisterRequest addressRegisterRequest) {

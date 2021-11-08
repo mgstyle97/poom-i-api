@@ -3,9 +3,10 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,windows,java,intellij+all,database
 
 application-mail.yml
-application-oauth.yml
+application-prod.yml
 Dockerfile
 img/
+prod/
 
 ### Database ###
 *.accdb
