@@ -199,7 +199,6 @@ public class ChildCareExpertService {
                                        final ChildCareExpertModifiedRequest childCareExpertModifiedRequest,
                                        final Child child) {
         childCareExpert.modifiedFor(childCareExpertModifiedRequest, child);
-        childRepository.save(child);
         childCareExpertRepository.save(childCareExpert);
         log.info("Update child care expert entity id: {}", childCareExpert.getId());
     }
