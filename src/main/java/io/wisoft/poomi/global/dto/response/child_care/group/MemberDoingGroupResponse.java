@@ -1,7 +1,9 @@
 package io.wisoft.poomi.global.dto.response.child_care.group;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.wisoft.poomi.domain.child_care.RecruitmentStatus;
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
+import io.wisoft.poomi.domain.child_care.playground.vote.ExpiredStatus;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.global.dto.response.child_care.group.apply.GroupApplyDetailResponse;
 import lombok.Builder;
@@ -24,6 +26,9 @@ public class MemberDoingGroupResponse {
     @JsonProperty("activity_time")
     private String activityTime;
 
+    @JsonProperty("recruitment_status")
+    private RecruitmentStatus recruitmentStatus;
+
     @JsonProperty("participation_type")
     private ParticipationType participationType;
 
@@ -36,12 +41,14 @@ public class MemberDoingGroupResponse {
     @Builder
     public MemberDoingGroupResponse(final Long groupId,
                                     final String groupName, final String activityTime,
+                                    final RecruitmentStatus recruitmentStatus,
                                     final ParticipationType participationType,
                                     final List<MemberParticipatingGroupResponse> participatingMembers,
                                     final List<GroupApplyDetailResponse> applyInfo) {
         this.groupId = groupId;
         this.groupName = groupName;
         this.activityTime = activityTime;
+        this.recruitmentStatus = recruitmentStatus;
         this.participationType = participationType;
         this.participatingMembers = participatingMembers;
         this.applyInfo = applyInfo;
@@ -53,6 +60,7 @@ public class MemberDoingGroupResponse {
                 .groupId(group.getId())
                 .groupName(group.getName())
                 .activityTime(group.getRegularMeetingDay())
+                .recruitmentStatus(group.getRecruitmentStatus())
                 .participationType(participationType)
                 .participatingMembers(generateParticipatingMembers(group, member))
                 .applyInfo(generateApplyInfo(group))

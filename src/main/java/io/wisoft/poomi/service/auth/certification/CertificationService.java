@@ -144,18 +144,19 @@ public class CertificationService {
     @Transactional
     public void registerResidenceCertification(
             final Member member,
-            final ResidenceCertificationRegisterRequest registerRequest) {
-        UploadFile residenceFile = uploadFileUtils.saveFileAndConvertImage(registerRequest.getFileData());
+            final String residenceCertificationFileData) {
+        UploadFile residenceFile = uploadFileUtils.saveFileAndConvertImage(residenceCertificationFileData);
         uploadFileRepository.save(residenceFile);
         log.info("Upload S3 Residence file id: {}", residenceFile.getId());
 
         ResidenceCertification residenceCertification = ResidenceCertification.builder()
                 .member(member)
                 .residenceFile(residenceFile)
-                .expiredValidationToken(jwtTokenProvider.generateResidenceExpiredToken())
                 .build();
         residenceCertificationRepository.save(residenceCertification);
         log.info("Save Residence Certification id: {}", residenceCertification.getId());
+
+        member.setResidenceCertification(residenceCertification);
     }
 
     private String generateCertificationNumber() {

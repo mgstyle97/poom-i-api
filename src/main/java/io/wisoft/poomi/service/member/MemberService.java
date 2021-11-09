@@ -17,6 +17,7 @@ import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.address.AddressRepository;
 import io.wisoft.poomi.domain.member.address.AddressTagRepository;
 import io.wisoft.poomi.domain.member.MemberRepository;
+import io.wisoft.poomi.service.auth.certification.CertificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,7 +40,9 @@ public class MemberService {
     private final AddressTagRepository addressTagRepository;
     private final ChildRepository childRepository;
     private final UploadFileRepository uploadFileRepository;
+
     private final UploadFileUtils uploadFileUtils;
+    private final CertificationService certificationService;
 
     @Transactional
     public SignupResponse signup(final SignupRequest signupRequest) {
@@ -47,14 +50,12 @@ public class MemberService {
 
         log.info("Generate member: {}", member.getEmail());
 
-        Optional<String> optionalAddressCertification = Optional
-                .ofNullable(signupRequest.getAddressCertificationFileData());
-        optionalAddressCertification.ifPresent(uploadFileUtils::saveFileAndConvertImage);
+        certificationService
+                .registerResidenceCertification(member, signupRequest.getAddressCertificationFileData());
 
         Optional<String> optionalFamilyCertification = Optional
                 .ofNullable(signupRequest.getFamilyCertificateFileData());
         optionalFamilyCertification.ifPresent(uploadFileUtils::saveFileAndConvertImage);
-
 
         return SignupResponse.of(member);
     }

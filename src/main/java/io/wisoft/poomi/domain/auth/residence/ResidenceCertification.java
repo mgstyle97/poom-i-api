@@ -31,16 +31,14 @@ public class ResidenceCertification extends BaseCertificationEntity {
     @Enumerated(EnumType.STRING)
     private CertificationStatus certificationStatus;
 
-
-
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(
             name = "member_id",
             referencedColumnName = "id"
     )
     private Member member;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(
             name = "residence_file_id",
             referencedColumnName = "id"
@@ -57,6 +55,11 @@ public class ResidenceCertification extends BaseCertificationEntity {
         this.member = member;
         this.residenceFile = residenceFile;
         this.certificationStatus = CertificationStatus.UN_APPROVED;
+    }
+
+    public void approve(final String expiredValidationToken) {
+        this.certificationStatus = CertificationStatus.APPROVED;
+        super.setExpiredValidationToken(expiredValidationToken);
     }
 
 }

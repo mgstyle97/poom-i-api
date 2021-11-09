@@ -1,5 +1,6 @@
 package io.wisoft.poomi.domain.member;
 
+import io.wisoft.poomi.domain.auth.residence.ResidenceCertification;
 import io.wisoft.poomi.domain.child_care.expert.apply.ChildCareExpertApply;
 import io.wisoft.poomi.domain.child_care.group.board.GroupBoard;
 import io.wisoft.poomi.domain.child_care.group.participating.GroupParticipatingMember;
@@ -97,6 +98,9 @@ public class Member {
     )
     private Address address;
 
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
+    private ResidenceCertification residenceCertification;
+
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy = "parent"
@@ -178,9 +182,17 @@ public class Member {
         return member;
     }
 
+    public void setResidenceCertification(final ResidenceCertification certification) {
+        this.residenceCertification = certification;
+    }
+
     public void approveSignup(final Authority authority) {
         this.approvalStatus = ApprovalStatus.APPROVED;
         this.authorities.add(authority);
+    }
+
+    public void approveResidence(final String expiredValidationToken) {
+        this.residenceCertification.approve(expiredValidationToken);
     }
 
     public void saveProfileImage(final UploadFile profileImage) {

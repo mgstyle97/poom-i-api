@@ -1,6 +1,7 @@
 package io.wisoft.poomi.controller;
 
 import io.wisoft.poomi.configures.security.jwt.JwtToken;
+import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.configures.web.formatter.Social;
 import io.wisoft.poomi.configures.web.validator.pdf.SignUpFile;
 import io.wisoft.poomi.global.dto.request.member.ProfileImageUploadRequest;
@@ -33,6 +34,8 @@ public class MemberController {
     private final MemberService memberService;
     private final OAuth2Service oAuth2Service;
 
+    private final JwtTokenProvider jwtTokenProvider;
+
     @PostMapping("/signup")
     public ApiResponse<SignupResponse> signup(
             @RequestBody @Valid final SignupRequest signupRequest) {
@@ -43,7 +46,15 @@ public class MemberController {
 
     @GetMapping("/member/me")
     public ApiResponse<MyPageResponse> myPage(@SignInMember final Member member) {
-        return ApiResponse.succeed(HttpStatus.OK, MyPageResponse.of(member));
+        return ApiResponse.succeed(
+                HttpStatus.OK,
+                MyPageResponse.of(
+                        member,
+                        jwtTokenProvider
+                                .getExpirationDateFromToken(
+                                        member.getResidenceCertification().getExpiredValidationToken()
+                                ))
+        );
     }
 
     @GetMapping("/member/poomi")

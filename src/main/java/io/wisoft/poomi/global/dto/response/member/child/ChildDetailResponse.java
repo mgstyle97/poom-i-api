@@ -3,6 +3,7 @@ package io.wisoft.poomi.global.dto.response.member.child;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.poomi.domain.child_care.group.participating.GroupParticipatingMember;
+import io.wisoft.poomi.domain.member.Gender;
 import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.global.dto.response.child_care.expert.ChildDoingExpertResponse;
 import io.wisoft.poomi.global.dto.response.child_care.group.ChildCareGroupSimpleResponse;
@@ -30,6 +31,8 @@ public class ChildDetailResponse {
 
     private String school;
 
+    private Gender gender;
+
     @JsonProperty("special_note")
     private String specialNote;
 
@@ -42,7 +45,7 @@ public class ChildDetailResponse {
     @Builder
     public ChildDetailResponse(final Long childId, final String childName,
                                final Date birthday, final String school,
-                               final String specialNote,
+                               final String specialNote, final Gender gender,
                                final ChildDoingExpertResponse expertInfo,
                                final List<ChildCareGroupSimpleResponse> groupInfo) {
         this.childId = childId;
@@ -50,6 +53,7 @@ public class ChildDetailResponse {
         this.birthday = birthday;
         this.school = school;
         this.specialNote = specialNote;
+        this.gender = gender;
         this.expertInfo = expertInfo;
         this.groupInfo = groupInfo;
     }
@@ -65,6 +69,7 @@ public class ChildDetailResponse {
                 .birthday(child.getBirthday())
                 .school(child.getSchool())
                 .specialNote(child.getSpecialNote())
+                .gender(child.getGender())
                 .expertInfo(expertInfo)
                 .groupInfo(groupInfo)
                 .build();

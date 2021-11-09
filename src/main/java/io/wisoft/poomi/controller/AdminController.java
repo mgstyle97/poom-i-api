@@ -1,5 +1,6 @@
 package io.wisoft.poomi.controller;
 
+import io.wisoft.poomi.global.dto.request.admin.ApproveResidenceMemberRequest;
 import io.wisoft.poomi.global.dto.request.admin.ApproveSignupMemberRequest;
 import io.wisoft.poomi.service.admin.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,12 @@ public class AdminController {
     @PatchMapping("/approve/signup")
     public void approveSignupMember(@RequestBody @Valid final ApproveSignupMemberRequest approveSignupMemberRequest) {
         adminService.approveSignupAccount(approveSignupMemberRequest);
+    }
+
+    @PatchMapping("approve/residence")
+    public void approveResidence(
+            @RequestBody @Valid final ApproveResidenceMemberRequest approveResidenceMemberRequest) {
+        adminService.approveResidence(approveResidenceMemberRequest);
     }
 
     @PatchMapping("/approve/vote")

@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Getter
@@ -25,6 +26,7 @@ public class ChildAddRequest {
     @JsonProperty("special_note")
     private String specialNote;
 
+    @NotNull(message = "아이의 성별을 선택해주세요.")
     private Gender gender;
 
     public void setGender(final String gender) {

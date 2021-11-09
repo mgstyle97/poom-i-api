@@ -56,7 +56,7 @@ public class CertificationController {
     public void registerResidenceCertification(
             @RequestBody @Valid final ResidenceCertificationRegisterRequest registerRequest,
             @SignInMember final Member member) {
-        certificationService.registerResidenceCertification(member, registerRequest);
+        certificationService.registerResidenceCertification(member, registerRequest.getFileData());
     }
 
 }
