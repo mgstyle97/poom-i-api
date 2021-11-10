@@ -23,7 +23,7 @@ public class CommentLookupResponse {
     public CommentLookupResponse(final Comment comment) {
         this.commentId = comment.getId();
         this.writer = comment.getWriter().getNick();
-        this.writerScore = comment.getWriter().getScore();
+        this.writerScore = comment.getWriter().getAverageScore();
         this.contents = comment.getContents();
     }
 

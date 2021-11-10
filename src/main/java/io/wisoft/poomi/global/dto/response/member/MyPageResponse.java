@@ -33,11 +33,15 @@ public class MyPageResponse {
     @JsonProperty("child_count")
     private Integer childCount;
 
+    @JsonProperty("member_score")
+    private Integer memberScore;
+
     @Builder
     public MyPageResponse(final String email, final String password,
                           final String name, final String gender,
                           final String phoneNumber, final String address,
-                          final Date addressExpiredDate, final Integer childCount) {
+                          final Date addressExpiredDate, final Integer childCount,
+                          final Integer memberScore) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -46,6 +50,7 @@ public class MyPageResponse {
         this.address = address;
         this.addressExpiredDate = addressExpiredDate;
         this.childCount = childCount;
+        this.memberScore = memberScore;
     }
 
     public static MyPageResponse of(final Member member, final Date addressExpiredDate) {
@@ -58,6 +63,7 @@ public class MyPageResponse {
                 .address(member.getAddress().getDetailAddress())
                 .addressExpiredDate(addressExpiredDate)
                 .childCount(member.getChildren().size())
+                .memberScore(member.getAverageScore())
                 .build();
 
         return myPageResponse;

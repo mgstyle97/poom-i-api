@@ -74,7 +74,7 @@ public class ChildCareExpertLookupResponse {
         Optional.ofNullable(childCareExpert.getCaringChild()).ifPresent(child -> {
             this.childId = child.getId();
         });
-        this.writerScore = childCareExpert.getWriter().getScore();
+        this.writerScore = childCareExpert.getWriter().getAverageScore();
         this.likedCount = childCareExpert.getLikes().size();
         this.appliedCount = childCareExpert.getApplications().size();
         this.contents = childCareExpert.getContents();

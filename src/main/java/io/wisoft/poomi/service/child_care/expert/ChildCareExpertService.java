@@ -3,22 +3,20 @@ package io.wisoft.poomi.service.child_care.expert;
 import io.wisoft.poomi.domain.child_care.expert.RecruitType;
 import io.wisoft.poomi.domain.child_care.expert.apply.ChildCareExpertApply;
 import io.wisoft.poomi.domain.child_care.expert.apply.ChildCareExpertApplyRepository;
-import io.wisoft.poomi.domain.member.MemberRepository;
 import io.wisoft.poomi.domain.member.child.Child;
-import io.wisoft.poomi.domain.member.child.ChildRepository;
+import io.wisoft.poomi.domain.member.evaluation.MemberEvaluation;
+import io.wisoft.poomi.domain.member.evaluation.MemberEvaluationRepository;
 import io.wisoft.poomi.global.aop.child_care.NoAccessCheck;
-import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertApplyModifiedRequest;
-import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertApplyRequest;
+import io.wisoft.poomi.global.dto.request.child_care.expert.*;
 import io.wisoft.poomi.global.dto.response.child_care.expert.apply.ChildCareExpertApplyLookupResponse;
 import io.wisoft.poomi.global.dto.response.child_care.expert.ChildCareExpertLookupResponse;
 import io.wisoft.poomi.global.dto.response.child_care.expert.ChildCareExpertModifiedResponse;
 import io.wisoft.poomi.global.dto.response.child_care.expert.ChildCareExpertRegisterResponse;
-import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertModifiedRequest;
-import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertRegisterRequest;
 import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
 import io.wisoft.poomi.domain.child_care.expert.ChildCareExpertRepository;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.global.dto.response.child_care.expert.apply.ChildCareExpertApplyRegisterResponse;
+import io.wisoft.poomi.global.exception.exceptions.NoPermissionOfContentException;
 import io.wisoft.poomi.service.child_care.ContentPermissionVerifier;
 import io.wisoft.poomi.service.member.ChildService;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +33,9 @@ import java.util.stream.Collectors;
 @Service
 public class ChildCareExpertService {
 
-    private final MemberRepository memberRepository;
     private final ChildCareExpertRepository childCareExpertRepository;
     private final ChildCareExpertApplyRepository childCareExpertApplyRepository;
-    private final ChildRepository childRepository;
+    private final MemberEvaluationRepository memberEvaluationRepository;
 
     private final ChildService childService;
 
@@ -188,6 +185,24 @@ public class ChildCareExpertService {
         childCareExpertApplyRepository.delete(expertApply);
     }
 
+    @Transactional
+    public void evaluationExpert(final Long expertId,
+                                 final ChildCareExpertEvaluationRequest evaluationRequest,
+                                 final Member member) {
+        ChildCareExpert expert = generateChildCareExpertById(expertId);
+        expert.isWriter(member);
+        validateExpertForEvaluation(expert, member);
+
+        MemberEvaluation evaluation = MemberEvaluation.builder()
+                .contents(evaluationRequest.getContents())
+                .score(evaluationRequest.getScore())
+                .member(expert.getManager())
+                .build();
+        memberEvaluationRepository.save(evaluation);
+        member.addEvaluation(evaluation);
+
+    }
+
     private ChildCareExpert generateChildCareExpertById(final Long expertId) {
         ChildCareExpert childCareExpert = childCareExpertRepository.getById(expertId);
         log.info("Generate child care expert id: {}", expertId);
@@ -250,6 +265,13 @@ public class ChildCareExpertService {
         expertApply.reset();
         childCareExpertApplyRepository.delete(expertApply);
         log.info("Delete child care expert apply id: {}", expertApply.getId());
+    }
+
+    private void validateExpertForEvaluation(final ChildCareExpert expert,
+                                             final Member member) {
+        if (expert.getCaringChild() != null && expert.getManager() != null)
+            if (expert.getCaringChild().getParent().equals(member)) return;
+        throw new NoPermissionOfContentException();
     }
 
 }

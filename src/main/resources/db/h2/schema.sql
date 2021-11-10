@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS member CASCADE;
+DROP TABLE IF EXISTS member_evaluation CASCADE;
 DROP TABLE IF EXISTS authority CASCADE;
 DROP TABLE IF EXISTS address_tag CASCADE;
 DROP TABLE IF EXISTS address CASCADE;
@@ -80,12 +81,18 @@ CREATE TABLE member(
     gender varchar not null,
     age integer not null,
     profile_image_id integer,
-    score integer not null default 0,
-    score_provider_count integer not null default 0,
     approval_status varchar not null default 'UN_APPROVED',
     address_id integer,
     foreign key (address_id) references address(id),
     foreign key (profile_image_id) references upload_file(id)
+);
+
+CREATE TABLE member_evaluation(
+    id integer primary key,
+    contents varchar not null,
+    score integer not null default 0,
+    member_id integer not null,
+    foreign key (member_id) references member(id)
 );
 
 CREATE TABLE member_authority(

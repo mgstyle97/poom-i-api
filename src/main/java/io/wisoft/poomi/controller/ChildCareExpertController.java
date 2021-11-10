@@ -1,14 +1,11 @@
 package io.wisoft.poomi.controller;
 
-import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertApplyModifiedRequest;
-import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertApplyRequest;
+import io.wisoft.poomi.global.dto.request.child_care.expert.*;
 import io.wisoft.poomi.global.dto.response.ApiResponse;
 import io.wisoft.poomi.global.dto.response.child_care.expert.apply.ChildCareExpertApplyLookupResponse;
 import io.wisoft.poomi.global.dto.response.child_care.expert.ChildCareExpertLookupResponse;
 import io.wisoft.poomi.global.dto.response.child_care.expert.ChildCareExpertModifiedResponse;
 import io.wisoft.poomi.global.dto.response.child_care.expert.ChildCareExpertRegisterResponse;
-import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertModifiedRequest;
-import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertRegisterRequest;
 import io.wisoft.poomi.configures.web.resolver.SignInMember;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.global.dto.response.child_care.expert.apply.ChildCareExpertApplyRegisterResponse;
@@ -137,6 +134,14 @@ public class ChildCareExpertController {
             @PathVariable("apply-id") @Valid final Long applyId,
             @SignInMember Member member) {
         childCareExpertService.approveExpertApply(expertId, applyId, member);
+    }
+
+    @PostMapping("/evaluate")
+    public void evaluationExpert(
+            @RequestParam("expert_id") @Valid final Long expertId,
+            @RequestBody @Valid final ChildCareExpertEvaluationRequest evaluationRequest,
+            @SignInMember final Member member) {
+        childCareExpertService.evaluationExpert(expertId, evaluationRequest, member);
     }
 
 }

@@ -7,6 +7,7 @@ import io.wisoft.poomi.domain.child_care.group.participating.GroupParticipatingM
 import io.wisoft.poomi.domain.child_care.playground.vote.PlaygroundVote;
 import io.wisoft.poomi.domain.common.ApprovalStatus;
 import io.wisoft.poomi.domain.file.UploadFile;
+import io.wisoft.poomi.domain.member.evaluation.MemberEvaluation;
 import io.wisoft.poomi.global.dto.request.member.SignupRequest;
 import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
 import io.wisoft.poomi.domain.member.address.Address;
@@ -73,11 +74,8 @@ public class Member {
     )
     private UploadFile profileImage;
 
-    @Column(name = "score")
-    private Integer score;
-
-    @Column(name = "score_provider_count")
-    private Integer scoreProviderCount;
+    @OneToMany(mappedBy = "member")
+    private Set<MemberEvaluation> evaluations;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "approval_status")
@@ -152,8 +150,7 @@ public class Member {
         this.password = password;
         this.nick = nick;
         this.age = age;
-        this.score = 0;
-        this.scoreProviderCount = 0;
+        this.evaluations = new HashSet<>();
         this.approvalStatus = ApprovalStatus.UN_APPROVED;
         this.gender = gender;
         this.authorities = authorities;
@@ -197,6 +194,15 @@ public class Member {
 
     public void saveProfileImage(final UploadFile profileImage) {
         this.profileImage = profileImage;
+    }
+
+    public int getAverageScore() {
+        final int totalEvaluationCount = this.evaluations.size();
+        final int totalEvaluationScore = this.evaluations.stream()
+                .mapToInt(MemberEvaluation::getScore)
+                .sum();
+
+        return totalEvaluationScore / totalEvaluationCount;
     }
 
     public void checkChildInChildren(final Child child) {
@@ -276,6 +282,10 @@ public class Member {
 
     public void addLikedExpertContent(final ChildCareExpert expertContent) {
         this.likedExpertContents.add(expertContent);
+    }
+
+    public void addEvaluation(final MemberEvaluation evaluation) {
+        this.evaluations.add(evaluation);
     }
 
     public void removeLikedExpertContent(final ChildCareExpert expertContent) {

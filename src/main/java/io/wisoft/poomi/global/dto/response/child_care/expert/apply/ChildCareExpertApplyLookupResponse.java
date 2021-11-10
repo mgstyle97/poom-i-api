@@ -29,7 +29,7 @@ public class ChildCareExpertApplyLookupResponse {
     private ChildCareExpertApplyLookupResponse(final ChildCareExpertApply application) {
         this.applyId = application.getId();
         this.applier = application.getWriter().getNick();
-        this.writerScore = application.getWriter().getScore();
+        this.writerScore = application.getWriter().getAverageScore();
         this.contents = application.getContents();
         this.requestedAt = new Date();
     }
