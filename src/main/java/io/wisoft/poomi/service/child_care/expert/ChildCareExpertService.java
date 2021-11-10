@@ -190,7 +190,6 @@ public class ChildCareExpertService {
                                  final ChildCareExpertEvaluationRequest evaluationRequest,
                                  final Member member) {
         ChildCareExpert expert = generateChildCareExpertById(expertId);
-        expert.isWriter(member);
         validateExpertForEvaluation(expert, member);
 
         MemberEvaluation evaluation = MemberEvaluation.builder()
@@ -270,7 +269,7 @@ public class ChildCareExpertService {
     private void validateExpertForEvaluation(final ChildCareExpert expert,
                                              final Member member) {
         if (expert.getCaringChild() != null && expert.getManager() != null)
-            if (expert.getCaringChild().getParent().equals(member)) return;
+            if (expert.getCaringChild().getParent().equals(member) && !expert.getManager().equals(member)) return;
         throw new NoPermissionOfContentException();
     }
 
