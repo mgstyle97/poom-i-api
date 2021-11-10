@@ -22,6 +22,9 @@ public class GroupBoardLookupResponse {
     @JsonProperty("board_id")
     private Long boardId;
 
+    @JsonProperty("group_id")
+    private Long groupId;
+
     private String title;
 
     private String writer;
@@ -56,6 +59,7 @@ public class GroupBoardLookupResponse {
     @Builder
     public GroupBoardLookupResponse(final GroupBoard board, final Member member) {
         this.boardId = board.getId();
+        this.groupId = board.getChildCareGroup().getId();
         this.title = board.getChildCareGroup().getName();
         this.writer = board.getWriter().getNick();
         this.recruitmentStatus = board.getChildCareGroup().getRecruitmentStatus();
