@@ -2,6 +2,7 @@ package io.wisoft.poomi.global.dto.response.child_care.expert;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.wisoft.poomi.domain.child_care.RecruitmentStatus;
 import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
 import io.wisoft.poomi.domain.child_care.expert.RecruitType;
 import io.wisoft.poomi.domain.child_care.expert.apply.ChildCareExpertApply;
@@ -41,6 +42,9 @@ public class ChildCareExpertLookupResponse {
     @JsonProperty("recruit_type")
     private RecruitType recruitType;
 
+    @JsonProperty("recruitment_status")
+    private RecruitmentStatus recruitmentStatus;
+
     @JsonProperty("created_at")
     private String createdAt;
 
@@ -79,6 +83,7 @@ public class ChildCareExpertLookupResponse {
         this.appliedCount = childCareExpert.getApplications().size();
         this.contents = childCareExpert.getContents();
         this.recruitType = childCareExpert.getRecruitType();
+        this.recruitmentStatus = childCareExpert.getRecruitmentStatus();
         this.createdAt = LocalDateTimeUtils.getDateToString(childCareExpert.getCreatedAt());
         this.startDate = LocalDateTimeUtils.getDateToString(childCareExpert.getStartTime());
         this.startTime = LocalDateTimeUtils.getTimeToString(childCareExpert.getStartTime());

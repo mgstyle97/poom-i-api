@@ -76,4 +76,8 @@ public class BaseChildCareEntity extends BaseTimeEntity {
         }
     }
 
+    public void setClosed() {
+        this.recruitmentStatus = RecruitmentStatus.CLOSED;
+    }
+
 }

@@ -2,6 +2,7 @@ package io.wisoft.poomi.global.dto.response.child_care.expert.apply;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.wisoft.poomi.domain.child_care.expert.apply.ChildCareExpertApply;
 import io.wisoft.poomi.domain.member.child.Child;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,13 +40,13 @@ public class ExpertApplyApprovedDetailResponse {
         this.childBirthday = childBirthday;
     }
 
-    public static ExpertApplyApprovedDetailResponse of(final Child child) {
+    public static ExpertApplyApprovedDetailResponse of(final ChildCareExpertApply apply) {
         return ExpertApplyApprovedDetailResponse.builder()
-                .memberId(child.getParent().getId())
-                .memberNick(child.getParent().getNick())
-                .childId(child.getId())
-                .childName(child.getName())
-                .childBirthday(child.getBirthday())
+                .memberId(apply.getWriter().getId())
+                .memberNick(apply.getWriter().getNick())
+                .childId(apply.getChild().getId())
+                .childName(apply.getChild().getName())
+                .childBirthday(apply.getChild().getBirthday())
                 .build();
     }
 

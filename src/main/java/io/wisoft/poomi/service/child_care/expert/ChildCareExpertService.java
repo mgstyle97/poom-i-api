@@ -1,5 +1,6 @@
 package io.wisoft.poomi.service.child_care.expert;
 
+import io.wisoft.poomi.domain.child_care.RecruitmentStatus;
 import io.wisoft.poomi.domain.child_care.expert.RecruitType;
 import io.wisoft.poomi.domain.child_care.expert.apply.ChildCareExpertApply;
 import io.wisoft.poomi.domain.child_care.expert.apply.ChildCareExpertApplyRepository;
@@ -67,6 +68,7 @@ public class ChildCareExpertService {
         return ChildCareExpertRegisterResponse.of(childCareExpert);
     }
 
+    @NoAccessCheck
     @Transactional(readOnly = true)
     public ChildCareExpertLookupResponse lookupChildCareExpert(final Long expertId, final Member member) {
         ChildCareExpert childCareExpert = generateChildCareExpertById(expertId);
@@ -81,6 +83,7 @@ public class ChildCareExpertService {
             final Member member) {
 
         ChildCareExpert childCareExpert = generateChildCareExpertById(expertId);
+        validateAccessExpertByRecruitmentStatus(childCareExpert);
 
         Child child = childService
                 .checkChildId(member, Optional.ofNullable(childCareExpertModifiedRequest.getChildId()));
@@ -103,6 +106,7 @@ public class ChildCareExpertService {
                                                                      final Member member,
                                                                      final ChildCareExpertApplyRequest childCareExpertApplyRequest) {
         ChildCareExpert childCareExpert = generateChildCareExpertById(expertId);
+        validateAccessExpertByRecruitmentStatus(childCareExpert);
 
         childCareExpert.isWriter(member);
         childCareExpert.isAlreadyApplier(member);
@@ -174,15 +178,15 @@ public class ChildCareExpertService {
 
     @Transactional
     public void approveExpertApply(final Long expertId, final Long applyId, final Member member) {
-        ChildCareExpert childCareExpert = generateChildCareExpertById(expertId);
-        childCareExpert.isNotWriter(member);
+        ChildCareExpert expert = generateChildCareExpertById(expertId);
+        validateAccessExpertByRecruitmentStatus(expert);
+        expert.isNotWriter(member);
         log.info("Check expert writer");
 
         ChildCareExpertApply expertApply = childCareExpertApplyRepository.getById(applyId);
-        childCareExpert.checkApplyIncluded(expertApply);
+        expert.checkApplyIncluded(expertApply);
 
-        childCareExpert.approveApply(expertApply);
-        childCareExpertApplyRepository.delete(expertApply);
+        approveApply(expert, expertApply);
     }
 
     @Transactional
@@ -199,6 +203,7 @@ public class ChildCareExpertService {
                 .build();
         memberEvaluationRepository.save(evaluation);
         member.addEvaluation(evaluation);
+        expert.terminate();
 
     }
 
@@ -207,6 +212,12 @@ public class ChildCareExpertService {
         log.info("Generate child care expert id: {}", expertId);
 
         return childCareExpert;
+    }
+
+    private void validateAccessExpertByRecruitmentStatus(final ChildCareExpert expert) {
+        if (expert.getRecruitmentStatus().equals(RecruitmentStatus.CLOSED)) {
+            throw new NoPermissionOfContentException();
+        }
     }
 
     private void modifyChildCareExpert(final ChildCareExpert childCareExpert,
@@ -264,6 +275,11 @@ public class ChildCareExpertService {
         expertApply.reset();
         childCareExpertApplyRepository.delete(expertApply);
         log.info("Delete child care expert apply id: {}", expertApply.getId());
+    }
+
+    private void approveApply(final ChildCareExpert expert, final ChildCareExpertApply apply) {
+        expert.approveApply(apply);
+        apply.setApprovedStatus();
     }
 
     private void validateExpertForEvaluation(final ChildCareExpert expert,

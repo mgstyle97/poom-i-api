@@ -300,6 +300,10 @@ public class Member {
         this.writtenExpertContents.remove(expertContent);
     }
 
+    public void cancelExpert() {
+        this.managedExpertContent = null;
+    }
+
     public void addLikeBoard(final GroupBoard board) {
         this.childCareGroupProperties.getLikeBoards().add(board);
     }

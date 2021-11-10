@@ -1,6 +1,7 @@
 package io.wisoft.poomi.domain.child_care.expert.apply;
 
 import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
+import io.wisoft.poomi.domain.common.ApprovalStatus;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.global.dto.request.child_care.expert.ChildCareExpertApplyRequest;
@@ -35,6 +36,9 @@ public class ChildCareExpertApply {
 
     private String contents;
 
+    @Enumerated(EnumType.STRING)
+    private ApprovalStatus approvalStatus;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "writer_id",
@@ -62,10 +66,11 @@ public class ChildCareExpertApply {
     }
 
     @Builder
-    private ChildCareExpertApply(final String contents,
+    private ChildCareExpertApply(final String contents, final ApprovalStatus approvalStatus,
                                  final Member writer, final Child child,
                                  final ChildCareExpert childCareExpert) {
         this.contents = contents;
+        this.approvalStatus = approvalStatus;
         this.writer = writer;
         this.child = child;
         this.childCareExpert = childCareExpert;
@@ -76,6 +81,7 @@ public class ChildCareExpertApply {
                                           final Member member, final Child child) {
         ChildCareExpertApply expertApply = ChildCareExpertApply.builder()
                 .contents(childCareExpertApplyRequest.getContents())
+                .approvalStatus(ApprovalStatus.UN_APPROVED)
                 .writer(member)
                 .child(child)
                 .childCareExpert(childCareExpert)
@@ -93,6 +99,10 @@ public class ChildCareExpertApply {
     public void modifiedByRequest(final String contents, Child child) {
         changeContents(contents);
         changeChild(Optional.ofNullable(child));
+    }
+
+    public void setApprovedStatus() {
+        this.approvalStatus = ApprovalStatus.APPROVED;
     }
 
     public void reset() {

@@ -190,10 +190,12 @@ CREATE TABLE child_care_expert(
     start_time timestamp not null,
     end_time timestamp not null,
     writer_id integer not null,
+    writer_child_id integer,
     child_id integer,
     manager_id integer,
     address_tag_id integer not null,
     foreign key(writer_id) references member(id),
+    foreign key(writer_child_id) references child(id),
     foreign key(child_id) references child(id),
     foreign key(manager_id) references member(id),
     foreign key(address_tag_id) references address_tag(id)
@@ -202,6 +204,7 @@ CREATE TABLE child_care_expert(
 CREATE TABLE expert_apply(
     id integer primary key,
     contents varchar not null,
+    approval_status varchar not null default 'UN_APPROVED',
     writer_id integer not null,
     child_id integer,
     expert_id integer not null,
