@@ -27,6 +27,8 @@ public class ChildCareGroupLookupResponse {
     @JsonProperty("main_activity")
     private String mainActivity;
 
+    private String description;
+
     @JsonProperty("including_members")
     private Integer includingMembers;
 
@@ -47,6 +49,7 @@ public class ChildCareGroupLookupResponse {
         this.writer = childCareGroup.getWriter().getNick();
         this.regularMeetingDay = childCareGroup.getRegularMeetingDay();
         this.mainActivity = childCareGroup.getMainActivity();
+        this.description = childCareGroup.getDescription();
         this.includingMembers = childCareGroup.getParticipatingMembers().size();
         this.profileImageURI = childCareGroup.getProfileImage().getFileAccessURI();
         this.createdAt = LocalDateTimeUtils.toDate(childCareGroup.getCreatedAt());
