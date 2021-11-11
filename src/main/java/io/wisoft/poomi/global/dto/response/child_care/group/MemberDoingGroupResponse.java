@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.poomi.domain.child_care.RecruitmentStatus;
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
 import io.wisoft.poomi.domain.child_care.playground.vote.ExpiredStatus;
+import io.wisoft.poomi.domain.file.UploadFile;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.global.dto.response.child_care.group.apply.GroupApplyDetailResponse;
 import lombok.Builder;
@@ -11,6 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Getter
@@ -73,7 +75,9 @@ public class MemberDoingGroupResponse {
             .groupId(group.getId())
             .groupName(group.getName())
             .activityTime(group.getRegularMeetingDay())
-            .profileImageURL(group.getProfileImage().getFileAccessURI())
+            .profileImageURL(
+                Optional.ofNullable(group.getProfileImage()).map(UploadFile::getFileAccessURI).orElse(null)
+            )
             .mainActivity(group.getMainActivity())
             .description(group.getDescription())
             .recruitmentStatus(group.getRecruitmentStatus())
