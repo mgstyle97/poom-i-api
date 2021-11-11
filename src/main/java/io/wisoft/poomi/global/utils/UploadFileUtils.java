@@ -77,9 +77,7 @@ public class UploadFileUtils {
     }
 
     public void removeBoardImages(final Set<UploadFile> uploadFiles) {
-        uploadFiles
-                .forEach(image -> s3FileHandler.deleteFile(image.getFileName()));
-
+        uploadFiles.forEach(this::removeImage);
     }
 
     public void removeImage(final UploadFile uploadFile) {

@@ -1,6 +1,7 @@
 package io.wisoft.poomi.global.dto.request.member;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.wisoft.poomi.configures.web.validator.member.SignupChild;
 import io.wisoft.poomi.configures.web.validator.pdf.SignUpFile;
 import io.wisoft.poomi.domain.member.Gender;
 import lombok.Getter;
@@ -12,6 +13,11 @@ import java.util.List;
 
 @Getter
 @Setter
+@SignupChild(
+        children = "children",
+        familyCertificationFileData = "familyCertificateFileData",
+        message = "자식 정보가 있을 때는 가족관계증명서가 필수입니다."
+)
 public class SignupRequest {
 
     @NotBlank(message = "이름을 입력해야 합니다.")

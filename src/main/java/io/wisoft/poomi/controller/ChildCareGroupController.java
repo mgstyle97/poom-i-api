@@ -82,6 +82,13 @@ public class ChildCareGroupController {
         );
     }
 
+    @DeleteMapping("/{group-id}/withdraw")
+    public void withdrawGroup(
+            @PathVariable("group-id") @Valid final Long groupId,
+            @SignInMember final Member member) {
+        childCareGroupService.withdrawGroup(groupId, member);
+    }
+
     @PostMapping("/{group-id}/apply")
     public void applyChildCareGroup(
             @PathVariable("group-id") final Long groupId,

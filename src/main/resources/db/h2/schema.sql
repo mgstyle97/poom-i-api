@@ -81,10 +81,12 @@ CREATE TABLE member(
     gender varchar not null,
     age integer not null,
     profile_image_id integer,
+    family_certification_file_id integer,
     approval_status varchar not null default 'UN_APPROVED',
     address_id integer,
     foreign key (address_id) references address(id),
-    foreign key (profile_image_id) references upload_file(id)
+    foreign key (profile_image_id) references upload_file(id),
+    foreign key (family_certification_file_id) references upload_file(id)
 );
 
 CREATE TABLE member_evaluation(

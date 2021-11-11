@@ -139,7 +139,6 @@ public class GroupBoard extends BaseTimeEntity {
 
     public void resetAssociated() {
         this.likes.forEach(member -> member.removeLikeBoard(this));
-
     }
 
     public void addLikeMember(final Member member) {

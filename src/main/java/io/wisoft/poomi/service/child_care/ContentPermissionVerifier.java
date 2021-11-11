@@ -13,11 +13,5 @@ public class ContentPermissionVerifier {
             throw new NoPermissionOfContentException();
         }
     }
-    
-    public static void verifyAccessPermission(final AddressTag approved, final AddressTag unapproved) {
-        if (!approved.equals(unapproved)) {
-            throw new NoPermissionOfContentException();
-        }
-    }
 
 }

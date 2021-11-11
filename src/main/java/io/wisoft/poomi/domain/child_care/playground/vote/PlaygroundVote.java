@@ -127,15 +127,11 @@ public class PlaygroundVote extends BaseTimeEntity {
     }
 
     public Double calculateVotingRate() {
+        if (this.voters.size() == 0) return 0.0;
+
         double votingCount = getVotersVoting().size();
 
         return votingCount / this.voters.size() * 100;
-    }
-
-    public Double calculateNotVotingRate() {
-        double notVotingCount = getVotersNotVoting().size();
-
-        return notVotingCount / this.voters.size() * 100;
     }
 
     public Double calculateRateByVoteType(final VoteType voteType) {

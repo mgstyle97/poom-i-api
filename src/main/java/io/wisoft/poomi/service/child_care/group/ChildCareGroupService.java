@@ -70,6 +70,7 @@ public class ChildCareGroupService {
                 .collect(Collectors.toList());
     }
 
+
     @NoAccessCheck
     @Transactional(readOnly = true)
     public byte[] getProfileImage(final String groupName) {
@@ -90,11 +91,12 @@ public class ChildCareGroupService {
         ChildCareGroup group = ChildCareGroup.of(member, childCareGroupRegisterRequest);
         log.info("Generate child care group title: {}", group.getName());
 
-        UploadFile profileImage = uploadFileUtils
-                .saveFileAndConvertImage(childCareGroupRegisterRequest.getProfileImage());
-        uploadFileRepository.save(profileImage);
+        Optional.ofNullable(childCareGroupRegisterRequest.getProfileImage()).ifPresent(imageData -> {
+            UploadFile profileImage = uploadFileUtils.saveFileAndConvertImage(imageData);
+            uploadFileRepository.save(profileImage);
+            group.setProfileImage(profileImage);
+        });
 
-        group.setProfileImage(profileImage);
         childCareGroupRepository.save(group);
         log.info("Save child care group id: {}", group.getId());
 
@@ -140,6 +142,16 @@ public class ChildCareGroupService {
         deleteGroup(childCareGroup, member);
 
         return ChildCareGroupDeleteResponse.of(groupId);
+    }
+
+    @Transactional
+    public void withdrawGroup(final Long groupId, final Member member) {
+        ChildCareGroup group = generateChildCareGroupById(groupId);
+        group.isWriter(member);
+        group.validateMemberIsParticipating(member);
+
+        GroupParticipatingMember groupParticipatingMember = group.withdrawMember(member);
+        groupParticipatingMemberRepository.delete(groupParticipatingMember);
     }
 
     @Transactional
@@ -220,11 +232,10 @@ public class ChildCareGroupService {
 
     private void deleteGroup(final ChildCareGroup group, final Member member) {
         group.resetAssociated();
+        groupParticipatingMemberRepository.deleteAll(group.getParticipatingMembers());
 
         Set<GroupApply> applies = group.getApplies();
         groupApplyRepository.deleteAll(applies);
-
-        groupParticipatingMemberRepository.deleteAll(group.getParticipatingMembers());
 
         group.getBoards().forEach(groupBoardService::removeBoard);
 

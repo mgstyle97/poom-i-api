@@ -158,6 +158,18 @@ public class ChildCareGroup extends BaseChildCareEntity {
         }
     }
 
+    public GroupParticipatingMember withdrawMember(final Member member) {
+        return this.participatingMembers.stream()
+                .filter(participatingMember -> participatingMember.getMember().equals(member))
+                .peek(groupParticipatingMember -> {
+                    groupParticipatingMember.getMember().withdrawFromGroup(this);
+                    if (Objects.nonNull(groupParticipatingMember.getChild())) {
+                        groupParticipatingMember.getChild().withdrawFromGroup(this);
+                    }
+                })
+                .findFirst().orElseThrow(NoPermissionOfContentException::new);
+    }
+
     public void checkApplyIncluding(final GroupApply groupApply) {
         if (!this.applies.contains(groupApply)) {
             throw new IllegalArgumentException("해당 품앗이반에 지원한 요청이 아닙니다.");

@@ -53,7 +53,7 @@ public class BaseChildCareEntity extends BaseTimeEntity {
 
     public void isWriter(final Member member) {
         if (this.writer.equals(member)) {
-            throw new IllegalArgumentException("작성자는 지원할 수 없습니다.");
+            throw new IllegalArgumentException("작성자는 접근할 수 없는 요청입니다.");
         }
     }
 

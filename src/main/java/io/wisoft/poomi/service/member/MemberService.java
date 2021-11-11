@@ -53,10 +53,6 @@ public class MemberService {
         certificationService
                 .registerResidenceCertification(member, signupRequest.getAddressCertificationFileData());
 
-        Optional<String> optionalFamilyCertification = Optional
-                .ofNullable(signupRequest.getFamilyCertificateFileData());
-        optionalFamilyCertification.ifPresent(uploadFileUtils::saveFileAndConvertImage);
-
         return SignupResponse.of(member);
     }
 
@@ -65,8 +61,6 @@ public class MemberService {
         UploadFile profileImage = uploadFileUtils.saveFileAndConvertImage(profileImageUploadRequest.getImageMetaData());
         uploadFileRepository.save(profileImage);
         member.saveProfileImage(profileImage);
-
-        memberRepository.save(member);
     }
 
     @Transactional
@@ -111,6 +105,7 @@ public class MemberService {
         member.updateAddressInfo(address);
         memberRepository.save(member);
         log.info("Set request data to member properties");
+
     }
 
     private void saveChildInfo(final Member member, final SignupRequest signupRequest) {
@@ -122,7 +117,18 @@ public class MemberService {
             childRepository.saveAll(children);
             member.setChildren(children);
             log.info("Save member data through member repository");
+
+            saveFamilyCertificationFile(member, signupRequest.getFamilyCertificateFileData());
         }
+    }
+
+    private void saveFamilyCertificationFile(final Member member, final String familyCertificationFileData) {
+        member.setFamilyCertificationFile(
+                uploadFileRepository.save(
+                        uploadFileUtils.saveFileAndConvertImage(familyCertificationFileData)
+                )
+        );
+        memberRepository.save(member);
     }
 
 }

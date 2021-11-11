@@ -99,6 +99,13 @@ public class Member {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
     private ResidenceCertification residenceCertification;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "family_certification_file_id",
+            referencedColumnName = "id"
+    )
+    private UploadFile familyCertificationFile;
+
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy = "parent"
@@ -183,6 +190,10 @@ public class Member {
         this.residenceCertification = certification;
     }
 
+    public void setFamilyCertificationFile(final UploadFile familyCertificationFile) {
+        this.familyCertificationFile = familyCertificationFile;
+    }
+
     public void approveSignup(final Authority authority) {
         this.approvalStatus = ApprovalStatus.APPROVED;
         this.authorities.add(authority);
@@ -245,9 +256,7 @@ public class Member {
     }
 
     public void removeChild(final Child child) {
-        if (!this.children.contains(child)) {
-            throw new IllegalArgumentException("No child data in member object");
-        }
+        checkChildInChildren(child);
         this.children.remove(child);
     }
 
@@ -262,7 +271,6 @@ public class Member {
     public void withdrawFromGroup(final ChildCareGroup group) {
         this.childCareGroupProperties.getParticipatingGroups().stream()
                 .filter(groupParticipatingMember -> groupParticipatingMember.getGroup().equals(group))
-                .collect(Collectors.toList())
                 .forEach(groupParticipatingMember -> {
                     this.childCareGroupProperties.getParticipatingGroups().remove(groupParticipatingMember);
                 });

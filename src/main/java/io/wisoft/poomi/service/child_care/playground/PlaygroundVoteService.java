@@ -6,6 +6,7 @@ import io.wisoft.poomi.domain.child_care.playground.vote.PlaygroundVote;
 import io.wisoft.poomi.domain.child_care.playground.vote.PlaygroundVoteRepository;
 import io.wisoft.poomi.domain.child_care.playground.vote.voter.PlaygroundVoter;
 import io.wisoft.poomi.domain.child_care.playground.vote.voter.PlaygroundVoterRepository;
+import io.wisoft.poomi.domain.common.ApprovalStatus;
 import io.wisoft.poomi.domain.file.UploadFile;
 import io.wisoft.poomi.domain.file.UploadFileRepository;
 import io.wisoft.poomi.domain.member.Member;
@@ -47,6 +48,8 @@ public class PlaygroundVoteService {
     @Transactional
     public void registerPlaygroundVote(final PlaygroundVoteRegisterRequest registerRequest,
                                        final Member member) {
+        validatePlaygroundVoteAddress(registerRequest, member);
+
         Address address = generateAddress(registerRequest);
 
         PlaygroundVote playgroundVote = PlaygroundVote.builder()
@@ -63,8 +66,10 @@ public class PlaygroundVoteService {
 
     @Transactional(readOnly = true)
     public List<PlaygroundVoteRealtimeInfoResponse> lookupPlaygroundVoteList(final Member member) {
-        Set<PlaygroundVote> votes = member.getRegisteredPlaygroundVotes();
+        List<PlaygroundVote> votes = playgroundVoteRepository.findAll();
         votes.stream()
+                .filter(vote -> vote.getApprovalStatus().equals(ApprovalStatus.APPROVED))
+                .filter(vote -> vote.getAddress().getAddressTag().equals(member.getAddressTag()))
                 .filter(vote -> vote.getNotVotingDongAndHo().size() == 0)
                 .forEach(PlaygroundVote::expired);
 
@@ -75,7 +80,7 @@ public class PlaygroundVoteService {
 
     @Transactional
     public void approvePlaygroundVote(final Long voteId) {
-        PlaygroundVote playgroundVote = generatePlaygroundVote(voteId);
+        PlaygroundVote playgroundVote = playgroundVoteRepository.getById(voteId);
 
         playgroundVote.approveState(jwtTokenProvider.generateVoteExpiredToken());
         playgroundVoteRepository.save(playgroundVote);
@@ -102,6 +107,19 @@ public class PlaygroundVoteService {
                 .getVoterByDongAndHo(votingRequest.getDong(), votingRequest.getHo());
         voter.setVoteType(votingRequest.getVoteType());
         playgroundVoterRepository.save(voter);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PlaygroundVote> findAllPlaygroundVote() {
+        return playgroundVoteRepository.findAll();
+    }
+
+    private void validatePlaygroundVoteAddress(final PlaygroundVoteRegisterRequest registerRequest,
+                                               final Member member) {
+        final Address address = member.getAddress();
+        if (!address.getAddress().equals(registerRequest.getAddress())) {
+            throw new IllegalArgumentException("아파트 단지 내의 공간만 등록할 수 있습니다.");
+        }
     }
 
     private Address generateAddress(final PlaygroundVoteRegisterRequest registerRequest) {

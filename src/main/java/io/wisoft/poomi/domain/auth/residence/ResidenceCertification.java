@@ -1,11 +1,11 @@
 package io.wisoft.poomi.domain.auth.residence;
 
 import io.wisoft.poomi.domain.auth.BaseCertificationEntity;
+import io.wisoft.poomi.domain.common.ApprovalStatus;
 import io.wisoft.poomi.domain.file.UploadFile;
 import io.wisoft.poomi.domain.member.Member;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -29,7 +29,7 @@ public class ResidenceCertification extends BaseCertificationEntity {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private CertificationStatus certificationStatus;
+    private ApprovalStatus approvalStatus;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(
@@ -54,11 +54,11 @@ public class ResidenceCertification extends BaseCertificationEntity {
         super(expiredValidationToken);
         this.member = member;
         this.residenceFile = residenceFile;
-        this.certificationStatus = CertificationStatus.UN_APPROVED;
+        this.approvalStatus = ApprovalStatus.UN_APPROVED;
     }
 
     public void approve(final String expiredValidationToken) {
-        this.certificationStatus = CertificationStatus.APPROVED;
+        this.approvalStatus = ApprovalStatus.APPROVED;
         super.setExpiredValidationToken(expiredValidationToken);
     }
 
