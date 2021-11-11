@@ -26,6 +26,15 @@ public class MemberDoingGroupResponse {
     @JsonProperty("activity_time")
     private String activityTime;
 
+    @JsonProperty("profile_image_url")
+    private String profileImageURL;
+
+    @JsonProperty("main_activity")
+    private String mainActivity;
+
+    @JsonProperty("description")
+    private String description;
+
     @JsonProperty("recruitment_status")
     private RecruitmentStatus recruitmentStatus;
 
@@ -41,6 +50,7 @@ public class MemberDoingGroupResponse {
     @Builder
     public MemberDoingGroupResponse(final Long groupId,
                                     final String groupName, final String activityTime,
+                                    final String profileImageURL, final String mainActivity, final String description,
                                     final RecruitmentStatus recruitmentStatus,
                                     final ParticipationType participationType,
                                     final List<MemberParticipatingGroupResponse> participatingMembers,
@@ -48,6 +58,9 @@ public class MemberDoingGroupResponse {
         this.groupId = groupId;
         this.groupName = groupName;
         this.activityTime = activityTime;
+        this.profileImageURL = profileImageURL;
+        this.mainActivity = mainActivity;
+        this.description = description;
         this.recruitmentStatus = recruitmentStatus;
         this.participationType = participationType;
         this.participatingMembers = participatingMembers;
@@ -57,28 +70,31 @@ public class MemberDoingGroupResponse {
     public static MemberDoingGroupResponse of(final ChildCareGroup group, final Member member,
                                               final ParticipationType participationType) {
         return MemberDoingGroupResponse.builder()
-                .groupId(group.getId())
-                .groupName(group.getName())
-                .activityTime(group.getRegularMeetingDay())
-                .recruitmentStatus(group.getRecruitmentStatus())
-                .participationType(participationType)
-                .participatingMembers(generateParticipatingMembers(group, member))
-                .applyInfo(generateApplyInfo(group))
-                .build();
+            .groupId(group.getId())
+            .groupName(group.getName())
+            .activityTime(group.getRegularMeetingDay())
+            .profileImageURL(group.getProfileImage().getFileAccessURI())
+            .mainActivity(group.getMainActivity())
+            .description(group.getDescription())
+            .recruitmentStatus(group.getRecruitmentStatus())
+            .participationType(participationType)
+            .participatingMembers(generateParticipatingMembers(group, member))
+            .applyInfo(generateApplyInfo(group))
+            .build();
     }
 
     private static List<MemberParticipatingGroupResponse> generateParticipatingMembers(final ChildCareGroup group,
                                                                                        final Member member) {
         return group.getParticipatingMembers().stream()
-                .filter(groupParticipatingMember -> !groupParticipatingMember.getMember().equals(member))
-                .map(MemberParticipatingGroupResponse::of)
-                .collect(Collectors.toList());
+            .filter(groupParticipatingMember -> !groupParticipatingMember.getMember().equals(member))
+            .map(MemberParticipatingGroupResponse::of)
+            .collect(Collectors.toList());
     }
 
     private static List<GroupApplyDetailResponse> generateApplyInfo(final ChildCareGroup group) {
         return group.getApplies().stream()
-                .map(GroupApplyDetailResponse::of)
-                .collect(Collectors.toList());
+            .map(GroupApplyDetailResponse::of)
+            .collect(Collectors.toList());
     }
 
 }
