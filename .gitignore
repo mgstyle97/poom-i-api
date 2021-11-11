@@ -2,6 +2,7 @@
 # Created by https://www.toptal.com/developers/gitignore/api/macos,windows,java,intellij+all,database
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,windows,java,intellij+all,database
 
+application-oauth.yml
 application-mail.yml
 application-prod.yml
 Dockerfile
