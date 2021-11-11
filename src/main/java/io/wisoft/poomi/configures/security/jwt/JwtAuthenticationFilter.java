@@ -1,13 +1,8 @@
 package io.wisoft.poomi.configures.security.jwt;
 
 import io.jsonwebtoken.ExpiredJwtException;
-import io.wisoft.poomi.domain.member.Member;
-import io.wisoft.poomi.domain.member.MemberRepository;
-import io.wisoft.poomi.global.utils.CookieUtils;
-import io.wisoft.poomi.global.utils.SessionUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -16,7 +11,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

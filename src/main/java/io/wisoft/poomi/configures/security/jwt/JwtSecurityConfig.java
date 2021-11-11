@@ -1,7 +1,5 @@
 package io.wisoft.poomi.configures.security.jwt;
 
-import io.wisoft.poomi.domain.member.MemberRepository;
-import io.wisoft.poomi.global.utils.CookieUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
