@@ -68,7 +68,9 @@ public class MemberDoingExpertResponse {
                 .startTime(expert.getStartTime())
                 .endTime(expert.getEndTime())
                 .contents(expert.getContents())
-                .writerChildInfo(ExpertWriterChildInfo.of(expert.getWriterChild()))
+                .writerChildInfo(
+                    Optional.ofNullable(expert.getWriterChild()).map(ExpertWriterChildInfo::of).orElse(null)
+                )
                 .approveInfo(approveInfo)
                 .applyInfo(
                         expert.getApplications().stream()
