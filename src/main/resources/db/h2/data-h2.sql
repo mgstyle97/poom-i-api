@@ -61,6 +61,18 @@ VALUES (2, 1, 2, 'MANAGE');
 INSERT INTO playground_vote(id, purpose_using, approval_status, expired_status, address_id, registrant_id, created_at, modified_at, expired_validation_token)
 VALUES (1, '아이들 놀이터', 'APPROVED', 'VOTING', 1, 1, now(), now(), 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTIwMDYxNDgsInJlc2lkZW5jZSI6InJlc2lkZW5jZSB0b2tlbiJ9.YpAU_PhDGf8fP1iIaA_oAdrmYtTmQijeWCUNwrUVINs');
 
+INSERT INTO playground_voter(id, dong, ho, vote_type, vote_id)
+VALUES (1, '101동', '101호', 'NOT_YET', 1),
+       (2, '101동', '102호', 'NOT_YET', 1),
+       (3, '101동', '103호', 'NOT_YET', 1),
+       (4, '102동', '201호', 'NOT_YET', 1),
+       (5, '102동', '202호', 'NOT_YET', 1),
+       (6, '102동', '203호', 'NOT_YET', 1),
+       (7, '103동', '301호', 'NOT_YET', 1),
+       (8, '103동', '302호', 'NOT_YET', 1),
+       (9, '103동', '303호', 'NOT_YET', 1);
+
+
 INSERT INTO child_care_playground(id, name, operating_hours, holiday, call_number, features, address_id, registrant_id)
 VALUES (
     1, 'WS APT 101동 101호', '09:00~21:00', '월요일 휴무', '042-000-0000', '무료 이용, 팀당 보호자 1인 필수',
