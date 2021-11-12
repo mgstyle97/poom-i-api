@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -219,6 +220,27 @@ public class ChildCareGroupService {
             uploadFileRepository.save(profileImage);
 
             group.setProfileImage(profileImage);
+        }
+    }
+
+    private void validateApply(final ChildCareGroup group,
+                               final Member member,
+                               final ChildCareGroupApplyRequest applyRequest) {
+        final boolean isAlreadyParticipatingChild = group.getParticipatingMembers().stream()
+                .filter(participatingMember -> participatingMember.getMember().equals(member))
+                .map(GroupParticipatingMember::getChild)
+                .filter(Objects::nonNull)
+                .anyMatch(child -> {
+                    if (applyRequest.getChildId() != null)
+                        return child.getId().equals(applyRequest.getChildId());
+                    return false;
+                });
+        final boolean isAlreadyParticipatingMemberWithoutChild = group.getParticipatingMembers().stream()
+                .anyMatch(participatingMember ->
+                        participatingMember.getMember().equals(member) &&
+                        Objects.isNull(participatingMember.getChild()));
+        if (isAlreadyParticipatingChild || isAlreadyParticipatingMemberWithoutChild) {
+            throw new IllegalArgumentException("이미 참가 중인 품앗이반입니다.");
         }
     }
 

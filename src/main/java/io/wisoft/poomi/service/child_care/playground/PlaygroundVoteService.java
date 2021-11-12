@@ -18,6 +18,7 @@ import io.wisoft.poomi.global.dto.request.child_care.playground.PlaygroundVoteRe
 import io.wisoft.poomi.global.dto.request.child_care.playground.PlaygroundVoteVotingRequest;
 import io.wisoft.poomi.global.dto.response.child_care.playground.vote.PlaygroundVoteLookupResponse;
 import io.wisoft.poomi.global.dto.response.child_care.playground.vote.PlaygroundVoteRealtimeInfoResponse;
+import io.wisoft.poomi.global.dto.response.member.MemberPlaygroundVoteResponse;
 import io.wisoft.poomi.global.exception.exceptions.NotFoundEntityDataException;
 import io.wisoft.poomi.global.utils.UploadFileUtils;
 import lombok.RequiredArgsConstructor;
@@ -65,17 +66,20 @@ public class PlaygroundVoteService {
     }
 
     @Transactional(readOnly = true)
-    public List<PlaygroundVoteRealtimeInfoResponse> lookupPlaygroundVoteList(final Member member) {
+    public MemberPlaygroundVoteResponse lookupPlaygroundVoteList(final Member member) {
         List<PlaygroundVote> votes = playgroundVoteRepository.findAll();
-        votes.stream()
+        List<PlaygroundVote> votingVoteList = votes.stream()
                 .filter(vote -> vote.getApprovalStatus().equals(ApprovalStatus.APPROVED))
                 .filter(vote -> vote.getAddress().getAddressTag().equals(member.getAddressTag()))
-                .filter(vote -> vote.getNotVotingDongAndHo().size() == 0)
-                .forEach(PlaygroundVote::expired);
-
-        return votes.stream()
-                .map(PlaygroundVoteRealtimeInfoResponse::of)
+                .filter(vote -> !vote.getRegistrant().equals(member))
                 .collect(Collectors.toList());
+
+        List<PlaygroundVote> memberRegisterVoteList = votes.stream()
+                .filter(vote -> vote.getApprovalStatus().equals(ApprovalStatus.APPROVED))
+                .filter(vote -> vote.getRegistrant().equals(member))
+                .collect(Collectors.toList());
+
+        return MemberPlaygroundVoteResponse.of(member, votingVoteList, memberRegisterVoteList);
     }
 
     @Transactional
@@ -124,7 +128,7 @@ public class PlaygroundVoteService {
 
     private Address generateAddress(final PlaygroundVoteRegisterRequest registerRequest) {
         AddressTag addressTag = addressTagRepository
-                .saveAddressTagWithExtraAddress(registerRequest.getExtraAddress());
+                .saveAddressTagWithExtraAddress(registerRequest.getExtraAddress().trim());
 
         Address address = Address.builder()
                 .postCode(registerRequest.getPostCode())

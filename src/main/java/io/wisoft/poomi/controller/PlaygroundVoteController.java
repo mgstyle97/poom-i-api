@@ -7,6 +7,7 @@ import io.wisoft.poomi.global.dto.request.child_care.playground.PlaygroundVoteVo
 import io.wisoft.poomi.global.dto.response.ApiResponse;
 import io.wisoft.poomi.global.dto.response.child_care.playground.vote.PlaygroundVoteLookupResponse;
 import io.wisoft.poomi.global.dto.response.child_care.playground.vote.PlaygroundVoteRealtimeInfoResponse;
+import io.wisoft.poomi.global.dto.response.member.MemberPlaygroundVoteResponse;
 import io.wisoft.poomi.service.child_care.playground.PlaygroundVoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class PlaygroundVoteController {
     }
 
     @GetMapping("/playground/vote")
-    public ApiResponse<List<PlaygroundVoteRealtimeInfoResponse>> lookupPlaygroundVoteList(
+    public ApiResponse<MemberPlaygroundVoteResponse> lookupPlaygroundVoteList(
             @SignInMember final Member member) {
         return ApiResponse.succeed(
                 HttpStatus.OK,

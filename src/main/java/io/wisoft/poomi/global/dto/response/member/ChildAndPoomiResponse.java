@@ -1,8 +1,9 @@
 package io.wisoft.poomi.global.dto.response.member;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
 import io.wisoft.poomi.domain.member.Member;
-import io.wisoft.poomi.global.dto.response.child_care.expert.MemberDoingExpertResponse;
+import io.wisoft.poomi.global.dto.response.child_care.expert.MemberManagedExpertResponse;
 import io.wisoft.poomi.global.dto.response.child_care.group.MemberDoingGroupResponse;
 import io.wisoft.poomi.global.dto.response.member.child.ChildDetailResponse;
 import lombok.Builder;
@@ -20,21 +21,21 @@ public class ChildAndPoomiResponse {
     private List<ChildDetailResponse> childInfo;
 
     @JsonProperty("expert_info")
-    private List<MemberDoingExpertResponse> expertInfo;
+    private List<MemberManagedExpertResponse> expertInfo;
 
     @JsonProperty("group_info")
     private List<MemberDoingGroupResponse> groupInfo;
 
     @Builder
     public ChildAndPoomiResponse(final List<ChildDetailResponse> childInfo,
-                                 final List<MemberDoingExpertResponse> expertInfo,
+                                 final List<MemberManagedExpertResponse> expertInfo,
                                  final List<MemberDoingGroupResponse> groupInfo) {
         this.childInfo = childInfo;
         this.expertInfo = expertInfo;
         this.groupInfo = groupInfo;
     }
 
-    public static ChildAndPoomiResponse of(final Member member) {
+    public static ChildAndPoomiResponse of(final Member member, final List<ChildCareExpert> memberManagedExpertList) {
         return ChildAndPoomiResponse.builder()
                 .childInfo(
                         member.getChildren().stream()
@@ -42,8 +43,8 @@ public class ChildAndPoomiResponse {
                                 .collect(Collectors.toList())
                 )
                 .expertInfo(
-                        member.getWrittenExpertContents().stream()
-                                .map(MemberDoingExpertResponse::of)
+                        memberManagedExpertList.stream()
+                                .map(MemberManagedExpertResponse::of)
                                 .collect(Collectors.toList())
                 )
                 .groupInfo(

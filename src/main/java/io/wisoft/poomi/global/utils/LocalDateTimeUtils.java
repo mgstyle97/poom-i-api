@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class LocalDateTimeUtils {
@@ -26,6 +27,10 @@ public class LocalDateTimeUtils {
     public static String getTimeToString(final LocalDateTime localDateTime) {
         LocalTime time = localDateTime.toLocalTime();
         return time.toString();
+    }
+
+    public static String convertToString(final String format, final LocalDateTime localDateTime) {
+        return localDateTime.format(DateTimeFormatter.ofPattern(format));
     }
 
 }

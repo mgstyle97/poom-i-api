@@ -91,7 +91,6 @@ CREATE TABLE member(
 
 CREATE TABLE member_evaluation(
     id integer primary key,
-    contents varchar not null,
     score integer not null default 0,
     member_id integer not null,
     foreign key (member_id) references member(id)

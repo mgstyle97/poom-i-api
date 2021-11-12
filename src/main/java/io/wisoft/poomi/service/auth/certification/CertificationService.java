@@ -5,10 +5,12 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.wisoft.poomi.configures.security.jwt.JwtTokenProvider;
 import io.wisoft.poomi.domain.auth.residence.ResidenceCertification;
 import io.wisoft.poomi.domain.auth.residence.ResidenceCertificationRepository;
+import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
+import io.wisoft.poomi.domain.child_care.expert.RecruitType;
 import io.wisoft.poomi.domain.file.UploadFile;
 import io.wisoft.poomi.domain.file.UploadFileRepository;
 import io.wisoft.poomi.domain.member.Member;
-import io.wisoft.poomi.global.dto.request.child_care.playground.ResidenceCertificationRegisterRequest;
+import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.global.dto.response.auth.SmsResultResponse;
 import io.wisoft.poomi.global.dto.response.auth.SmsVerifyResponse;
 import io.wisoft.poomi.global.dto.request.auth.*;
@@ -17,6 +19,7 @@ import io.wisoft.poomi.domain.auth.property.email.EmailCertification;
 import io.wisoft.poomi.domain.auth.property.email.EmailCertificationRepository;
 import io.wisoft.poomi.domain.auth.property.sms.SmsCertification;
 import io.wisoft.poomi.domain.auth.property.sms.SmsCertificationRepository;
+import io.wisoft.poomi.global.utils.LocalDateTimeUtils;
 import io.wisoft.poomi.global.utils.UploadFileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +39,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
@@ -51,7 +55,7 @@ public class CertificationService {
     private final NCSProperty ncsProperty;
     private final SmsCertificationRepository smsCertificationRepository;
 
-    private  final UploadFileUtils uploadFileUtils;
+    private final UploadFileUtils uploadFileUtils;
     private final UploadFileRepository uploadFileRepository;
     private final ResidenceCertificationRepository residenceCertificationRepository;
 
@@ -136,9 +140,27 @@ public class CertificationService {
 
     public void sendMailOfSignupApproved(final String account) {
         final String approvedMessage =
-                "[POOMI-i]" + account+ "님의 회원가입이 승인되었습니다.";
+                "[POOMI-i]" + account + "님의 회원가입이 승인되었습니다.";
 
         sendMessageByEmail(account, "[POOM-i] 회원가입 안내", approvedMessage);
+    }
+
+    public void sendSmsOfExpertApproved(final ChildCareExpert expert) {
+        sendSmsOfExpertApproved(expert, expert.getManager());
+        sendSmsOfExpertApproved(expert, expert.getCaringChild().getParent());
+    }
+
+    private void sendSmsOfExpertApproved(final ChildCareExpert expert, final Member member) {
+        final String message = generateMessageOfExpertByMember(expert, member);
+        String phoneNumber = member.getPhoneNumber();
+
+        List<MessageRequest> messages = Collections
+                .singletonList(new MessageRequest(phoneNumber, message));
+        log.info("Generate message: {}", messages);
+
+        String requestBody = generateLMSRequestBody(messages);
+        sendSmsRequest(requestBody);
+
     }
 
     @Transactional
@@ -168,6 +190,57 @@ public class CertificationService {
 
     private String generateCertificationMessage(final String certificationNumber) {
         return "[POOM-i] 인증번호 [" + certificationNumber + "]을 입력해주세요.";
+    }
+
+    private String generateMessageOfExpertManager(final ChildCareExpert expert) {
+        return "[POOM-i]" +
+                "\n품앗이가 매칭되었습니다." +
+                "\n보호자 닉네임 : " + expert.getCaringChild().getParent().getNick() +
+                "\n보호자 전화번호 : " + expert.getCaringChild().getParent().getPhoneNumber() +
+                "\n자녀 이름 : " +
+                expert.getCaringChild().getName() +
+                "(" + new SimpleDateFormat("yyyy.MM.dd").format(expert.getCaringChild().getBirthday()) + ")" +
+                "\n활동 시간 : " +
+                LocalDateTimeUtils
+                        .convertToString("yyyy.MM.dd HH:mm:ss", expert.getStartTime()) + " ~ " +
+                LocalDateTimeUtils
+                        .convertToString("yyyy.MM.dd HH:mm:ss", expert.getEndTime());
+    }
+
+    private String generateMessageOfExpertParent(final ChildCareExpert expert) {
+        Child managerChild = null;
+        if (expert.getRecruitType().equals(RecruitType.RECRUIT)) {
+            managerChild = expert.getCaringChild();
+        } else {
+            managerChild = expert.getWriterChild();
+        }
+
+        return "[POOM-i]" +
+                "\n품앗이가 매칭되었습니다." +
+                "\n품앗이꾼 닉네임 : " + expert.getManager().getNick() +
+                "\n품앗이꾼 전화번호 : " + expert.getManager().getPhoneNumber() +
+                generateChildInfo(managerChild) +
+                "\n활동 시간 : " +
+                LocalDateTimeUtils
+                        .convertToString("yyyy.MM.dd HH:mm:ss", expert.getStartTime()) + " ~ " +
+                LocalDateTimeUtils
+                        .convertToString("yyyy.MM.dd HH:mm:ss", expert.getEndTime());
+    }
+
+    private String generateChildInfo(final Child child) {
+        if (child != null) {
+            return "\n 품앗이꾼 자녀 이름 : " +
+                    child.getName() +
+                    "(" + new SimpleDateFormat("yyyy.MM.dd").format(child.getBirthday()) + ")";
+        }
+        return "\n";
+    }
+
+    private String generateMessageOfExpertByMember(final ChildCareExpert expert, final Member member) {
+        if (expert.getManager().equals(member)) {
+            return generateMessageOfExpertManager(expert);
+        }
+        return generateMessageOfExpertParent(expert);
     }
 
     private void setHeaders(HttpHeaders headers) {
@@ -227,6 +300,18 @@ public class CertificationService {
             throw new IllegalArgumentException("SMS 요청 바디를 생성하는 데 실패했습니다.");
         }
 
+    }
+
+    private String generateLMSRequestBody(List<MessageRequest> messages) {
+        try {
+            SmsRequest smsRequest = SmsRequest.LMS(ncsProperty.getFrom(), messages);
+
+            return smsRequest.toJson();
+        } catch (JsonProcessingException e) {
+            log.error("Json Processing Error message: {}", e.getMessage());
+
+            throw new IllegalArgumentException("LMS 요청 바디를 생성하는 데 실패했습니다.");
+        }
     }
 
     private SmsResultResponse sendSmsRequest(final String requestBody) {

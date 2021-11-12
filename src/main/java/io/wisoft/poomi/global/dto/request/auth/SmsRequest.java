@@ -31,6 +31,17 @@ public class SmsRequest {
                 .build();
     }
 
+    public static SmsRequest LMS(final String from, final List<MessageRequest> messages) {
+        return SmsRequest.builder()
+                .type("LMS")
+                .contentType("COMM")
+                .countryCode("82")
+                .from(from)
+                .content("expert approved message")
+                .messages(messages)
+                .build();
+    }
+
     public String toJson() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(this);

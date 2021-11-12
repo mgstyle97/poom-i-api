@@ -27,8 +27,6 @@ public class MemberEvaluation {
     @Column(name = "id")
     private Long id;
 
-    private String contents;
-
     private Integer score;
 
     @ManyToOne
@@ -44,9 +42,7 @@ public class MemberEvaluation {
     }
 
     @Builder
-    public MemberEvaluation(final String contents,
-                            final Integer score, final Member member) {
-        this.contents = contents;
+    public MemberEvaluation(final Integer score, final Member member) {
         this.score = score;
         this.member = member;
     }

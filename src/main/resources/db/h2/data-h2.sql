@@ -24,10 +24,10 @@ VALUES (1, 'admin', '01075976959', 'admin@test.com', '{bcrypt}$2a$10$uUooeQNjjnw
        (2, '미연', '01064288185', 'aldusehd@gmail.com', '{bcrypt}$2a$10$uUooeQNjjnw3JqLaKqqKoO9sv/ZqkoRAVOcayqWH1tJe7FF4LN5em', 'aldusehd', 'FEMALE', 23, 2, 'APPROVED'),
        (3, '테스트', '01011111111', 'test@gmail.com', '{bcrypt}$2a$10$uUooeQNjjnw3JqLaKqqKoO9sv/ZqkoRAVOcayqWH1tJe7FF4LN5em', 'test', 'FEMALE', 27, 3, 'APPROVED');
 
-INSERT INTO member_evaluation(id, contents, score, member_id)
-VALUES (1, '저희 아이를 잘 돌봐주셔서 감사합니다!', 5, 1),
-       (2, '다음에도 잘 부탁드립니다.', 5, 2),
-       (3, '정말 감사했습니다.', 5, 3);
+INSERT INTO member_evaluation(id, score, member_id)
+VALUES (1, 5, 1),
+       (2, 5, 2),
+       (3, 5, 3);
 
 INSERT INTO member_authority(member_id, authority_id)
 VALUES (1, 2),

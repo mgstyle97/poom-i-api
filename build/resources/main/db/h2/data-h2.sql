@@ -24,10 +24,10 @@ VALUES (1, 'admin', '01075976959', 'admin@test.com', '{bcrypt}$2a$10$uUooeQNjjnw
        (2, '미연', '01064288185', 'aldusehd@gmail.com', '{bcrypt}$2a$10$uUooeQNjjnw3JqLaKqqKoO9sv/ZqkoRAVOcayqWH1tJe7FF4LN5em', 'aldusehd', 'FEMALE', 23, 2, 'APPROVED'),
        (3, '테스트', '01011111111', 'test@gmail.com', '{bcrypt}$2a$10$uUooeQNjjnw3JqLaKqqKoO9sv/ZqkoRAVOcayqWH1tJe7FF4LN5em', 'test', 'FEMALE', 27, 3, 'APPROVED');
 
-INSERT INTO member_evaluation(id, contents, score, member_id)
-VALUES (1, '저희 아이를 잘 돌봐주셔서 감사합니다!', 5, 1),
-       (2, '다음에도 잘 부탁드립니다.', 5, 2),
-       (3, '정말 감사했습니다.', 5, 3);
+INSERT INTO member_evaluation(id, score, member_id)
+VALUES (1, 5, 1),
+       (2, 5, 2),
+       (3, 5, 3);
 
 INSERT INTO member_authority(member_id, authority_id)
 VALUES (1, 2),
@@ -44,16 +44,16 @@ VALUES (1, 'APPROVED', 1, 1, 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTIwMDYxNDgsInJlc
        (2, 'APPROVED', 2, 1, 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTIwMDYxNDgsInJlc2lkZW5jZSI6InJlc2lkZW5jZSB0b2tlbiJ9.YpAU_PhDGf8fP1iIaA_oAdrmYtTmQijeWCUNwrUVINs'),
        (3, 'APPROVED', 3, 1, 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTIwMDYxNDgsInJlc2lkZW5jZSI6InJlc2lkZW5jZSB0b2tlbiJ9.YpAU_PhDGf8fP1iIaA_oAdrmYtTmQijeWCUNwrUVINs');
 
-INSERT INTO child_care_group(id, name, regular_meeting_day, main_activity, description, created_at, modified_at, recruitment_status, writer_id, address_tag_id)
+INSERT INTO child_care_group(id, name, regular_meeting_day, main_activity, description, created_at, modified_at, recruitment_status, writer_id, address_tag_id, profile_image_id)
 VALUES (1, '숲이 조아', '매월 둘째, 넷째 주 토요일 오후 2~5시', '숲 속 체험', '안녕하세요~ 자연과 품앗이의 대표 준이맘입니다\n저희는 품앗이 이름처럼 자연과 함께 할 수 있는 활동으로 진행하고 있습니다.\n 자연과 함께 뛰놀 아이와 부모님 함께 해요~',
-now(), now(), 'RECRUITING', 1, 1);
+now(), now(), 'RECRUITING', 1, 1, 1);
 
 INSERT INTO group_participating_member(id, member_id, group_id, participation_type)
 VALUES (1, 1, 1, 'MANAGE');
 
-INSERT INTO child_care_group(id, name, regular_meeting_day, main_activity, description, created_at, modified_at, recruitment_status, writer_id, address_tag_id)
+INSERT INTO child_care_group(id, name, regular_meeting_day, main_activity, description, created_at, modified_at, recruitment_status, writer_id, address_tag_id, profile_image_id)
 VALUES (2, '우리동네 품앗이', '매월 첫째, 셋째 주 토요일 오후 2~5시', '숲 속 체험', '안녕하세요~ 자연과 품앗이의 대표 준이맘입니다\n저희는 품앗이 이름처럼 자연과 함께 할 수 있는 활동으로 진행하고 있습니다.\n 자연과 함께 뛰놀 아이와 부모님 함께 해요~',
-now(), now(), 'CLOSED', 1, 1);
+now(), now(), 'CLOSED', 1, 1, 1);
 
 INSERT INTO group_participating_member(id, member_id, group_id, participation_type)
 VALUES (2, 1, 2, 'MANAGE');

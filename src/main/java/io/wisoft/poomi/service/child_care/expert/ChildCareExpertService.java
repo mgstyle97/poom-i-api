@@ -18,6 +18,7 @@ import io.wisoft.poomi.domain.child_care.expert.ChildCareExpertRepository;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.global.dto.response.child_care.expert.apply.ChildCareExpertApplyRegisterResponse;
 import io.wisoft.poomi.global.exception.exceptions.NoPermissionOfContentException;
+import io.wisoft.poomi.service.auth.certification.CertificationService;
 import io.wisoft.poomi.service.child_care.ContentPermissionVerifier;
 import io.wisoft.poomi.service.member.ChildService;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class ChildCareExpertService {
     private final MemberEvaluationRepository memberEvaluationRepository;
 
     private final ChildService childService;
+    private final CertificationService certificationService;
 
     @NoAccessCheck
     @Transactional(readOnly = true)
@@ -187,6 +189,7 @@ public class ChildCareExpertService {
         expert.checkApplyIncluded(expertApply);
 
         approveApply(expert, expertApply);
+        certificationService.sendSmsOfExpertApproved(expert);
     }
 
     @Transactional
@@ -197,7 +200,6 @@ public class ChildCareExpertService {
         validateExpertForEvaluation(expert, member);
 
         MemberEvaluation evaluation = MemberEvaluation.builder()
-                .contents(evaluationRequest.getContents())
                 .score(evaluationRequest.getScore())
                 .member(expert.getManager())
                 .build();
@@ -205,6 +207,11 @@ public class ChildCareExpertService {
         member.addEvaluation(evaluation);
         expert.terminate();
 
+    }
+
+    @Transactional(readOnly = true)
+    public List<ChildCareExpert> findAllExpert() {
+        return childCareExpertRepository.findAll();
     }
 
     private ChildCareExpert generateChildCareExpertById(final Long expertId) {

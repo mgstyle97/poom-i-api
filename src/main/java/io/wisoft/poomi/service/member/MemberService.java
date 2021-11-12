@@ -1,5 +1,7 @@
 package io.wisoft.poomi.service.member;
 
+import io.wisoft.poomi.domain.child_care.RecruitmentStatus;
+import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
 import io.wisoft.poomi.domain.file.UploadFile;
 import io.wisoft.poomi.domain.file.UploadFileRepository;
 import io.wisoft.poomi.domain.member.child.Child;
@@ -18,6 +20,7 @@ import io.wisoft.poomi.domain.member.address.AddressRepository;
 import io.wisoft.poomi.domain.member.address.AddressTagRepository;
 import io.wisoft.poomi.domain.member.MemberRepository;
 import io.wisoft.poomi.service.auth.certification.CertificationService;
+import io.wisoft.poomi.service.child_care.expert.ChildCareExpertService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,6 +46,7 @@ public class MemberService {
 
     private final UploadFileUtils uploadFileUtils;
     private final CertificationService certificationService;
+    private final ChildCareExpertService expertService;
 
     @Transactional
     public SignupResponse signup(final SignupRequest signupRequest) {
@@ -65,7 +69,11 @@ public class MemberService {
 
     @Transactional
     public ChildAndPoomiResponse childAndPoomi(final Member member) {
-        return ChildAndPoomiResponse.of(member);
+        List<ChildCareExpert> memberMangedExpertList = expertService.findAllExpert().stream()
+                .filter(expert -> expert.getRecruitmentStatus().equals(RecruitmentStatus.CLOSED))
+                .filter(expert -> expert.getManager().equals(member))
+                .collect(Collectors.toList());
+        return ChildAndPoomiResponse.of(member, memberMangedExpertList);
     }
 
     private Member saveMember(final SignupRequest signupRequest) {

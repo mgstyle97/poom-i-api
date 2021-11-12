@@ -3,6 +3,7 @@ package io.wisoft.poomi.global.dto.response.child_care.playground.vote;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.poomi.domain.child_care.playground.vote.PlaygroundVote;
 import io.wisoft.poomi.domain.child_care.playground.vote.voter.VoteType;
+import io.wisoft.poomi.domain.member.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -57,18 +58,22 @@ public class PlaygroundVoteRealtimeInfoResponse {
         this.votingYetList = votingYetList;
     }
 
-    public static PlaygroundVoteRealtimeInfoResponse of(final PlaygroundVote playgroundVote) {
-        return PlaygroundVoteRealtimeInfoResponse.builder()
-                .voteId(playgroundVote.getId())
-                .registrant(playgroundVote.getRegistrant().getNick())
-                .address(playgroundVote.getAddress().getAddress())
-                .detailAddress(playgroundVote.getAddress().getDetailAddress())
-                .expiredStatus(playgroundVote.getExpiredStatus().toString())
-                .votingRate(String.format("%.2f", playgroundVote.calculateVotingRate()))
-                .agreeRate(String.format("%.2f", playgroundVote.calculateRateByVoteType(VoteType.AGREE)))
-                .disagreeRate(String.format("%.2f", playgroundVote.calculateRateByVoteType(VoteType.DISAGREE)))
-                .votingYetList(playgroundVote.getNotVotingDongAndHo())
+    public static PlaygroundVoteRealtimeInfoResponse of(final PlaygroundVote vote, final Member member) {
+        PlaygroundVoteRealtimeInfoResponse voteRealtimeInfoResponse = PlaygroundVoteRealtimeInfoResponse.builder()
+                .voteId(vote.getId())
+                .registrant(vote.getRegistrant().getNick())
+                .address(vote.getAddress().getAddress())
+                .detailAddress(vote.getAddress().getDetailAddress())
+                .expiredStatus(vote.getExpiredStatus().toString())
+                .votingRate(String.format("%.2f", vote.calculateVotingRate()))
+                .agreeRate(String.format("%.2f", vote.calculateRateByVoteType(VoteType.AGREE)))
+                .disagreeRate(String.format("%.2f", vote.calculateRateByVoteType(VoteType.DISAGREE)))
                 .build();
+        if (vote.getRegistrant().equals(member)) {
+            voteRealtimeInfoResponse.setVotingYetList(vote.getNotVotingDongAndHo());
+        }
+
+        return voteRealtimeInfoResponse;
     }
 
 }
