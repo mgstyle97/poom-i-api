@@ -27,6 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -67,7 +68,7 @@ public class MemberService {
         member.saveProfileImage(profileImage);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ChildAndPoomiResponse childAndPoomi(final Member member) {
         List<ChildCareExpert> memberMangedExpertList = expertService.findAllExpert().stream()
                 .filter(expert -> expert.getRecruitmentStatus().equals(RecruitmentStatus.CLOSED))

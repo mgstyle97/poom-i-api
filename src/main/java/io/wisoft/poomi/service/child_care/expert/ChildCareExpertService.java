@@ -209,6 +209,7 @@ public class ChildCareExpertService {
 
     }
 
+    @NoAccessCheck
     @Transactional(readOnly = true)
     public List<ChildCareExpert> findAllExpert() {
         return childCareExpertRepository.findAll();
