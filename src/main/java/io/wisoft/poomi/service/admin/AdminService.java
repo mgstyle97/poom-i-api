@@ -38,7 +38,10 @@ public class AdminService {
         List<Member> memberList = memberRepository.findAll();
 
         return memberList.stream()
-                .filter(member -> member.getApprovalStatus().equals(ApprovalStatus.UN_APPROVED))
+                .filter(member -> member
+                        .getResidenceCertification()
+                        .getApprovalStatus()
+                        .equals(ApprovalStatus.UN_APPROVED))
                 .map(ApprovalNeedMemberResponse::of)
                 .collect(Collectors.toList());
     }

@@ -165,6 +165,7 @@ public class PlaygroundVoteService {
     private void checkVoteExpired(final PlaygroundVote vote) {
         if (vote.getNotVotingDongAndHo().size() == 0) {
             vote.expired();
+            playgroundVoteRepository.save(vote);
         } else {
             try {
                 Optional
@@ -172,6 +173,7 @@ public class PlaygroundVoteService {
                         .ifPresent(jwtTokenProvider::validateToken);
             } catch (ExpiredJwtException e) {
                 vote.expired();
+                playgroundVoteRepository.save(vote);
             }
 
         }

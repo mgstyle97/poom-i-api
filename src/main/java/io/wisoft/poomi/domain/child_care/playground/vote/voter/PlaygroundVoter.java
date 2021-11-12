@@ -43,6 +43,14 @@ public class PlaygroundVoter {
     )
     private PlaygroundVote playgroundVote;
 
+    public int getDongOnlyNumber() {
+        return Integer.parseInt(this.dong.replace("동", ""));
+    }
+
+    public int getHoOnlyNumber() {
+        return Integer.parseInt(this.ho.replace("호", ""));
+    }
+
     @Builder
     public PlaygroundVoter(final String dong, final String ho,
                            final PlaygroundVote playgroundVote) {

@@ -3,24 +3,31 @@ spring:
   mvc:
     throw-exception-if-no-handler-found: true
 
+
   h2:
     console:
       enabled: true
       settings:
         web-allow-others: true
+
   jpa:
     show-sql: true
     properties:
       hibernate:
+        jdbc:
+          batch_size: 1000
+        order_inserts: true
+        order_updates: true
         format_sql: true
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.H2Dialect
+
   datasource:
     data: classpath*:db/${db}/data-${db}.sql
     schema: classpath*:db/${db}/schema.sql
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:testdb?reWriteBatchedInserts=true
     username: sa
     password:
 

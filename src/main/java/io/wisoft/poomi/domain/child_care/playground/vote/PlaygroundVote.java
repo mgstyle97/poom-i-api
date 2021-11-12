@@ -173,6 +173,7 @@ public class PlaygroundVote extends BaseTimeEntity {
         dongList.forEach(dong -> {
             List<String> hoList = notVotingVoters.stream()
                     .filter(voter -> voter.getDong().equals(dong))
+                    .sorted(Comparator.comparing(PlaygroundVoter::getHoOnlyNumber))
                     .map(PlaygroundVoter::getHo)
                     .collect(Collectors.toList());
             votingYetList.put(dong, hoList);

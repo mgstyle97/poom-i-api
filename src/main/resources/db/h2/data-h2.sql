@@ -58,9 +58,8 @@ now(), now(), 'CLOSED', 1, 1, 1);
 INSERT INTO group_participating_member(id, member_id, group_id, participation_type)
 VALUES (2, 1, 2, 'MANAGE');
 
-INSERT INTO playground_vote(id, purpose_using, approval_status, expired_status, address_id, registrant_id, created_at, modified_at)
-VALUES (1, '아이들 놀이터', 'APPROVED', 'VOTING', 1, 1, now(), now());
-
+INSERT INTO playground_vote(id, purpose_using, approval_status, expired_status, address_id, registrant_id, created_at, modified_at, expired_validation_token)
+VALUES (1, '아이들 놀이터', 'APPROVED', 'VOTING', 1, 1, now(), now(), 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTIwMDYxNDgsInJlc2lkZW5jZSI6InJlc2lkZW5jZSB0b2tlbiJ9.YpAU_PhDGf8fP1iIaA_oAdrmYtTmQijeWCUNwrUVINs');
 
 INSERT INTO child_care_playground(id, name, operating_hours, holiday, call_number, features, address_id, registrant_id)
 VALUES (
