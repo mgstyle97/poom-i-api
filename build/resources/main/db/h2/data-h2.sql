@@ -39,7 +39,7 @@ VALUES (1, '철수', '2000-10-20', '월평초등학교', null, 'MALE', 3),
        (2, '지수', '2002-09-03', '월평초등학교', null, 'FEMALE', 3),
        (3, '민정', '2005-05-10', '갈마초등학교', null, 'FEMALE', 1);
 
-INSERT INTO residence_certification(id, certification_status, member_id, residence_file_id, expired_validation_token)
+INSERT INTO residence_certification(id, approval_status, member_id, residence_file_id, expired_validation_token)
 VALUES (1, 'APPROVED', 1, 1, 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTIwMDYxNDgsInJlc2lkZW5jZSI6InJlc2lkZW5jZSB0b2tlbiJ9.YpAU_PhDGf8fP1iIaA_oAdrmYtTmQijeWCUNwrUVINs'),
        (2, 'APPROVED', 2, 1, 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTIwMDYxNDgsInJlc2lkZW5jZSI6InJlc2lkZW5jZSB0b2tlbiJ9.YpAU_PhDGf8fP1iIaA_oAdrmYtTmQijeWCUNwrUVINs'),
        (3, 'APPROVED', 3, 1, 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTIwMDYxNDgsInJlc2lkZW5jZSI6InJlc2lkZW5jZSB0b2tlbiJ9.YpAU_PhDGf8fP1iIaA_oAdrmYtTmQijeWCUNwrUVINs');

@@ -106,7 +106,7 @@ CREATE TABLE member_authority(
 
 CREATE TABLE residence_certification(
     id integer primary key,
-    certification_status varchar not null default 'UN_APPROVED',
+    approval_status varchar not null default 'UN_APPROVED',
     member_id integer not null,
     residence_file_id integer not null,
     expired_validation_token varchar,

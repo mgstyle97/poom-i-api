@@ -41,6 +41,8 @@ public class AdminService {
                 .filter(member -> member
                         .getResidenceCertification()
                         .getApprovalStatus()
+                        .equals(ApprovalStatus.UN_APPROVED) || member
+                        .getApprovalStatus()
                         .equals(ApprovalStatus.UN_APPROVED))
                 .map(ApprovalNeedMemberResponse::of)
                 .collect(Collectors.toList());

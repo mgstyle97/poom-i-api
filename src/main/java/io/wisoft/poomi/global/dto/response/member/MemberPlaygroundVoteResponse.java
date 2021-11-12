@@ -2,7 +2,6 @@ package io.wisoft.poomi.global.dto.response.member;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.poomi.domain.child_care.playground.vote.PlaygroundVote;
-import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.global.dto.response.child_care.playground.vote.PlaygroundVoteRealtimeInfoResponse;
 import lombok.Builder;
 import lombok.Getter;
