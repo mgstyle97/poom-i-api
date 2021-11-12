@@ -71,7 +71,6 @@ public class PlaygroundVoteService {
         List<PlaygroundVote> votingVoteList = votes.stream()
                 .filter(vote -> vote.getApprovalStatus().equals(ApprovalStatus.APPROVED))
                 .filter(vote -> vote.getAddress().getAddressTag().equals(member.getAddressTag()))
-                .filter(vote -> !vote.getRegistrant().equals(member))
                 .collect(Collectors.toList());
 
         List<PlaygroundVote> memberRegisterVoteList = votes.stream()
@@ -79,7 +78,7 @@ public class PlaygroundVoteService {
                 .filter(vote -> vote.getRegistrant().equals(member))
                 .collect(Collectors.toList());
 
-        return MemberPlaygroundVoteResponse.of(member, votingVoteList, memberRegisterVoteList);
+        return MemberPlaygroundVoteResponse.of(votingVoteList, memberRegisterVoteList);
     }
 
     @Transactional

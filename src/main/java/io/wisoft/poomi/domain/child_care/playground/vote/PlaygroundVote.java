@@ -197,4 +197,10 @@ public class PlaygroundVote extends BaseTimeEntity {
         }
     }
 
+    public void checkAgreeRate() {
+        if (calculateRateByVoteType(VoteType.AGREE) <= 50.0) {
+            throw new IllegalArgumentException("찬성 비율이 절반을 넘지 못하여 품앗이터를 등록할 수 없습니다.");
+        }
+    }
+
 }

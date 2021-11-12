@@ -58,8 +58,19 @@ public class PlaygroundVoteRealtimeInfoResponse {
         this.votingYetList = votingYetList;
     }
 
-    public static PlaygroundVoteRealtimeInfoResponse of(final PlaygroundVote vote, final Member member) {
-        PlaygroundVoteRealtimeInfoResponse voteRealtimeInfoResponse = PlaygroundVoteRealtimeInfoResponse.builder()
+    public static PlaygroundVoteRealtimeInfoResponse of(final PlaygroundVote vote) {
+        return generateVoteRealtimeInfo(vote);
+    }
+
+    public static PlaygroundVoteRealtimeInfoResponse ofNotVotingList(final PlaygroundVote vote) {
+        PlaygroundVoteRealtimeInfoResponse voteRealtimeInfoResponse = generateVoteRealtimeInfo(vote);
+        voteRealtimeInfoResponse.setVotingYetList(vote.getNotVotingDongAndHo());
+
+        return voteRealtimeInfoResponse;
+    }
+
+    private static PlaygroundVoteRealtimeInfoResponse generateVoteRealtimeInfo(final PlaygroundVote vote) {
+        return PlaygroundVoteRealtimeInfoResponse.builder()
                 .voteId(vote.getId())
                 .registrant(vote.getRegistrant().getNick())
                 .address(vote.getAddress().getAddress())
@@ -69,11 +80,6 @@ public class PlaygroundVoteRealtimeInfoResponse {
                 .agreeRate(String.format("%.2f", vote.calculateRateByVoteType(VoteType.AGREE)))
                 .disagreeRate(String.format("%.2f", vote.calculateRateByVoteType(VoteType.DISAGREE)))
                 .build();
-        if (vote.getRegistrant().equals(member)) {
-            voteRealtimeInfoResponse.setVotingYetList(vote.getNotVotingDongAndHo());
-        }
-
-        return voteRealtimeInfoResponse;
     }
 
 }

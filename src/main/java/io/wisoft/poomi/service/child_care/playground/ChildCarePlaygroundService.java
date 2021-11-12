@@ -43,8 +43,7 @@ public class ChildCarePlaygroundService {
     @Transactional
     public void registerPlayground(final ChildCarePlaygroundRegisterRequest registerRequest, final Member member) {
         PlaygroundVote vote = playgroundVoteService.generatePlaygroundVote(registerRequest.getVoteId());
-        vote.checkApprovalStatus();
-        vote.checkAccessToNotExpiredVote();
+        validateVoteForRegister(vote);
 
         ChildCarePlayground playground = ChildCarePlayground.of(registerRequest, vote, member);
         childCarePlaygroundRepository.save(playground);
@@ -61,6 +60,12 @@ public class ChildCarePlaygroundService {
                         playground.addImage(uploadFileRepository.save(image));
                     });
         }
+    }
+
+    private void validateVoteForRegister(final PlaygroundVote vote) {
+        vote.checkApprovalStatus();
+        vote.checkAccessToNotExpiredVote();
+        vote.checkAgreeRate();
     }
 
 }

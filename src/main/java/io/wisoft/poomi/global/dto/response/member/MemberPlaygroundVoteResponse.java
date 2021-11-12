@@ -28,18 +28,17 @@ public class MemberPlaygroundVoteResponse {
         this.memberRegisterVoteList = memberRegisterVoteList;
     }
 
-    public static MemberPlaygroundVoteResponse of(final Member member,
-                                                  final List<PlaygroundVote> votingVoteList,
+    public static MemberPlaygroundVoteResponse of(final List<PlaygroundVote> votingVoteList,
                                                   final List<PlaygroundVote> memberRegisterVoteList) {
         return MemberPlaygroundVoteResponse.builder()
                 .votingVoteList(
                         votingVoteList.stream()
-                                .map(vote -> PlaygroundVoteRealtimeInfoResponse.of(vote, member))
+                                .map(PlaygroundVoteRealtimeInfoResponse::of)
                                 .collect(Collectors.toList())
                 )
                 .memberRegisterVoteList(
                         memberRegisterVoteList.stream()
-                                .map(vote -> PlaygroundVoteRealtimeInfoResponse.of(vote, member))
+                                .map(PlaygroundVoteRealtimeInfoResponse::ofNotVotingList)
                                 .collect(Collectors.toList())
                 )
                 .build();

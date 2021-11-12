@@ -59,8 +59,7 @@ INSERT INTO group_participating_member(id, member_id, group_id, participation_ty
 VALUES (2, 1, 2, 'MANAGE');
 
 INSERT INTO playground_vote(id, purpose_using, approval_status, expired_status, address_id, registrant_id, created_at, modified_at)
-VALUES (1, '아이들 놀이터', 'APPROVED', 'CLOSED', 1, 1, now(), now());
-
+VALUES (1, '아이들 놀이터', 'APPROVED', 'VOTING', 1, 1, now(), now());
 
 
 INSERT INTO child_care_playground(id, name, operating_hours, holiday, call_number, features, address_id, registrant_id)
