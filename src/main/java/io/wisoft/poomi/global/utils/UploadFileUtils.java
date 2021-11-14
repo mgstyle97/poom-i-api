@@ -7,13 +7,19 @@ import io.wisoft.poomi.service.file.S3FileHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
 
+import javax.crypto.*;
 import java.io.*;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Set;
 import java.util.UUID;
 
@@ -23,6 +29,16 @@ import java.util.UUID;
 public class UploadFileUtils {
 
     private final S3FileHandler s3FileHandler;
+
+    private final SecretKey key;
+    private final Cipher cipher;
+
+    @Autowired
+    public UploadFileUtils(final S3FileHandler s3FileHandler) throws NoSuchPaddingException, NoSuchAlgorithmException {
+        this.s3FileHandler = s3FileHandler;
+        this.key = KeyGenerator.getInstance("AES").generateKey();
+        this.cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+    }
 
     private File saveFile(final String fileMetaData, final String extension) {
         final byte[] fileData = Base64Utils.decodeFromString(getFileMetaData(fileMetaData));
@@ -62,6 +78,30 @@ public class UploadFileUtils {
         deleteFile(fileName);
 
         return UploadFile.of(fileName, fileAccessURI, fileDownloadURI, contentType);
+    }
+
+    public void encryptFile(final FileDataOfBase64 fileDataOfBase64) {
+        byte[] iv = new byte[0];
+        try {
+            this.cipher.init(Cipher.ENCRYPT_MODE, this.key);
+            iv = cipher.getIV();
+        } catch (InvalidKeyException e) {
+            log.error("IV 초기화 에러");
+        }
+
+        File encryptFile = new File(
+                FilenameUtils.removeExtension(fileDataOfBase64.getConvertedOfMetaData().getName()) + ".enc"
+        );
+
+        try(
+                FileOutputStream os = new FileOutputStream(encryptFile);
+                CipherOutputStream cos = new CipherOutputStream(os, this.cipher)) {
+            os.write(iv);
+            cos.write(Files.readAllBytes(fileDataOfBase64.getConvertedOfMetaData().toPath()));
+            fileDataOfBase64.setConvertedOfMetaData(encryptFile);
+        } catch (IOException e) {
+            log.error("파일 암호화 에러");
+        }
     }
 
     public FileDataOfBase64 convertToFileData(final String fileData) {

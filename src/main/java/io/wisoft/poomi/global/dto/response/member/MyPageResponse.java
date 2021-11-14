@@ -26,6 +26,9 @@ public class MyPageResponse {
 
     private String address;
 
+    @JsonProperty("detail_address")
+    private String detailAddress;
+
     @JsonProperty("address_expired_date")
     @JsonFormat(pattern = "yyyy.MM.dd")
     private Date addressExpiredDate;
@@ -40,6 +43,7 @@ public class MyPageResponse {
     public MyPageResponse(final String email, final String password,
                           final String name, final String gender,
                           final String phoneNumber, final String address,
+                          final String detailAddress,
                           final Date addressExpiredDate, final Integer childCount,
                           final Integer memberScore) {
         this.email = email;
@@ -48,6 +52,7 @@ public class MyPageResponse {
         this.gender = gender;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.detailAddress = detailAddress;
         this.addressExpiredDate = addressExpiredDate;
         this.childCount = childCount;
         this.memberScore = memberScore;
@@ -61,6 +66,7 @@ public class MyPageResponse {
                 .gender(member.getGender().toString())
                 .phoneNumber(member.getPhoneNumber())
                 .address(member.getAddress().getDetailAddress())
+                .detailAddress(member.getAddress().getDetailAddress())
                 .addressExpiredDate(addressExpiredDate)
                 .childCount(member.getChildren().size())
                 .memberScore(member.getAverageScore())

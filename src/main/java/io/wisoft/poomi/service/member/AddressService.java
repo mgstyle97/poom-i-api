@@ -32,7 +32,7 @@ public class AddressService {
     @Transactional
     public AddressResponse registerAddress(final Member member, final AddressRegisterRequest addressRegisterRequest) {
         AddressTag addressTag = addressTagRepository
-                .saveAddressTagWithExtraAddress(addressRegisterRequest.getExtraAddress());
+                .saveAddressTagWithExtraAddress(addressRegisterRequest.getExtraAddress().trim());
         log.info("Generate address tag: {}", addressTag.getExtraAddress());
 
         Address address = generateAddressAndSave(addressRegisterRequest, addressTag);

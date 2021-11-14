@@ -104,7 +104,7 @@ public class MemberService {
     private void saveAddressInfo(final Member member, final SignupRequest signupRequest) {
 
         AddressTag addressTag = addressTagRepository
-                .saveAddressTagWithExtraAddress(signupRequest.getExtraAddress());
+                .saveAddressTagWithExtraAddress(signupRequest.getExtraAddress().trim());
         log.info("Generate address tag data through request");
 
         Address address = Address.of(signupRequest, addressTag);
