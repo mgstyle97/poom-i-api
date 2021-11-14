@@ -53,7 +53,7 @@ public class AdminService {
 
         return playgroundVoteList.stream()
                 .filter(vote -> vote.getApprovalStatus().equals(ApprovalStatus.UN_APPROVED))
-                .map(ApprovalNeedVoteResponse::of)
+                .map(vote -> ApprovalNeedVoteResponse.of(vote, vote.getRegistrant()))
                 .collect(Collectors.toList());
     }
 

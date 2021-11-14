@@ -2,6 +2,8 @@ package io.wisoft.poomi.global.dto.response.admin.vote;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.poomi.domain.child_care.playground.vote.PlaygroundVote;
+import io.wisoft.poomi.domain.member.Member;
+import io.wisoft.poomi.global.dto.response.admin.member.ResidenceInfoResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,8 +24,8 @@ public class ApprovalNeedVoteResponse {
     @JsonProperty("registrant_nick")
     private String registrantNick;
 
-    @JsonProperty("registrant_address_info")
-    private AddressDetailResponse registrantAddressInfo;
+    @JsonProperty("residence_info")
+    private ResidenceInfoResponse residenceInfo;
 
     @JsonProperty("vote_address_info")
     private AddressDetailResponse voteAddressInfo;
@@ -31,23 +33,25 @@ public class ApprovalNeedVoteResponse {
     @Builder
     public ApprovalNeedVoteResponse(final Long voteId, final String purposeUsing,
                                     final Long registrantId, final String registrantNick,
-                                    final AddressDetailResponse registrantAddressInfo,
+                                    final ResidenceInfoResponse residenceInfo,
                                     final AddressDetailResponse voteAddressInfo) {
         this.voteId = voteId;
         this.purposeUsing = purposeUsing;
         this.registrantId = registrantId;
         this.registrantNick = registrantNick;
-        this.registrantAddressInfo = registrantAddressInfo;
+        this.residenceInfo = residenceInfo;
         this.voteAddressInfo = voteAddressInfo;
     }
 
-    public static ApprovalNeedVoteResponse of(final PlaygroundVote vote) {
+    public static ApprovalNeedVoteResponse of(final PlaygroundVote vote, final Member registrant) {
         return ApprovalNeedVoteResponse.builder()
                 .voteId(vote.getId())
                 .purposeUsing(vote.getPurposeUsing())
                 .registrantId(vote.getRegistrant().getId())
                 .registrantNick(vote.getRegistrant().getNick())
-                .registrantAddressInfo(AddressDetailResponse.of(vote.getRegistrant().getAddress()))
+                .residenceInfo(
+                        ResidenceInfoResponse.of(registrant.getAddress(), registrant.getResidenceCertification())
+                )
                 .voteAddressInfo(AddressDetailResponse.of(vote.getAddress()))
                 .build();
     }

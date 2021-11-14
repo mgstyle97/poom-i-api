@@ -213,6 +213,9 @@ public class Member {
 
     public int getAverageScore() {
         final int totalEvaluationCount = this.evaluations.size();
+        if (totalEvaluationCount == 0) {
+            return 0;
+        }
         final int totalEvaluationScore = this.evaluations.stream()
                 .mapToInt(MemberEvaluation::getScore)
                 .sum();
