@@ -10,6 +10,7 @@ import io.wisoft.poomi.domain.child_care.expert.RecruitType;
 import io.wisoft.poomi.domain.file.UploadFile;
 import io.wisoft.poomi.domain.file.UploadFileRepository;
 import io.wisoft.poomi.domain.member.Member;
+import io.wisoft.poomi.domain.member.MemberRepository;
 import io.wisoft.poomi.domain.member.child.Child;
 import io.wisoft.poomi.global.dto.response.auth.SmsResultResponse;
 import io.wisoft.poomi.global.dto.response.auth.SmsVerifyResponse;
@@ -31,6 +32,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
@@ -51,6 +53,7 @@ import java.util.stream.Collectors;
 public class CertificationService {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final MemberRepository memberRepository;
 
     private final NCSProperty ncsProperty;
     private final SmsCertificationRepository smsCertificationRepository;
@@ -179,6 +182,8 @@ public class CertificationService {
         log.info("Save Residence Certification id: {}", residenceCertification.getId());
 
         member.setResidenceCertification(residenceCertification);
+        memberRepository.save(member);
+
     }
 
     private String generateCertificationNumber() {

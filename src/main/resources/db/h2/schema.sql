@@ -71,6 +71,14 @@ CREATE TABLE authority (
     authority varchar unique
 );
 
+CREATE TABLE residence_certification(
+    id integer primary key,
+    approval_status varchar not null default 'UN_APPROVED',
+    residence_file_id integer not null,
+    expired_validation_token varchar,
+    foreign key (residence_file_id) references upload_file(id)
+);
+
 CREATE TABLE member(
     id integer primary key,
     name varchar not null,
@@ -82,11 +90,13 @@ CREATE TABLE member(
     age integer not null,
     profile_image_id integer,
     family_certification_file_id integer,
+    residence_id integer not null,
     approval_status varchar not null default 'UN_APPROVED',
     address_id integer,
     foreign key (address_id) references address(id),
     foreign key (profile_image_id) references upload_file(id),
-    foreign key (family_certification_file_id) references upload_file(id)
+    foreign key (family_certification_file_id) references upload_file(id),
+    foreign key (residence_id) references residence_certification(id)
 );
 
 CREATE TABLE member_evaluation(
@@ -102,16 +112,6 @@ CREATE TABLE member_authority(
     foreign key (member_id) references member(id),
     foreign key (authority_id) references authority(id),
     primary key (member_id, authority_id)
-);
-
-CREATE TABLE residence_certification(
-    id integer primary key,
-    approval_status varchar not null default 'UN_APPROVED',
-    member_id integer not null,
-    residence_file_id integer not null,
-    expired_validation_token varchar,
-    foreign key (member_id) references member(id),
-    foreign key (residence_file_id) references upload_file(id)
 );
 
 CREATE TABLE child_care_group(

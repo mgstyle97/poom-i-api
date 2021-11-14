@@ -31,11 +31,7 @@ public class ResidenceCertification extends BaseCertificationEntity {
     @Enumerated(EnumType.STRING)
     private ApprovalStatus approvalStatus;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(
-            name = "member_id",
-            referencedColumnName = "id"
-    )
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "residenceCertification")
     private Member member;
 
     @OneToOne(fetch = FetchType.EAGER)

@@ -89,14 +89,18 @@ public class Member {
     )
     private Set<Authority> authorities;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "address_id",
             referencedColumnName = "id"
     )
     private Address address;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "residence_id",
+            referencedColumnName = "id"
+    )
     private ResidenceCertification residenceCertification;
 
     @OneToOne(fetch = FetchType.LAZY)

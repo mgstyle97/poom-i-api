@@ -1,5 +1,7 @@
 package io.wisoft.poomi.service.member;
 
+import io.wisoft.poomi.domain.auth.residence.ResidenceCertification;
+import io.wisoft.poomi.domain.auth.residence.ResidenceCertificationRepository;
 import io.wisoft.poomi.domain.child_care.RecruitmentStatus;
 import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
 import io.wisoft.poomi.domain.file.UploadFile;
@@ -44,19 +46,15 @@ public class MemberService {
     private final AddressTagRepository addressTagRepository;
     private final ChildRepository childRepository;
     private final UploadFileRepository uploadFileRepository;
+    private final ResidenceCertificationRepository residenceCertificationRepository;
 
     private final UploadFileUtils uploadFileUtils;
-    private final CertificationService certificationService;
     private final ChildCareExpertService expertService;
 
     @Transactional
     public SignupResponse signup(final SignupRequest signupRequest) {
         Member member = saveMember(signupRequest);
-
         log.info("Generate member: {}", member.getEmail());
-
-        certificationService
-                .registerResidenceCertification(member, signupRequest.getAddressCertificationFileData());
 
         return SignupResponse.of(member);
     }
@@ -88,7 +86,9 @@ public class MemberService {
 
         saveChildInfo(member, signupRequest);
 
-        return member;
+        saveResidenceCertification(member, signupRequest.getAddressCertificationFileData());
+
+        return memberRepository.save(member);
     }
 
     private void verifyEmailAndNick(final String email, final String nick) {
@@ -112,7 +112,6 @@ public class MemberService {
         log.info("Generate address data through request");
 
         member.updateAddressInfo(address);
-        memberRepository.save(member);
         log.info("Set request data to member properties");
 
     }
@@ -129,6 +128,21 @@ public class MemberService {
 
             saveFamilyCertificationFile(member, signupRequest.getFamilyCertificateFileData());
         }
+    }
+
+    private void saveResidenceCertification(final Member member, final String residenceCertificationFileData) {
+        UploadFile residenceFile = uploadFileUtils.saveFileAndConvertImage(residenceCertificationFileData);
+        uploadFileRepository.save(residenceFile);
+        log.info("Upload S3 Residence file id: {}", residenceFile.getId());
+
+        ResidenceCertification residenceCertification = ResidenceCertification.builder()
+                .member(member)
+                .residenceFile(residenceFile)
+                .build();
+        residenceCertificationRepository.save(residenceCertification);
+        log.info("Save Residence Certification id: {}", residenceCertification.getId());
+
+        member.setResidenceCertification(residenceCertification);
     }
 
     private void saveFamilyCertificationFile(final Member member, final String familyCertificationFileData) {
