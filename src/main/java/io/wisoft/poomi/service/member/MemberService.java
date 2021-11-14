@@ -29,6 +29,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -52,8 +53,8 @@ public class MemberService {
     private final ChildCareExpertService expertService;
 
     @Transactional
-    public SignupResponse signup(final SignupRequest signupRequest) {
-        Member member = saveMember(signupRequest);
+    public SignupResponse signup(final SignupRequest signupRequest, final HttpServletRequest request) {
+        Member member = saveMember(signupRequest, request);
         log.info("Generate member: {}", member.getEmail());
 
         return SignupResponse.of(member);
@@ -75,7 +76,7 @@ public class MemberService {
         return ChildAndPoomiResponse.of(member, memberMangedExpertList);
     }
 
-    private Member saveMember(final SignupRequest signupRequest) {
+    private Member saveMember(final SignupRequest signupRequest, final HttpServletRequest request) {
         verifyEmailAndNick(signupRequest.getEmail(), signupRequest.getNick());
         log.info("Verify email and nick from request");
 
@@ -84,9 +85,9 @@ public class MemberService {
 
         saveAddressInfo(member, signupRequest);
 
-        saveChildInfo(member, signupRequest);
+        saveChildInfo(member, signupRequest, request);
 
-        saveResidenceCertification(member, signupRequest.getAddressCertificationFileData());
+        saveResidenceCertification(member, signupRequest.getAddressCertificationFileData(), request);
 
         return memberRepository.save(member);
     }
@@ -116,7 +117,8 @@ public class MemberService {
 
     }
 
-    private void saveChildInfo(final Member member, final SignupRequest signupRequest) {
+    private void saveChildInfo(final Member member, final SignupRequest signupRequest,
+                               final HttpServletRequest request) {
 
         if (signupRequest.getChildren() != null) {
             List<Child> children = signupRequest.getChildren().stream()
@@ -126,12 +128,14 @@ public class MemberService {
             member.setChildren(children);
             log.info("Save member data through member repository");
 
-            saveFamilyCertificationFile(member, signupRequest.getFamilyCertificateFileData());
+            saveFamilyCertificationFile(member, signupRequest.getFamilyCertificateFileData(), request);
         }
     }
 
-    private void saveResidenceCertification(final Member member, final String residenceCertificationFileData) {
-        UploadFile residenceFile = uploadFileUtils.saveFileAndConvertImage(residenceCertificationFileData);
+    private void saveResidenceCertification(final Member member, final String residenceCertificationFileData,
+                                            final HttpServletRequest request) {
+        UploadFile residenceFile = uploadFileUtils
+                .saveFileWithEncryption(residenceCertificationFileData, request);
         uploadFileRepository.save(residenceFile);
         log.info("Upload S3 Residence file id: {}", residenceFile.getId());
 
@@ -145,10 +149,11 @@ public class MemberService {
         member.setResidenceCertification(residenceCertification);
     }
 
-    private void saveFamilyCertificationFile(final Member member, final String familyCertificationFileData) {
+    private void saveFamilyCertificationFile(final Member member, final String familyCertificationFileData,
+                                             final HttpServletRequest request) {
         member.setFamilyCertificationFile(
                 uploadFileRepository.save(
-                        uploadFileUtils.saveFileAndConvertImage(familyCertificationFileData)
+                        uploadFileUtils.saveFileWithEncryption(familyCertificationFileData, request)
                 )
         );
         memberRepository.save(member);

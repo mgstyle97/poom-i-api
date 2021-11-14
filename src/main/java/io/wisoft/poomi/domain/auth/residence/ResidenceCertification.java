@@ -14,7 +14,7 @@ import javax.persistence.*;
 @SequenceGenerator(
         name = "residence_certification_sequence_generator",
         sequenceName = "residence_certification_sequence",
-        initialValue = 4,
+        initialValue = 5,
         allocationSize = 1
 )
 @Table(name = "residence_certification")

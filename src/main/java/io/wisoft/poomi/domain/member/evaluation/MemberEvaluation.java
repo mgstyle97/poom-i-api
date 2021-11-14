@@ -13,7 +13,7 @@ import javax.persistence.*;
 @SequenceGenerator(
         name = "member_evaluation_sequence_generator",
         sequenceName = "member_evaluation_sequence",
-        initialValue = 4,
+        initialValue = 5,
         allocationSize = 1
 )
 @Table(name = "member_evaluation")

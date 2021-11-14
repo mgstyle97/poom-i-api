@@ -26,7 +26,6 @@ public class S3FileHandler {
     private final AmazonS3 amazonS3;
     private final S3Bucket s3Bucket;
 
-
     public byte[] getFileData(final String fileName) {
         try {
             S3Object s3Object = amazonS3.getObject(s3Bucket.getBucket(), fileName);
@@ -51,6 +50,19 @@ public class S3FileHandler {
         );
 
         uploadFile(fileDataOfBase64.getConvertedOfMetaData().getName(), inputStream, objectMetadata);
+        return fileDataOfBase64.getConvertedOfMetaData().getName();
+    }
+
+    public String uploadEncryptFileData(final FileDataOfBase64 fileDataOfBase64) {
+        final InputStream inputStream = getInputStream(fileDataOfBase64.getConvertedOfMetaData());
+        final ObjectMetadata objectMetadata = getObjectMetaData(
+                fileDataOfBase64.getConvertedOfMetaData(), fileDataOfBase64.getContentType()
+        );
+
+        uploadFile(
+                "encrypt/" + fileDataOfBase64.getConvertedOfMetaData().getName(),
+                inputStream, objectMetadata
+        );
         return fileDataOfBase64.getConvertedOfMetaData().getName();
     }
 

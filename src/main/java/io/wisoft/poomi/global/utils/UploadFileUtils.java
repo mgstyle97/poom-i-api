@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
 
 import javax.crypto.*;
+import javax.crypto.spec.IvParameterSpec;
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.URLConnection;
 import java.nio.file.Files;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Set;
@@ -80,7 +84,23 @@ public class UploadFileUtils {
         return UploadFile.of(fileName, fileAccessURI, fileDownloadURI, contentType);
     }
 
-    public void encryptFile(final FileDataOfBase64 fileDataOfBase64) {
+    public UploadFile saveFileWithEncryption(final String fileData, final HttpServletRequest request) {
+        final FileDataOfBase64 fileDataOfBase64 = convertToFileData(fileData);
+        encryptFile(fileDataOfBase64);
+
+        String fileName = s3FileHandler.uploadEncryptFileData(fileDataOfBase64);
+        final String domain = getDomain(request);
+
+        deleteFile(fileName);
+        return UploadFile.builder()
+                .fileName(fileName)
+                .fileAccessURI(domain + "/api/image/encrypt?image=" + fileName)
+                .fileDownloadURI(domain + "/api/download/encrypt?image=" + fileName)
+                .contentType(fileDataOfBase64.getContentType())
+                .build();
+    }
+
+    private void encryptFile(final FileDataOfBase64 fileDataOfBase64) {
         byte[] iv = new byte[0];
         try {
             this.cipher.init(Cipher.ENCRYPT_MODE, this.key);
@@ -102,6 +122,34 @@ public class UploadFileUtils {
         } catch (IOException e) {
             log.error("파일 암호화 에러");
         }
+    }
+
+    public byte[] getEncryptFileToDecrypted(final String fileName) {
+        byte[] encryptFileData = s3FileHandler.getFileData("encrypt/" + fileName);
+        File encryptFile = new File(fileName);
+        try {
+            FileUtils.writeByteArrayToFile(encryptFile, encryptFileData);
+        } catch (IOException e) {
+            log.error("암호화된 파일을 로컬에 저장하는 데 실패하였습니다.");
+        }
+
+        try(FileInputStream is = new FileInputStream(fileName)) {
+            byte[] iv = new byte[16];
+            is.read(iv);
+            this.cipher.init(Cipher.DECRYPT_MODE, this.key, new IvParameterSpec(iv));
+
+            try(CipherInputStream cipherInputStream = new CipherInputStream(is, this.cipher)) {
+                return IOUtils.toByteArray(cipherInputStream);
+            } catch (IOException e) {
+                log.error("파일 복호화 실패");
+            }
+        } catch (IOException | InvalidKeyException | InvalidAlgorithmParameterException e) {
+            log.error("파일 복호화를 위한 준비 실패");
+        } finally {
+            deleteFile(encryptFile.getName());
+        }
+
+        return null;
     }
 
     public FileDataOfBase64 convertToFileData(final String fileData) {
@@ -157,6 +205,12 @@ public class UploadFileUtils {
             log.error("존재하지 않는 Content-Type: {}", contentType);
             throw new FileNotReadableException();
         }
+    }
+
+    private String getDomain(final HttpServletRequest request) {
+        return request.getRequestURL()
+                .toString()
+                .replace(request.getRequestURI(), "");
     }
 
 }

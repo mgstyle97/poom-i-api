@@ -12,7 +12,7 @@ import javax.persistence.*;
 @SequenceGenerator(
     name = "upload_file_sequence_generator",
     sequenceName = "upload_file_sequence",
-    initialValue = 2,
+    initialValue = 13,
     allocationSize = 1
 )
 public class UploadFile {

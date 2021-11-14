@@ -38,9 +38,10 @@ public class MemberController {
 
     @PostMapping("/signup")
     public ApiResponse<SignupResponse> signup(
-            @RequestBody @Valid final SignupRequest signupRequest) {
+            @RequestBody @Valid final SignupRequest signupRequest,
+            final HttpServletRequest request) {
         return ApiResponse
-                .succeed(HttpStatus.CREATED, memberService.signup(signupRequest)
+                .succeed(HttpStatus.CREATED, memberService.signup(signupRequest, request)
                 );
     }
 

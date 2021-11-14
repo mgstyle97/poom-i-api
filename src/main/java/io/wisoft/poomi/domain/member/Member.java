@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 @SequenceGenerator(
         name = "member_sequence_generator",
         sequenceName = "member_sequence",
-        initialValue = 4,
+        initialValue = 5,
         allocationSize = 1
 )
 @Table(name = "MEMBER")
