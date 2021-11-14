@@ -17,7 +17,7 @@ import javax.persistence.*;
 @SequenceGenerator(
         name = "group_participating_member_sequence_generator",
         sequenceName = "group_participating_member_sequence",
-        initialValue = 3,
+        initialValue = 11,
         allocationSize = 1
 )
 @Table(name = "group_participating_member")

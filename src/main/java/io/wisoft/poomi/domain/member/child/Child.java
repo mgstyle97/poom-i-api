@@ -21,7 +21,7 @@ import java.util.Set;
 @SequenceGenerator(
         name = "child_sequence_generator",
         sequenceName = "child_sequence",
-        initialValue = 5,
+        initialValue = 8,
         allocationSize = 1
 )
 public class Child {

@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @SequenceGenerator(
         name = "playground_vote_sequence_generator",
         sequenceName = "playground_vote_sequence",
-        initialValue = 2,
+        initialValue = 3,
         allocationSize = 1
 )
 @Table(name = "playground_vote")

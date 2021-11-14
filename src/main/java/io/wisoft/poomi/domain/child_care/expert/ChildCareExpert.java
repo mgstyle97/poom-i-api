@@ -26,7 +26,7 @@ import java.util.Set;
 @SequenceGenerator(
         name = "expert_sequence_generator",
         sequenceName = "expert_sequence",
-        initialValue = 1,
+        initialValue = 4,
         allocationSize = 1
 )
 public class ChildCareExpert extends BaseChildCareEntity {

@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @SequenceGenerator(
         name = "group_board_sequence_generator",
         sequenceName = "group_board_sequence",
-        initialValue = 1,
+        initialValue = 4,
         allocationSize = 1
 )
 @Table(name = "group_board")

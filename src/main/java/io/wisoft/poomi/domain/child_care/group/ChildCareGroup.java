@@ -28,7 +28,7 @@ import java.util.Set;
 @SequenceGenerator(
         name = "group_sequence_generator",
         sequenceName = "group_sequence",
-        initialValue = 3,
+        initialValue = 5,
         allocationSize = 1
 )
 @Table(name = "child_care_group")

@@ -14,7 +14,7 @@ import javax.persistence.*;
 @SequenceGenerator(
         name = "playground_voter_sequence_generator",
         sequenceName = "playground_voter_sequence",
-        initialValue = 10,
+        initialValue = 19,
         allocationSize = 1
 )
 @Table(name = "playground_voter")
