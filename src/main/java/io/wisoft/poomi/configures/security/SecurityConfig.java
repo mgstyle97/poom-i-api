@@ -92,13 +92,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .passwordEncoder(passwordEncoder());
     }
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring()
-                .requestMatchers(
-                        PathRequest.toH2Console()
-                );
-    }
+//    @Override
+//    public void configure(WebSecurity web) throws Exception {
+//        web.ignoring()
+//                .requestMatchers(
+//                        PathRequest.toH2Console()
+//                );
+//    }
 
     private String[] permitAllPatterns() {
         return new String[] {
