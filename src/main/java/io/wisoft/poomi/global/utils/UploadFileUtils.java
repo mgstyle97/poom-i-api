@@ -143,9 +143,11 @@ public class UploadFileUtils {
                 return IOUtils.toByteArray(cipherInputStream);
             } catch (IOException e) {
                 log.error("파일 복호화 실패");
+                throw e;
             }
         } catch (IOException | InvalidKeyException | InvalidAlgorithmParameterException e) {
             log.error("파일 복호화를 위한 준비 실패");
+            log.error(e.getMessage());
         } finally {
             deleteFile(encryptFile.getName());
         }

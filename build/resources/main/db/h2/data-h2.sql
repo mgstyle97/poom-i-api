@@ -49,9 +49,9 @@ VALUES (
 'https://poomi-storage-service.s3.ap-northeast-2.amazonaws.com/group4.jpg',
 '/api/download?image=group4.jpg', 'image/jpg'),
 (
-12, '229d9880-338f-4cee-9164-4cf7c9d8c8eb.enc',
-'http://www.poomi.space:8080/api/image/encrypt?image=229d9880-338f-4cee-9164-4cf7c9d8c8eb.enc',
-'http://www.poomi.space:8080/api/download/encrypt?image=229d9880-338f-4cee-9164-4cf7c9d8c8eb.enc', 'image/png');
+12, '4a5fa5f4-80ff-40b7-ac2d-f25c0f1ba410.enc',
+'http://www.poomi.space:8080/api/image/encrypt?image=4a5fa5f4-80ff-40b7-ac2d-f25c0f1ba410.enc',
+'http://www.poomi.space:8080/api/download/encrypt?image=4a5fa5f4-80ff-40b7-ac2d-f25c0f1ba410.enc', 'image/png');
 
 INSERT INTO address_tag(id, extra_address)
 VALUES (1, '(월평동, 전원아파트)');

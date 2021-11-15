@@ -78,7 +78,9 @@ public class PlaygroundVoteService {
                 .filter(vote -> vote.getRegistrant().equals(member))
                 .collect(Collectors.toList());
 
-        return MemberPlaygroundVoteResponse.of(votingVoteList, memberRegisterVoteList);
+        return MemberPlaygroundVoteResponse.of(
+                member.getResidenceCertification().getApprovalStatus(),
+                votingVoteList, memberRegisterVoteList);
     }
 
     @Transactional
