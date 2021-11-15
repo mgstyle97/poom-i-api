@@ -87,6 +87,7 @@ public class PlaygroundVoteService {
     public void approvePlaygroundVote(final Long voteId) {
         PlaygroundVote playgroundVote = playgroundVoteRepository.getById(voteId);
         validateMemberResidenceApprove(playgroundVote.getRegistrant());
+        validatePlaygroundVoteAlreadyApproved(playgroundVote);
 
         playgroundVote.approveState(jwtTokenProvider.generateVoteExpiredToken());
         playgroundVoteRepository.save(playgroundVote);
@@ -185,6 +186,12 @@ public class PlaygroundVoteService {
     private void validateMemberResidenceApprove(final Member member) {
         if (member.getResidenceCertification().getApprovalStatus().equals(ApprovalStatus.UN_APPROVED)) {
             throw new NotApprovedResidenceMemberException();
+        }
+    }
+
+    private void validatePlaygroundVoteAlreadyApproved(final PlaygroundVote vote) {
+        if (vote.getApprovalStatus().equals(ApprovalStatus.APPROVED)) {
+            throw new IllegalArgumentException("이미 승인된 투표입니다.");
         }
     }
 
