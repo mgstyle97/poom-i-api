@@ -185,7 +185,7 @@ VALUES (2, 7);
 
 INSERT INTO child_care_playground(id, name, operating_hours, holiday, call_number, features, address_id, registrant_id)
 VALUES (
-    1, 'WS APT 101동 101호', '09:00~21:00', '월요일 휴무', '042-000-0000', '무료 이용, 팀당 보호자 1인 필수',
+    1, '전원 아파트 101동 A101호', '09:00~21:00', '월요일 휴무', '042-000-0000', '무료 이용, 팀당 보호자 1인 필수',
     4, 1
 );
 
@@ -197,7 +197,7 @@ VALUES (1, 1);
 
 INSERT INTO child_care_playground(id, name, operating_hours, holiday, call_number, features, address_id, registrant_id)
 VALUES (
-    2, 'WS APT 103동 101호', '10:00~18:00', '화요일, 수요일 휴무', '042-111-1111', '무료 이용, 점심 간식 제공',
+    2, '전원 아파트 103동 B101호', '10:00~18:00', '화요일, 수요일 휴무', '042-111-1111', '무료 이용, 점심 간식 제공',
     5, 1
 );
 
