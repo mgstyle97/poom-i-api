@@ -118,6 +118,7 @@ public class UploadFileUtils {
                 CipherOutputStream cos = new CipherOutputStream(os, this.cipher)) {
             os.write(iv);
             cos.write(Files.readAllBytes(fileDataOfBase64.getConvertedOfMetaData().toPath()));
+            deleteFile(fileDataOfBase64.getConvertedOfMetaData().getName());
             fileDataOfBase64.setConvertedOfMetaData(encryptFile);
         } catch (IOException e) {
             log.error("파일 암호화 에러");
