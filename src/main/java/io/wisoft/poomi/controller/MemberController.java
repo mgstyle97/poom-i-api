@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Validated
 @RequiredArgsConstructor
@@ -51,10 +52,9 @@ public class MemberController {
                 HttpStatus.OK,
                 MyPageResponse.of(
                         member,
-                        jwtTokenProvider
-                                .getExpirationDateFromToken(
-                                        member.getResidenceCertification().getExpiredValidationToken()
-                                ))
+                        Optional.ofNullable(member.getResidenceCertification().getExpiredValidationToken())
+                                        .map(jwtTokenProvider::getExpirationDateFromToken).orElse(null)
+                )
         );
     }
 

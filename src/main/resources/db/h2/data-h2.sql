@@ -61,7 +61,8 @@ VALUES (1, '35217', '대전 서구 월평중로 50', '월평동 전원아파트 
        (2, '35217', '대전 서구 월평중로 50', '월평동 전원아파트 102동 203호', 1),
        (3, '35217', '대전 서구 월평중로 50', '월평동 전원아파트 102동 201호', 1),
        (4, '35217', '대전 서구 월평중로 50', '월평동 전원아파트 101동 101호', 1),
-       (5, '35217', '대전 서구 월평중로 50', '월평동 전원아파트 103동 301호', 1);
+       (5, '35217', '대전 서구 월평중로 50', '월평동 전원아파트 103동 A301호', 1),
+       (6, '35217', '대전 서구 월평중로 50', '월평동 전원아파트 103동 A302호', 1);
 
 INSERT INTO residence_certification(id, approval_status, residence_file_id, expired_validation_token)
 VALUES (1, 'APPROVED', 12, 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTIwMDYxNDgsInJlc2lkZW5jZSI6InJlc2lkZW5jZSB0b2tlbiJ9.YpAU_PhDGf8fP1iIaA_oAdrmYtTmQijeWCUNwrUVINs'),
@@ -149,7 +150,7 @@ INSERT INTO board_image(board_id, image_id)
 VALUES (3, 2);
 
 INSERT INTO playground_vote(id, purpose_using, approval_status, expired_status, address_id, registrant_id, created_at, modified_at, expired_validation_token)
-VALUES (1, '<p>추운 겨울에도 아이들이 친구들과 놀고 공부할 수 있는 공간으로 탈바꿈 해봅시다!<br>주민 여러분들의 많이 지지로 비어있는 공간을 아이들과 부모의 소통의 장이 되길 바랍니다.</p>', 'APPROVED', 'VOTING', 1, 2, now(), now(), 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTIwMDYxNDgsInJlc2lkZW5jZSI6InJlc2lkZW5jZSB0b2tlbiJ9.YpAU_PhDGf8fP1iIaA_oAdrmYtTmQijeWCUNwrUVINs');
+VALUES (1, '<p>추운 겨울에도 아이들이 친구들과 놀고 공부할 수 있는 공간으로 탈바꿈 해봅시다!<br>주민 여러분들의 많이 지지로 비어있는 공간을 아이들과 부모의 소통의 장이 되길 바랍니다.</p>', 'APPROVED', 'VOTING', 5, 2, now(), now(), 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTIwMDYxNDgsInJlc2lkZW5jZSI6InJlc2lkZW5jZSB0b2tlbiJ9.YpAU_PhDGf8fP1iIaA_oAdrmYtTmQijeWCUNwrUVINs');
 
 INSERT INTO playground_voter(id, dong, ho, vote_type, vote_id)
 VALUES (1, '101동', '101호', 'NOT_YET', 1),
@@ -166,7 +167,7 @@ INSERT INTO playground_vote_image(vote_id, image_id)
 VALUES (1, 6);
 
 INSERT INTO playground_vote(id, purpose_using, approval_status, expired_status, address_id, registrant_id, created_at, modified_at, expired_validation_token)
-VALUES (2, '<p>좋은 공간이 항상 비어있어요.<br>맞벌이 부부와 자녀들에게는 이 비어있는 공간이 때로는 쉼터가, 떄로는 놀이터가 될 수 있습니다.<br>많이 찬성 부탁드립니다.</p>', 'APPROVED', 'VOTING', 1, 4, now(), now(), 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTIwMDYxNDgsInJlc2lkZW5jZSI6InJlc2lkZW5jZSB0b2tlbiJ9.YpAU_PhDGf8fP1iIaA_oAdrmYtTmQijeWCUNwrUVINs');
+VALUES (2, '<p>좋은 공간이 항상 비어있어요.<br>맞벌이 부부와 자녀들에게는 이 비어있는 공간이 때로는 쉼터가, 떄로는 놀이터가 될 수 있습니다.<br>많이 찬성 부탁드립니다.</p>', 'APPROVED', 'VOTING', 6, 4, now(), now(), 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTIwMDYxNDgsInJlc2lkZW5jZSI6InJlc2lkZW5jZSB0b2tlbiJ9.YpAU_PhDGf8fP1iIaA_oAdrmYtTmQijeWCUNwrUVINs');
 
 INSERT INTO playground_voter(id, dong, ho, vote_type, vote_id)
 VALUES (10, '101동', '101호', 'AGREE', 2),
