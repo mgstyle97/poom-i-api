@@ -3,6 +3,7 @@ package io.wisoft.poomi.global.dto.response.child_care.group;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.poomi.domain.child_care.RecruitmentStatus;
 import io.wisoft.poomi.domain.child_care.group.ChildCareGroup;
+import io.wisoft.poomi.domain.child_care.group.participating.GroupParticipatingMember;
 import io.wisoft.poomi.domain.child_care.playground.vote.ExpiredStatus;
 import io.wisoft.poomi.domain.file.UploadFile;
 import io.wisoft.poomi.domain.member.Member;
@@ -69,36 +70,49 @@ public class MemberDoingGroupResponse {
         this.applyInfo = applyInfo;
     }
 
-    public static MemberDoingGroupResponse of(final ChildCareGroup group, final Member member,
-                                              final ParticipationType participationType) {
+    public static MemberDoingGroupResponse of(final ChildCareGroup group, final Member member) {
         return MemberDoingGroupResponse.builder()
-            .groupId(group.getId())
-            .groupName(group.getName())
-            .activityTime(group.getRegularMeetingDay())
-            .profileImageURL(
-                Optional.ofNullable(group.getProfileImage()).map(UploadFile::getFileAccessURI).orElse(null)
-            )
-            .mainActivity(group.getMainActivity())
-            .description(group.getDescription())
-            .recruitmentStatus(group.getRecruitmentStatus())
-            .participationType(participationType)
-            .participatingMembers(generateParticipatingMembers(group, member))
-            .applyInfo(generateApplyInfo(group))
-            .build();
+                .groupId(group.getId())
+                .groupName(group.getName())
+                .activityTime(group.getRegularMeetingDay())
+                .profileImageURL(
+                        Optional.ofNullable(group.getProfileImage()).map(UploadFile::getFileAccessURI).orElse(null)
+                )
+                .mainActivity(group.getMainActivity())
+                .description(group.getDescription())
+                .recruitmentStatus(group.getRecruitmentStatus())
+                .participationType(generateParticipationType(group, member))
+                .participatingMembers(generateParticipatingMembers(group, member))
+                .applyInfo(generateApplyInfo(group))
+                .build();
     }
 
     private static List<MemberParticipatingGroupResponse> generateParticipatingMembers(final ChildCareGroup group,
                                                                                        final Member member) {
         return group.getParticipatingMembers().stream()
-            .filter(groupParticipatingMember -> !groupParticipatingMember.getMember().equals(member))
-            .map(MemberParticipatingGroupResponse::of)
-            .collect(Collectors.toList());
+                .filter(groupParticipatingMember ->
+                        !(groupParticipatingMember.getMember().equals(member) &&
+                                groupParticipatingMember.getParticipationType().equals(ParticipationType.MANAGE)))
+                .map(MemberParticipatingGroupResponse::of)
+                .collect(Collectors.toList());
     }
 
     private static List<GroupApplyDetailResponse> generateApplyInfo(final ChildCareGroup group) {
         return group.getApplies().stream()
-            .map(GroupApplyDetailResponse::of)
-            .collect(Collectors.toList());
+                .map(GroupApplyDetailResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    private static ParticipationType generateParticipationType(final ChildCareGroup group, final Member member) {
+        final boolean memberParticipatingAsManager = group.getParticipatingMembers().stream()
+                .filter(participatingMember -> participatingMember.getMember().equals(member))
+                .map(GroupParticipatingMember::getParticipationType)
+                .anyMatch(participationType -> participationType.equals(ParticipationType.MANAGE));
+        if (memberParticipatingAsManager) {
+            return ParticipationType.MANAGE;
+        }
+
+        return ParticipationType.PARTICIPATION;
     }
 
 }

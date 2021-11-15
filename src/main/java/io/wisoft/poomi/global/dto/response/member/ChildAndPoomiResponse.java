@@ -2,6 +2,7 @@ package io.wisoft.poomi.global.dto.response.member;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.poomi.domain.child_care.expert.ChildCareExpert;
+import io.wisoft.poomi.domain.child_care.group.participating.GroupParticipatingMember;
 import io.wisoft.poomi.domain.member.Member;
 import io.wisoft.poomi.global.dto.response.child_care.expert.MemberManagedExpertResponse;
 import io.wisoft.poomi.global.dto.response.child_care.group.MemberDoingGroupResponse;
@@ -49,10 +50,9 @@ public class ChildAndPoomiResponse {
                 )
                 .groupInfo(
                         member.getChildCareGroupProperties().getParticipatingGroups().stream()
-                                .map(groupParticipatingMember -> MemberDoingGroupResponse.of(
-                                        groupParticipatingMember.getGroup(), member,
-                                        groupParticipatingMember.getParticipationType()
-                                ))
+                                .map(GroupParticipatingMember::getGroup)
+                                .distinct()
+                                .map(group -> MemberDoingGroupResponse.of(group, member))
                                 .collect(Collectors.toList())
                 )
                 .build();

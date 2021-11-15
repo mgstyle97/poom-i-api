@@ -57,7 +57,7 @@ public class Child {
     )
     private Member parent;
 
-    @OneToMany(mappedBy = "child")
+    @OneToMany(mappedBy = "child", fetch = FetchType.EAGER)
     private Set<GroupParticipatingMember> participatingGroups;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "caringChild")
