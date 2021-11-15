@@ -19,6 +19,7 @@ import io.wisoft.poomi.global.dto.request.child_care.playground.PlaygroundVoteVo
 import io.wisoft.poomi.global.dto.response.child_care.playground.vote.PlaygroundVoteLookupResponse;
 import io.wisoft.poomi.global.dto.response.child_care.playground.vote.PlaygroundVoteRealtimeInfoResponse;
 import io.wisoft.poomi.global.dto.response.member.MemberPlaygroundVoteResponse;
+import io.wisoft.poomi.global.exception.exceptions.NotApprovedResidenceMemberException;
 import io.wisoft.poomi.global.exception.exceptions.NotFoundEntityDataException;
 import io.wisoft.poomi.global.utils.UploadFileUtils;
 import lombok.RequiredArgsConstructor;
@@ -79,13 +80,13 @@ public class PlaygroundVoteService {
                 .collect(Collectors.toList());
 
         return MemberPlaygroundVoteResponse.of(
-                member.getResidenceCertification().getApprovalStatus(),
                 votingVoteList, memberRegisterVoteList);
     }
 
     @Transactional
     public void approvePlaygroundVote(final Long voteId) {
         PlaygroundVote playgroundVote = playgroundVoteRepository.getById(voteId);
+        validateMemberResidenceApprove(playgroundVote.getRegistrant());
 
         playgroundVote.approveState(jwtTokenProvider.generateVoteExpiredToken());
         playgroundVoteRepository.save(playgroundVote);
@@ -178,6 +179,12 @@ public class PlaygroundVoteService {
                 playgroundVoteRepository.save(vote);
             }
 
+        }
+    }
+
+    private void validateMemberResidenceApprove(final Member member) {
+        if (member.getResidenceCertification().getApprovalStatus().equals(ApprovalStatus.UN_APPROVED)) {
+            throw new NotApprovedResidenceMemberException();
         }
     }
 

@@ -3,6 +3,7 @@ package io.wisoft.poomi.global.dto.response.child_care.playground.vote;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.poomi.domain.child_care.playground.vote.PlaygroundVote;
 import io.wisoft.poomi.domain.child_care.playground.vote.voter.VoteType;
+import io.wisoft.poomi.domain.common.ApprovalStatus;
 import io.wisoft.poomi.domain.member.Member;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +20,9 @@ public class PlaygroundVoteRealtimeInfoResponse {
     private Long voteId;
 
     private String registrant;
+
+    @JsonProperty("registrant_residence_status")
+    private ApprovalStatus approvalStatus;
 
     @JsonProperty("expired_statue")
     private String expiredStatus;
@@ -42,13 +46,15 @@ public class PlaygroundVoteRealtimeInfoResponse {
 
     @Builder
     public PlaygroundVoteRealtimeInfoResponse(final Long voteId,
-                                              final String registrant, final String address,
-                                              final String detailAddress, final String expiredStatus,
+                                              final String registrant, final ApprovalStatus approvalStatus,
+                                              final String address, final String detailAddress,
+                                              final String expiredStatus,
                                               final String votingRate, final String agreeRate,
                                               final String disagreeRate,
                                               final Map<String, List<String>> votingYetList) {
         this.voteId = voteId;
         this.registrant = registrant;
+        this.approvalStatus = approvalStatus;
         this.address = address;
         this.detailAddress = detailAddress;
         this.expiredStatus = expiredStatus;
@@ -73,6 +79,7 @@ public class PlaygroundVoteRealtimeInfoResponse {
         return PlaygroundVoteRealtimeInfoResponse.builder()
                 .voteId(vote.getId())
                 .registrant(vote.getRegistrant().getNick())
+                .approvalStatus(vote.getRegistrant().getResidenceCertification().getApprovalStatus())
                 .address(vote.getAddress().getAddress())
                 .detailAddress(vote.getAddress().getDetailAddress())
                 .expiredStatus(vote.getExpiredStatus().toString())

@@ -15,9 +15,6 @@ import java.util.stream.Collectors;
 @Setter
 public class MemberPlaygroundVoteResponse {
 
-    @JsonProperty("member_residence_approval_status")
-    private ApprovalStatus approvalStatus;
-
     @JsonProperty("voting_vote_list")
     private List<PlaygroundVoteRealtimeInfoResponse> votingVoteList;
 
@@ -25,19 +22,15 @@ public class MemberPlaygroundVoteResponse {
     private List<PlaygroundVoteRealtimeInfoResponse> memberRegisterVoteList;
 
     @Builder
-    public MemberPlaygroundVoteResponse(final ApprovalStatus approvalStatus,
-                                        final List<PlaygroundVoteRealtimeInfoResponse> votingVoteList,
+    public MemberPlaygroundVoteResponse(final List<PlaygroundVoteRealtimeInfoResponse> votingVoteList,
                                         final List<PlaygroundVoteRealtimeInfoResponse> memberRegisterVoteList) {
-        this.approvalStatus = approvalStatus;
         this.votingVoteList = votingVoteList;
         this.memberRegisterVoteList = memberRegisterVoteList;
     }
 
-    public static MemberPlaygroundVoteResponse of(final ApprovalStatus approvalStatus,
-                                                  final List<PlaygroundVote> votingVoteList,
+    public static MemberPlaygroundVoteResponse of(final List<PlaygroundVote> votingVoteList,
                                                   final List<PlaygroundVote> memberRegisterVoteList) {
         return MemberPlaygroundVoteResponse.builder()
-                .approvalStatus(approvalStatus)
                 .votingVoteList(
                         votingVoteList.stream()
                                 .map(PlaygroundVoteRealtimeInfoResponse::of)

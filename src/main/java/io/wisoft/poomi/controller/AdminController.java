@@ -48,7 +48,8 @@ public class AdminController {
     }
 
     @PatchMapping("/approve/vote")
-    public void approvePlaygroundVote(@RequestParam("vote_id") @Valid final Long voteId) {
+    public void approvePlaygroundVote(
+            @RequestParam("vote_id") @Valid final Long voteId) {
         adminService.approvePlaygroundVote(voteId);
     }
 
