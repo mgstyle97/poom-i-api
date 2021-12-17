@@ -17,11 +17,13 @@ import org.springframework.web.client.RestTemplate;
 public abstract class OAuth2Manager {
 
     protected final ObjectMapper objectMapper;
+    protected final OAuth2Property oAuth2Property;
     private final RestTemplate restTemplate;
 
-    protected OAuth2Manager() {
+    protected OAuth2Manager(final OAuth2Property oAuth2Property) {
         this.objectMapper = new ObjectMapper();
         this.restTemplate = new RestTemplate();
+        this.oAuth2Property = oAuth2Property;
     }
 
     public OAuthUserPropertiesResponse getOAuthUserProperties(final String code) throws JsonProcessingException {
@@ -33,7 +35,7 @@ public abstract class OAuth2Manager {
         HttpEntity<MultiValueMap<String, String>> tokenRequestEntity = new HttpEntity<>(params, headers);
 
         ResponseEntity<String> tokenResponse = restTemplate
-                .postForEntity(getOAuth2Property().getTokenURI(), tokenRequestEntity, String.class);
+                .postForEntity(oAuth2Property.getTokenURI(), tokenRequestEntity, String.class);
 
         String accessToken = getAccessToken(tokenResponse.getBody());
 
@@ -63,7 +65,6 @@ public abstract class OAuth2Manager {
 
 
     protected abstract MultiValueMap<String, String> getParams(final String code);
-    protected abstract OAuth2Property getOAuth2Property();
     protected abstract String getAccessToken(final String tokenResponse)
             throws JsonProcessingException;
     protected abstract OAuthUserPropertiesResponse stringToUserProperties(final String userInfo)

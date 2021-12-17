@@ -36,14 +36,12 @@ public class GroupBoardController {
     public ApiResponse<GroupBoardRegisterResponse> registerGroupBoard(
             @RequestBody @Valid final GroupBoardRegisterRequest registerRequest,
             @SignInMember final Member member) {
-        log.info("Received Request DTO: {}", registerRequest);
 
         ApiResponse<GroupBoardRegisterResponse> response = ApiResponse.succeed(HttpStatus.CREATED,
                 groupBoardService
                         .registerGroupBoard(
                                 member, registerRequest
                         ));
-        log.info(response.toString());
 
         return response;
     }

@@ -8,18 +8,24 @@ import io.wisoft.poomi.global.oauth2.properties.oauth2.KakaoProperty;
 import io.wisoft.poomi.global.oauth2.properties.oauth2.OAuth2Property;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-@RequiredArgsConstructor
 @Component
 public class KakaoManager extends OAuth2Manager {
 
-    private final KakaoProperty kakaoProperty;
+
+    public KakaoManager(
+            @Qualifier("kakao-io.wisoft.poomi.global.oauth2.properties.oauth2.KakaoProperty")
+            final OAuth2Property oAuth2Property) {
+        super(oAuth2Property);
+    }
 
     @Override
     protected MultiValueMap<String, String> getParams(String code) {
+        KakaoProperty kakaoProperty = (KakaoProperty) oAuth2Property;
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
@@ -29,11 +35,6 @@ public class KakaoManager extends OAuth2Manager {
         params.add("client_secret", kakaoProperty.getClientSecret());
 
         return params;
-    }
-
-    @Override
-    protected OAuth2Property getOAuth2Property() {
-        return this.kakaoProperty;
     }
 
     @Override

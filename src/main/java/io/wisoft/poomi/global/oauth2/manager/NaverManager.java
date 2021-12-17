@@ -7,18 +7,25 @@ import io.wisoft.poomi.global.dto.response.oauth.naver.NaverUserInfoResponse;
 import io.wisoft.poomi.global.oauth2.properties.oauth2.NaverProperty;
 import io.wisoft.poomi.global.oauth2.properties.oauth2.OAuth2Property;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-@RequiredArgsConstructor
 @Component
 public class NaverManager extends OAuth2Manager {
 
-    private final NaverProperty naverProperty;
+    public NaverManager(
+            @Qualifier("naver-io.wisoft.poomi.global.oauth2.properties.oauth2.NaverProperty")
+            final OAuth2Property oAuth2Property
+    ) {
+        super(oAuth2Property);
+    }
 
     @Override
     protected MultiValueMap<String, String> getParams(String code) {
+
+        final NaverProperty naverProperty = (NaverProperty) oAuth2Property;
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
@@ -27,11 +34,6 @@ public class NaverManager extends OAuth2Manager {
         params.add("code", code);
 
         return params;
-    }
-
-    @Override
-    protected OAuth2Property getOAuth2Property() {
-        return this.naverProperty;
     }
 
     @Override

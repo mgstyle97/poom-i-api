@@ -189,7 +189,7 @@ public class ChildCareExpertService {
         expert.checkApplyIncluded(expertApply);
 
         approveApply(expert, expertApply);
-        certificationService.sendSmsOfExpertApproved(expert);
+//        certificationService.sendSmsOfExpertApproved(expert);
     }
 
     @Transactional
